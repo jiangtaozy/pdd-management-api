@@ -16,7 +16,7 @@ import (
 
 func OrderList(w http.ResponseWriter, r *http.Request) {
   db := database.ConnectDB()
-  rows, err := db.Query("SELECT id, productName, orderId, orderStatus, productTotalPrice, storeDiscount, platformDiscount, postage, userPaidAmount, merchantReceivedAmount, numberOfProducts, receiver, phone, whetherUnderReview, province, city, district, street, paymentTime, joinSuccessTime, orderConfirmationTime, commitmentDeliveryTime, deliveryTime, confirmDeliveryTime, productId, productSku, skuId, trackingNumber, courierCompany, merchantNotes, afterSaleStatus, buyerMessage FROM itemOrder")
+  rows, err := db.Query("SELECT itemOrder.id, itemOrder.productName, itemOrder.orderId, itemOrder.orderStatus, itemOrder.productTotalPrice, itemOrder.storeDiscount, itemOrder.platformDiscount, itemOrder.postage, itemOrder.userPaidAmount, itemOrder.merchantReceivedAmount, itemOrder.numberOfProducts, itemOrder.receiver, itemOrder.phone, itemOrder.whetherUnderReview, itemOrder.province, itemOrder.city, itemOrder.district, itemOrder.street, itemOrder.paymentTime, itemOrder.joinSuccessTime, itemOrder.orderConfirmationTime, itemOrder.commitmentDeliveryTime, itemOrder.deliveryTime, itemOrder.confirmDeliveryTime, itemOrder.productId, itemOrder.productSku, itemOrder.skuId, itemOrder.trackingNumber, itemOrder.courierCompany, itemOrder.merchantNotes, itemOrder.afterSaleStatus, itemOrder.buyerMessage, item.detailUrl FROM itemOrder LEFT JOIN pddItem ON itemOrder.productId = pddItem.pddId LEFT JOIN item ON pddItem.outGoodsSn = item.searchId where item.forSell = TRUE OR item.forSell IS NULL")
   if err != nil {
     log.Println("order-list-query-error: ", err)
   }
@@ -56,8 +56,9 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       merchantNotes string
       afterSaleStatus string
       buyerMessage string
+      detailUrl sql.NullString
     )
-    if err := rows.Scan(&id, &productName, &orderId, &orderStatus, &productTotalPrice, &storeDiscount, &platformDiscount, &postage, &userPaidAmount, &merchantReceivedAmount, &numberOfProducts, &receiver, &phone, &whetherUnderReview, &province, &city, &district, &street, &paymentTime, &joinSuccessTime, &orderConfirmationTime, &commitmentDeliveryTime, &deliveryTime, &confirmDeliveryTime, &productId, &productSku, &skuId, &trackingNumber, &courierCompany, &merchantNotes, &afterSaleStatus, &buyerMessage); err != nil {
+    if err := rows.Scan(&id, &productName, &orderId, &orderStatus, &productTotalPrice, &storeDiscount, &platformDiscount, &postage, &userPaidAmount, &merchantReceivedAmount, &numberOfProducts, &receiver, &phone, &whetherUnderReview, &province, &city, &district, &street, &paymentTime, &joinSuccessTime, &orderConfirmationTime, &commitmentDeliveryTime, &deliveryTime, &confirmDeliveryTime, &productId, &productSku, &skuId, &trackingNumber, &courierCompany, &merchantNotes, &afterSaleStatus, &buyerMessage, &detailUrl); err != nil {
       log.Println("order-list-scan-error: ", err)
     }
     order := map[string]interface{}{
@@ -93,6 +94,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "merchantNotes": merchantNotes,
       "afterSaleStatus": afterSaleStatus,
       "buyerMessage": buyerMessage,
+      "detailUrl": detailUrl.String,
     }
     orderList = append(orderList, order)
   }

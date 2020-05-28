@@ -30,6 +30,10 @@ func InitDB() {
   execSQL(searchItem)
   execSQL(itemOrder)
   execSQL(createPddItem)
+  execSQL(createPddAdPlan)
+  execSQL(createPddAdUnit)
+  execSQL(createPddAdUnitDailyData)
+  execSQL(createStall)
   //execSQL(alter)
 }
 
@@ -153,20 +157,20 @@ const itemOrder = `
   );
 `
 
+/*
 const alter = `
   ALTER TABLE pddItem
   CHANGE COLUMN
   promotion_goods promotionGoods VARCHAR(50)
   ;
 `
-/*
+*/
 const alter = `
-  ALTER TABLE pddItem
+  ALTER TABLE pddAdUnitDailyData
   MODIFY COLUMN
-    createdAt TIMESTAMP NULL
+  inquiryNum INTEGER UNSIGNED NOT NULL DEFAULT 0
   ;
 `
-*/
 /*
 const alter = `
   ALTER TABLE supplier

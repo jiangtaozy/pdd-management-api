@@ -1,2 +1,4 @@
 # database config
 database/config.go
+# .swp
+*.swp
