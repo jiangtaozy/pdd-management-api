@@ -34,7 +34,7 @@ func InitDB() {
   execSQL(createPddAdUnit)
   execSQL(createPddAdUnitDailyData)
   execSQL(createStall)
-  //execSQL(alter)
+  execSQL(addColumnAlter)
 }
 
 func execSQL(sqlStmt string) {
@@ -85,7 +85,15 @@ const supplier = `
     province VARCHAR(20) NOT NULL DEFAULT '',
     city VARCHAR(60) NOT NULL DEFAULT '',
     url VARCHAR(150) NOT NULL DEFAULT '',
-    siteType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '1: 1688, 2: hznzcn'
+    siteType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '1: 1688, 2: hznzcn',
+    mallName VARCHAR(20) NOT NULL DEFAULT '',
+    floor TINYINT NOT NULL DEFAULT 1,
+    stallNumber VARCHAR(5) DEFAULT '',
+    phone VARCHAR(11) NOT NULL DEFAULT '',
+    telephone VARCHAR(13) NOT NULL DEFAULT '',
+    wechat VARCHAR(20) NOT NULL DEFAULT '',
+    qq VARCHAR(12) NOT NULL DEFAULT '',
+    dataUrl VARCHAR(30) NOT NULL DEFAULT ''
   );
 `
 
@@ -178,15 +186,15 @@ const alter = `
   ;
 `
 */
-/*
-const alter = `
-  ALTER TABLE item
-  ADD imgUrlOf290x290 VARCHAR(100) NOT NULL DEFAULT '',
-  ADD imgUrlOf120x120 VARCHAR(100) NOT NULL DEFAULT '',
-  ADD imgUrlOf270x270 VARCHAR(100) NOT NULL DEFAULT '',
-  ADD imgUrlOf100x100 VARCHAR(100) NOT NULL DEFAULT '',
-  ADD imgUrlOf150x150 VARCHAR(100) NOT NULL DEFAULT '',
-  ADD imgUrlOf220x220 VARCHAR(100) NOT NULL DEFAULT ''
+const addColumnAlter = `
+  ALTER TABLE supplier
+  ADD mallName VARCHAR(20) NOT NULL DEFAULT '',
+  ADD floor TINYINT NOT NULL DEFAULT 1,
+  ADD stallNumber VARCHAR(5) DEFAULT '',
+  ADD phone VARCHAR(11) NOT NULL DEFAULT '',
+  ADD telephone VARCHAR(13) NOT NULL DEFAULT '',
+  ADD wechat VARCHAR(20) NOT NULL DEFAULT '',
+  ADD qq VARCHAR(12) NOT NULL DEFAULT '',
+  ADD dataUrl VARCHAR(30) NOT NULL DEFAULT ''
   ;
 `
-*/

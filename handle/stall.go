@@ -22,25 +22,25 @@ func Stall(w http.ResponseWriter, r *http.Request) {
   }
   db := database.ConnectDB()
   var count int
-  err = db.QueryRow("SELECT COUNT(*) FROM stall WHERE id = ?", body["id"]).Scan(&count)
+  err = db.QueryRow("SELECT COUNT(*) FROM supplier WHERE id = ?", body["id"]).Scan(&count)
   if err != nil {
     log.Println("stall-count-error: ", err)
   }
   if count == 0 {
-    stmtInsert, err := db.Prepare("INSERT INTO stall (name, cityName, mallName, floor, stallNumber, phone, telephone, wechat, qq, dataUrl, stallUrl) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    stmtInsert, err := db.Prepare("INSERT INTO supplier (name, city, mallName, floor, stallNumber, phone, telephone, wechat, qq, dataUrl, url, siteType) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     if err != nil {
       log.Println("stall-insert-prepare-error: ", err)
     }
-    _, err = stmtInsert.Exec(body["name"], body["cityName"], body["mallName"], body["floor"], body["stallNumber"], body["phone"], body["telephone"], body["wechat"], body["qq"], body["dataUrl"], body["stallUrl"])
+    _, err = stmtInsert.Exec(body["name"], body["city"], body["mallName"], body["floor"], body["stallNumber"], body["phone"], body["telephone"], body["wechat"], body["qq"], body["dataUrl"], body["url"], 2)
     if err != nil {
       log.Println("stall-insert-exec-error: ", err)
     }
   } else {
-    stmtUpdate, err := db.Prepare("UPDATE stall SET name = ?, cityName = ?, mallName = ?, floor = ?, stallNumber = ?, phone = ?, telephone = ?, wechat = ?, qq = ?, dataUrl = ?, stallUrl = ? WHERE id = ?")
+    stmtUpdate, err := db.Prepare("UPDATE supplier SET name = ?, city = ?, mallName = ?, floor = ?, stallNumber = ?, phone = ?, telephone = ?, wechat = ?, qq = ?, dataUrl = ?, url = ? WHERE id = ?")
     if err != nil {
       log.Println("stall-update-prepare-error: ", err)
     }
-    _, err = stmtUpdate.Exec(body["name"], body["cityName"], body["mallName"], body["floor"], body["stallNumber"], body["phone"], body["telephone"], body["wechat"], body["qq"], body["dataUrl"], body["stallUrl"], body["id"])
+    _, err = stmtUpdate.Exec(body["name"], body["city"], body["mallName"], body["floor"], body["stallNumber"], body["phone"], body["telephone"], body["wechat"], body["qq"], body["dataUrl"], body["url"], body["id"])
     if err != nil {
       log.Println("stall-update-exec-error", err)
     }

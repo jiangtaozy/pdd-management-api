@@ -15,7 +15,7 @@ import (
 
 func StallList(w http.ResponseWriter, r *http.Request) {
   db := database.ConnectDB()
-  rows, err := db.Query("SELECT id, name, cityName, mallName, floor, stallNumber, phone, telephone, wechat, qq, dataUrl, stallUrl FROM stall")
+  rows, err := db.Query("SELECT id, name, city, mallName, floor, stallNumber, phone, telephone, wechat, qq, dataUrl, url, siteType FROM supplier")
   if err != nil {
     log.Println("stall-list-query-error: ", err)
   }
@@ -25,7 +25,7 @@ func StallList(w http.ResponseWriter, r *http.Request) {
     var (
       id int64
       name string
-      cityName string
+      city string
       mallName string
       floor int64
       stallNumber string
@@ -34,15 +34,16 @@ func StallList(w http.ResponseWriter, r *http.Request) {
       wechat string
       qq string
       dataUrl string
-      stallUrl string
+      url string
+      siteType int64
     )
-    if err := rows.Scan(&id, &name, &cityName, &mallName, &floor, &stallNumber, &phone, &telephone, &wechat, &qq, &dataUrl, &stallUrl); err != nil {
+    if err := rows.Scan(&id, &name, &city, &mallName, &floor, &stallNumber, &phone, &telephone, &wechat, &qq, &dataUrl, &url, &siteType); err != nil {
       log.Println("stall-list-scan-error: ", err)
     }
     stall := map[string]interface{}{
       "id": id,
       "name": name,
-      "cityName": cityName,
+      "city": city,
       "mallName": mallName,
       "floor": floor,
       "stallNumber": stallNumber,
@@ -51,7 +52,8 @@ func StallList(w http.ResponseWriter, r *http.Request) {
       "wechat": wechat,
       "qq": qq,
       "dataUrl": dataUrl,
-      "stallUrl": stallUrl,
+      "url": url,
+      "siteType": siteType,
     }
     stallList = append(stallList, stall)
   }
