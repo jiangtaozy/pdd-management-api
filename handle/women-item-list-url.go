@@ -27,12 +27,14 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
   womenItemListUrl := body["womenItemListUrl"].(string)
   collector := colly.NewCollector()
   collector.OnHTML("#BrandProductListDiv ul li", func(e *colly.HTMLElement) {
+    productid, _ := e.DOM.Attr("productid")
     title, _ := e.DOM.Find(".insideBox .pic a img").Attr("title")
     itemUrl, _ := e.DOM.Find(".insideBox .pic a").Attr("href")
     imgUrl, _ := e.DOM.Find(".insideBox .pic a img").Attr("data-original")
     priceStr := e.DOM.Find(".rowPri .price").Text()
-    brandname, _ := e.DOM.Find(".insideBox .pic div").Attr("brandname")
-    brandurl, _ := e.DOM.Find(".insideBox .pic div").Attr("brandurl")
+    findSelector := ".insideBox .pic .ProductListItem_HoverInfo_" + productid
+    brandname, _ := e.DOM.Find(findSelector).Attr("brandname")
+    brandurl, _ := e.DOM.Find(findSelector).Attr("brandurl")
     db := database.ConnectDB()
     // insert search item
     priceStr = strings.Replace(priceStr, "￥", "", -1)
