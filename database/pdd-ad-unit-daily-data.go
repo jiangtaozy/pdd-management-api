@@ -18,7 +18,7 @@ const createPddAdUnitDailyData =`
     orderNum INTEGER UNSIGNED NOT NULL COMMENT '订单量',
     cpc FLOAT UNSIGNED NOT NULL COMMENT 'Cost Per Click 平均点击花费(厘)',
     cvr FLOAT UNSIGNED NOT NULL COMMENT 'Click Conversion Rate 点击转化率',
-    gmv INTEGER UNSIGNED NOT NULL COMMENT '交易额(分)',
+    gmv INTEGER UNSIGNED NOT NULL COMMENT '交易额(厘)',
     cpm FLOAT UNSIGNED NOT NULL COMMENT '千次曝光花费(厘)',
     mallFavNum INTEGER UNSIGNED NOT NULL COMMENT '店铺关注量',
     goodsFavNum INTEGER UNSIGNED NOT NULL COMMENT '商品收藏量',

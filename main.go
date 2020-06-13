@@ -36,6 +36,7 @@ func main() {
   mux.HandleFunc("/uploadAdPlanData", handle.UploadAdPlanData)
   mux.HandleFunc("/adPlanList", handle.AdPlanList)
   mux.HandleFunc("/adUnitList", handle.AdUnitList)
+  mux.HandleFunc("/adUnitListAll", handle.AdUnitListAll)
   mux.HandleFunc("/adUnitData", handle.AdUnitData)
   mux.HandleFunc("/adUnit", handle.AdUnit)
   mux.HandleFunc("/adUnitDataList", handle.AdUnitDataList)
