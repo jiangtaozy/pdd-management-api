@@ -86,6 +86,10 @@ func AdUnitDataList(w http.ResponseWriter, r *http.Request) {
       "costPerAppPay": costPerAppPay,
       "date": date,
     }
+    if click != 0 {
+      unitData["cmfr"] = float64(mallFavNum) / float64(click)
+      unitData["cgfr"] = float64(goodsFavNum) / float64(click)
+    }
     unitDataList = append(unitDataList, unitData)
   }
   json.NewEncoder(w).Encode(unitDataList)

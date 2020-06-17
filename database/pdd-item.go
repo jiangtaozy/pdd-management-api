@@ -19,7 +19,6 @@ const createPddItem =`
     skuPriceMax INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '单位：分',
     originSkuGroupPriceMin INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '单位：分',
     originSkuGroupPriceMax INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT '单位：分',
-    promotionGoods VARCHAR(50),
     pddId BIGINT UNSIGNED NOT NULL,
     goodsName VARCHAR(60) NOT NULL,
     goodsSn VARCHAR(30) NOT NULL DEFAULT '',

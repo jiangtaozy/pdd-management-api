@@ -8,6 +8,7 @@ package handle
 
 import (
   "encoding/json"
+  "database/sql"
   "log"
   "net/http"
   "github.com/jiangtaozy/pdd-management-api/database"
@@ -22,7 +23,7 @@ func AdUnit(w http.ResponseWriter, r *http.Request) {
     adName string
     goodsId int64
     goodsName string
-    thumbUrl string
+    thumbUrl sql.NullString
   )
   err := db.QueryRow("SELECT pddAdUnit.adId, pddAdUnit.adName, pddAdUnit.goodsId, pddAdUnit.goodsName, pddItem.thumbUrl FROM pddAdUnit LEFT JOIN pddItem ON pddAdUnit.goodsId = pddItem.pddId WHERE pddAdUnit.adId = ?", adId).Scan(&adId, &adName, &goodsId, &goodsName, &thumbUrl)
   if err != nil {
@@ -33,6 +34,6 @@ func AdUnit(w http.ResponseWriter, r *http.Request) {
     "adName": adName,
     "goodsId": goodsId,
     "goodsName": goodsName,
-    "thumbUrl": thumbUrl,
+    "thumbUrl": thumbUrl.String,
   })
 }
