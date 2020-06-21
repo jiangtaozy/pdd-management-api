@@ -14,7 +14,7 @@ import (
 )
 
 func StallList(w http.ResponseWriter, r *http.Request) {
-  db := database.ConnectDB()
+  db := database.DB
   rows, err := db.Query("SELECT id, name, city, mallName, floor, stallNumber, phone, telephone, wechat, qq, dataUrl, url, siteType FROM supplier")
   if err != nil {
     log.Println("stall-list-query-error: ", err)

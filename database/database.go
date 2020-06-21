@@ -12,34 +12,33 @@ import (
   _ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
+var DB *sql.DB
 
-func ConnectDB() *sql.DB {
+func ConnectDB() {
   var err error
-  db, err = sql.Open("mysql", dbUrl)
+  DB, err = sql.Open("mysql", dbUrl)
   if err != nil {
     log.Println("db-initdb-open-error: ", err)
   }
-  return db
 }
 
 func InitDB() {
   ConnectDB()
-  execSQL(item)
-  execSQL(supplier)
-  execSQL(searchItem)
-  execSQL(itemOrder)
-  execSQL(createPddItem)
-  execSQL(createPddAdPlan)
-  execSQL(createPddAdUnit)
-  execSQL(createPddAdUnitDailyData)
-  execSQL(createStall)
-  execSQL(addColumnAlter)
+  //execSQL(item)
+  //execSQL(supplier)
+  //execSQL(searchItem)
+  //execSQL(itemOrder)
+  //execSQL(createPddItem)
+  //execSQL(createPddAdPlan)
+  //execSQL(createPddAdUnit)
+  //execSQL(createPddAdUnitDailyData)
+  //execSQL(createStall)
+  //execSQL(addColumnAlter)
 }
 
 func execSQL(sqlStmt string) {
   log.Print("db inited execSQL sqlStmt: ", sqlStmt)
-  stmt, err := db.Prepare(sqlStmt)
+  stmt, err := DB.Prepare(sqlStmt)
   if err != nil {
     log.Println("db-execSQL-prepare-error: ", err)
   }

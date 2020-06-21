@@ -31,7 +31,7 @@ func SearchData(w http.ResponseWriter, r *http.Request) {
   }
   var data = searchDataMap["data"].(map[string]interface{})
   var offerList = data["offerList"].([]interface{})
-  db := database.ConnectDB()
+  db := database.DB
   stmtIns, err := db.Prepare("INSERT INTO supplier (name, memberId, creditLevel, shopRepurchaseRate, province, city, url, siteType) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
   if err != nil {
     log.Println("search-data-insert-prepare-error: ", err)

@@ -22,7 +22,7 @@ func DeleteSearchTitle(w http.ResponseWriter, r *http.Request) {
   }
   var id = body["id"]
   log.Println("id: ", id)
-  db := database.ConnectDB()
+  db := database.DB
   stmtDelete, err := db.Prepare("DELETE FROM searchItem WHERE id = ?")
   if err != nil {
     log.Println("delete-search-title-prepare-error: ", err)

@@ -14,8 +14,8 @@ import (
 )
 
 func PddItemList(w http.ResponseWriter, r *http.Request) {
-  db := database.ConnectDB()
-  rows, err := db.Query("SELECT id, quantity, skuGroupPriceMin, skuGroupPriceMax, pddId, goodsName, displayPriority, thumbUrl, isOnsale, soldQuantity, outGoodsSn, soldQuantityForThirtyDays, favCnt, ifNewGoods, goodsInfoScr, createdAt FROM pddItem")
+  db := database.DB
+  rows, err := db.Query("SELECT id, quantity, skuGroupPriceMin, skuGroupPriceMax, pddId, goodsName, displayPriority, thumbUrl, isOnsale, soldQuantity, outGoodsSn, soldQuantityForThirtyDays, favCnt, ifNewGoods, goodsInfoScr, createdAt FROM pddItem ORDER BY createdAt DESC")
   if err != nil {
     log.Println("pdd-item-list-query-error: ", err)
   }

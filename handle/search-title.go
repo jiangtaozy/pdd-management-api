@@ -21,7 +21,7 @@ func SearchTitle(w http.ResponseWriter, r *http.Request) {
     log.Println("search-data-error: ", err)
   }
   var searchTitle = body["searchTitle"].(string)
-  db := database.ConnectDB()
+  db := database.DB
   var count int
   err = db.QueryRow("SELECT COUNT(*) FROM searchItem WHERE name = ?", searchTitle).Scan(&count)
   if err != nil {

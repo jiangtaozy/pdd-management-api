@@ -22,7 +22,7 @@ func UpdateSearchTitle(w http.ResponseWriter, r *http.Request) {
   }
   var id = body["id"]
   var name = body["name"].(string)
-  db := database.ConnectDB()
+  db := database.DB
   stmtUpdate, err := db.Prepare("UPDATE searchItem SET name = ? WHERE id = ?")
   if err != nil {
     log.Println("update-search-title-prepare-error: ", err)

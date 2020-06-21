@@ -14,8 +14,8 @@ import (
 )
 
 func SearchTitleList(w http.ResponseWriter, r *http.Request) {
-  db := database.ConnectDB()
-  rows, err := db.Query("SELECT * FROM searchItem")
+  db := database.DB
+  rows, err := db.Query("SELECT * FROM searchItem ORDER BY id DESC")
   if err != nil {
     log.Println("search-title-list-query-error: ", err)
   }

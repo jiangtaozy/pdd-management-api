@@ -20,7 +20,7 @@ func Stall(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     log.Println("stall-decode-body-error: ", err)
   }
-  db := database.ConnectDB()
+  db := database.DB
   var count int
   err = db.QueryRow("SELECT COUNT(*) FROM supplier WHERE id = ?", body["id"]).Scan(&count)
   if err != nil {

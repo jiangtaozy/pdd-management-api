@@ -28,7 +28,7 @@ func UploadAdPlanData(w http.ResponseWriter, r *http.Request) {
     log.Println("upload-ad-plan-data-unmarshal-error: ", err)
   }
   var result = adPlanMap["result"].([]interface{})
-  db := database.ConnectDB()
+  db := database.DB
   stmtInsert, err := db.Prepare("INSERT INTO pddAdPlan (mallId, planId, planName, stickTime, isStick, scenesType) VALUES(?, ?, ?, ?, ?, ?)")
   if err != nil {
     log.Println("upload-ad-plan-data-insert-prepare-error: ", err)

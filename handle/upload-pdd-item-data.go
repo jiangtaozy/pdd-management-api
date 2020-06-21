@@ -29,7 +29,7 @@ func UploadPddItemData(w http.ResponseWriter, r *http.Request) {
   }
   var result = pddGoodsMap["result"].(map[string]interface{})
   var goodsList = result["goods_list"].([]interface{})
-  db := database.ConnectDB()
+  db := database.DB
   stmtInsert, err := db.Prepare("INSERT INTO pddItem (quantity, score, resource, priority, skuGroupPriceMin, skuGroupPriceMax, skuPriceMin, skuPriceMax, originSkuGroupPriceMin, originSkuGroupPriceMax, pddId, goodsName, goodsSn, goodsType, catId, catName, eventType, displayPriority, reserveQuantity, hdThumbUrl, imageUrl, thumbUrl, isOnsale, soldQuantity, offSaleCheck, onsaleCheck, editCheck, grayGoodsHighQualityRefund, shareDesc, goodsDesc, activityTitle, isCardSecret, marketPrice, outGoodsSn, soldQuantityForThirtyDays, favCnt, multiTreasure, multiTreasureStatus, ifNewGoods, tagCategoryList, titleScrFlag, titleDesc, propsScrFlag, propsDesc, galleryScrFlag, galleryDesc, galleryVideoScrFlag, longGraphScrFlag, whiteGraphScrFlag, materialScrFlag, goodsInfoScr, goodsInfoScoreUpdateInfoHint, createdAt, preSaleTime, shipmentLimitSecond, isGroupPreSale, guideTarget, overSell, marketLabels, labels, skuType, isMoreSku, skuList, rejectStatus, rejectReason) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
   if err != nil {
     log.Println("upload-pdd-item-data-insert-prepare-error: ", err)

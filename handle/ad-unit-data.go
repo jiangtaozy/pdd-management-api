@@ -29,7 +29,7 @@ func AdUnitData(w http.ResponseWriter, r *http.Request) {
   }
   result := unitDataMap["result"].(map[string]interface{})
   list := result["result"].([]interface{})
-  db := database.ConnectDB()
+  db := database.DB
   stmtInsert, err := db.Prepare("INSERT INTO pddAdUnitDailyData (adId, impression, click, ctr, transactionCost, spend, roi, orderNum, cpc, cvr, gmv, cpm, mallFavNum, goodsFavNum, inquiryNum, uniqueView, rankAverage, rankMedian, avgPayAmount, appActivateNum, costPerAppActivate, appActivateRate, appRegisterNum, costPerAppRegister, appPayNum, costPerAppPay, date, entityId, dimensionType) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
   if err != nil {
     log.Println("ad-unit-data-insert-prepare-error: ", err)

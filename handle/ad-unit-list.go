@@ -18,7 +18,7 @@ func AdUnitList(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
   planIdArray := query["planId"]
   planId := planIdArray[0]
-  db := database.ConnectDB()
+  db := database.DB
   rows, err := db.Query("SELECT mallId, planId, adId, adName, goodsId, goodsName, scenesType FROM pddAdUnit WHERE planId = ?", planId)
   if err != nil {
     log.Println("ad-unit-list-query-error: ", err)

@@ -17,7 +17,7 @@ func SearchTitleById(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
   idArray := query["id"]
   id := idArray[0]
-  db := database.ConnectDB()
+  db := database.DB
   var title string
   err := db.QueryRow("SELECT name FROM searchItem WHERE id = ?", id).Scan(&title)
   if err != nil {

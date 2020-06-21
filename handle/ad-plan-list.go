@@ -15,7 +15,7 @@ import (
 )
 
 func AdPlanList(w http.ResponseWriter, r *http.Request) {
-  db := database.ConnectDB()
+  db := database.DB
   rows, err := db.Query("SELECT mallId, planId, planName, stickTime, isStick, scenesType FROM pddAdPlan")
   if err != nil {
     log.Println("ad-plan-list-query-error: ", err)

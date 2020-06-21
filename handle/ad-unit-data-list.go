@@ -17,7 +17,7 @@ func AdUnitDataList(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
   adIdArray := query["adId"]
   adId := adIdArray[0]
-  db := database.ConnectDB()
+  db := database.DB
   rows, err := db.Query("SELECT adId, impression, click, ctr, transactionCost, spend, roi, orderNum, cpc, cvr, gmv, cpm, mallFavNum, goodsFavNum, inquiryNum, uniqueView, rankAverage, rankMedian, avgPayAmount, appActivateNum, costPerAppActivate, appActivateRate, appRegisterNum, costPerAppRegister, appPayNum, costPerAppPay, date FROM pddAdUnitDailyData WHERE adId = ? ORDER BY date ASC", adId)
   if err != nil {
     log.Println("ad-unit-data-list-query-error: ", err)

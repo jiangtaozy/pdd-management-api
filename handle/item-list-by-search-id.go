@@ -17,7 +17,7 @@ func ItemListBySearchId(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
   idArray := query["searchId"]
   searchId := idArray[0]
-  db := database.ConnectDB()
+  db := database.DB
   rows, err := db.Query("SELECT item.id, item.name, item.price, item.imgUrl, item.detailUrl, item.siteType, item.originalId, item.supplierId, item.saleQuantity, item.quantitySumMonth, item.gmv30dRt, item.searchId, item.suitPrice, item.shippingPrice, item.forSell, item.imgUrlOf100x100, supplier.name, supplier.creditLevel, supplier.shopRepurchaseRate, supplier.province, supplier.city FROM item LEFT JOIN supplier ON item.supplierId = supplier.id WHERE item.searchId = ?", searchId)
   if err != nil {
     log.Println("item-list-query-error: ", err)

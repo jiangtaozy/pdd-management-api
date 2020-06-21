@@ -24,7 +24,7 @@ func UpdateItemSuitShippingPrice(w http.ResponseWriter, r *http.Request) {
   var suitPrice = body["suitPrice"]
   var shippingPrice = body["shippingPrice"]
   var forSell = body["forSell"]
-  db := database.ConnectDB()
+  db := database.DB
   stmtUpdate, err := db.Prepare("UPDATE item SET suitPrice = ?, shippingPrice = ?, forSell = ? WHERE id = ?")
   if err != nil {
     log.Println("update-item-suit-shipping-price-prepare-error: ", err)

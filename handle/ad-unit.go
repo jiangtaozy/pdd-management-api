@@ -18,7 +18,7 @@ func AdUnit(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
   adIdArray := query["adId"]
   adId := adIdArray[0]
-  db := database.ConnectDB()
+  db := database.DB
   var (
     adName string
     goodsId int64

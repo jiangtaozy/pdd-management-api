@@ -35,7 +35,7 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
     findSelector := ".insideBox .pic .ProductListItem_HoverInfo_" + productid
     brandname, _ := e.DOM.Find(findSelector).Attr("brandname")
     brandurl, _ := e.DOM.Find(findSelector).Attr("brandurl")
-    db := database.ConnectDB()
+    db := database.DB
     // insert search item
     priceStr = strings.Replace(priceStr, "￥", "", -1)
     price, err := strconv.ParseFloat(priceStr, 64)
