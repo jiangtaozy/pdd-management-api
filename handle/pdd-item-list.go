@@ -11,11 +11,12 @@ import (
   "log"
   "net/http"
   "github.com/jiangtaozy/pdd-management-api/database"
+  "database/sql"
 )
 
 func PddItemList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT id, quantity, skuGroupPriceMin, skuGroupPriceMax, pddId, goodsName, displayPriority, thumbUrl, isOnsale, soldQuantity, outGoodsSn, soldQuantityForThirtyDays, favCnt, ifNewGoods, goodsInfoScr, createdAt FROM pddItem ORDER BY createdAt DESC")
+  rows, err := db.Query("SELECT pddItem.id, pddItem.quantity, pddItem.skuGroupPriceMin, pddItem.skuGroupPriceMax, pddItem.pddId, pddItem.goodsName, pddItem.displayPriority, pddItem.thumbUrl, pddItem.isOnsale, pddItem.soldQuantity, pddItem.outGoodsSn, pddItem.soldQuantityForThirtyDays, pddItem.favCnt, pddItem.ifNewGoods, pddItem.goodsInfoScr, pddItem.createdAt, searchItem.name FROM pddItem LEFT JOIN searchItem ON pddItem.outGoodsSn = searchItem.id ORDER BY createdAt DESC")
   if err != nil {
     log.Println("pdd-item-list-query-error: ", err)
   }
@@ -39,8 +40,9 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       ifNewGoods bool
       goodsInfoScr string
       createdAt string
+      name sql.NullString
     )
-    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt); err != nil {
+    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
     item := map[string]interface{}{
@@ -60,6 +62,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       "ifNewGoods": ifNewGoods,
       "goodsInfoScr": goodsInfoScr,
       "createdAt": createdAt,
+      "name": name.String,
     }
     itemList = append(itemList, item)
   }
