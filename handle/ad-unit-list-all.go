@@ -60,19 +60,22 @@ func AdUnitListAll(w http.ResponseWriter, r *http.Request) {
       "goodsFavNum": goodsFavNum.Int64,
       "planName": planName,
     }
-    if impression.Valid && click.Valid {
+    if impression.Valid && click.Valid && impression.Int64 != 0 {
       adUnit["ctr"] = float64(click.Int64) / float64(impression.Int64)
     }
-    if click.Valid && orderNum.Valid {
+    if click.Valid && orderNum.Valid && click.Int64 != 0 {
       adUnit["cvr"] = float64(orderNum.Int64) / float64(click.Int64)
     }
-    if click.Valid && mallFavNum.Valid {
+    if click.Valid && mallFavNum.Valid && click.Int64 != 0 {
       adUnit["cmfr"] = float64(mallFavNum.Int64) / float64(click.Int64)
     }
-    if click.Valid && goodsFavNum.Valid {
+    if click.Valid && goodsFavNum.Valid && click.Int64 != 0 {
       adUnit["cgfr"] = float64(goodsFavNum.Int64) / float64(click.Int64)
     }
     adUnitList = append(adUnitList, adUnit)
   }
-  json.NewEncoder(w).Encode(adUnitList)
+  err = json.NewEncoder(w).Encode(adUnitList)
+  if err != nil {
+    log.Println("ad-unit-list-all-encode-error: ", err)
+  }
 }
