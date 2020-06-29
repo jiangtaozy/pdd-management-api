@@ -15,7 +15,7 @@ import (
 
 func AdDayData(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT SUM(impression) impression, SUM(click) click, date from pddAdUnitDailyData GROUP BY date ORDER BY date ASC")
+  rows, err := db.Query("SELECT SUM(impression) impression, SUM(click) click, SUM(spend) spend, SUM(orderNum) orderNum, SUM(gmv) gmv, SUM(mallFavNum) mallFavNum, SUM(goodsFavNum) goodsFavNum, date from pddAdUnitDailyData GROUP BY date ORDER BY date ASC")
   if err != nil {
     log.Println("ad-day-data-query-error: ", err)
   }
@@ -25,9 +25,14 @@ func AdDayData(w http.ResponseWriter, r *http.Request) {
     var (
       impression int64
       click int64
+      spend int64
+      orderNum int64
+      gmv int64
+      mallFavNum int64
+      goodsFavNum int64
       date string
     )
-    err := rows.Scan(&impression, &click, &date)
+    err := rows.Scan(&impression, &click, &spend, &orderNum, &gmv, &mallFavNum, &goodsFavNum, &date)
     if err != nil {
       log.Println("ad-day-data-scan-error: ", err)
     }
@@ -35,6 +40,11 @@ func AdDayData(w http.ResponseWriter, r *http.Request) {
       "impression": impression,
       "click": click,
       "date": date,
+      "spend": spend,
+      "orderNum": orderNum,
+      "gmv": gmv,
+      "mallFavNum": mallFavNum,
+      "goodsFavNum": goodsFavNum,
     }
     adDayDataList = append(adDayDataList, adDayData)
   }
