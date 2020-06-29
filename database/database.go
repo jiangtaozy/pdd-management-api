@@ -34,6 +34,7 @@ func InitDB() {
   //execSQL(createPddAdUnitDailyData)
   //execSQL(createStall)
   //execSQL(addColumnAlter)
+  //execSQL(alter)
 }
 
 func execSQL(sqlStmt string) {
@@ -175,7 +176,9 @@ const alter = `
 const alter = `
   ALTER TABLE pddAdUnitDailyData
   MODIFY COLUMN
-  inquiryNum INTEGER UNSIGNED NOT NULL DEFAULT 0
+  uniqueView INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  MODIFY COLUMN
+  costPerAppPay INTEGER UNSIGNED NOT NULL DEFAULT 0
   ;
 `
 /*
