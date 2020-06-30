@@ -14,16 +14,9 @@ import (
 
 var DB *sql.DB
 
-func ConnectDB() {
-  var err error
-  DB, err = sql.Open("mysql", dbUrl)
-  if err != nil {
-    log.Println("db-initdb-open-error: ", err)
-  }
-}
-
 func InitDB() {
   ConnectDB()
+  //execSQL(alter)
   //execSQL(item)
   //execSQL(supplier)
   //execSQL(searchItem)
@@ -33,8 +26,14 @@ func InitDB() {
   //execSQL(createPddAdUnit)
   //execSQL(createPddAdUnitDailyData)
   //execSQL(createStall)
-  //execSQL(addColumnAlter)
-  //execSQL(alter)
+}
+
+func ConnectDB() {
+  var err error
+  DB, err = sql.Open("mysql", dbUrl)
+  if err != nil {
+    log.Println("db-initdb-open-error: ", err)
+  }
 }
 
 func execSQL(sqlStmt string) {
@@ -107,24 +106,22 @@ const searchItem = `
 const itemOrder = `
   CREATE TABLE IF NOT EXISTS itemOrder (
     id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    mallId INTEGER UNSIGNED NOT NULL COMMENT '店铺id',
     productName VARCHAR(60) NOT NULL COMMENT '拼多多商品',
     orderId VARCHAR(30) NOT NULL COMMENT '拼多多订单号',
-    orderStatus VARCHAR(20) NOT NULL COMMENT '拼多多订单状态',
-    productTotalPrice DECIMAL(10,2) NOT NULL COMMENT '拼多多商品总价(元)',
-    storeDiscount DECIMAL(10,2) NOT NULL COMMENT '店铺优惠折扣(元)',
-    platformDiscount DECIMAL(10,2) NOT NULL COMMENT '平台优惠折扣(元)',
-    postage DECIMAL(10,2) NOT NULL COMMENT '邮费(元)',
-    onsiteInstallationFee DECIMAL(10,2) NOT NULL COMMENT '上门安装费(元)',
-    homeDeliveryFee DECIMAL(10,2) NOT NULL COMMENT '送货入户费(元)',
-    homeDeliveryAndInstallationFee DECIMAL(10,2) NOT NULL COMMENT '送货入户并安装费(元)',
-    userPaidAmount DECIMAL(10,2) NOT NULL COMMENT '用户实付金额(元)',
-    merchantReceivedAmount DECIMAL(10,2) NOT NULL COMMENT '商家实收金额(元)',
-    numberOfProducts INTEGER UNSIGNED NOT NULL COMMENT '商品数量(件)',
-    idCardName VARCHAR(60) NOT NULL DEFAULT '' COMMENT '身份证姓名',
-    identificationNumber VARCHAR(60) NOT NULL DEFAULT '' COMMENT '身份证号码',
+    orderStatus TINYINT NOT NULL COMMENT '拼多多订单状态，3：已发货，待签收；4：已签收，6：未发货退款成功',
+    orderStatusStr VARCHAR(20) NOT NULL COMMENT '拼多多订单状态',
+    productTotalPrice INTEGER UNSIGNED NOT NULL COMMENT '拼多多商品总价(分)',
+    storeDiscount INTEGER UNSIGNED NOT NULL COMMENT '店铺优惠折扣(分)',
+    platformDiscount INTEGER UNSIGNED NOT NULL COMMENT '平台优惠折扣(分)',
+    postage INTEGER UNSIGNED NOT NULL COMMENT '邮费(分)',
+    serviceAmount INTEGER UNSIGNED NOT NULL COMMENT '服务费(分)',
+    onsiteInstallationFee INTEGER UNSIGNED NOT NULL COMMENT '上门安装费(分)',
+    homeDeliveryFee INTEGER UNSIGNED NOT NULL COMMENT '送货入户费(分)',
+    homeDeliveryAndInstallationFee INTEGER UNSIGNED NOT NULL COMMENT '送货入户并安装费(分)',
+    userPaidAmount INTEGER UNSIGNED NOT NULL COMMENT '用户实付金额(分)',
     receiver VARCHAR(60) NOT NULL COMMENT '收货人',
-    phone VARCHAR(11) NOT NULL COMMENT '手机',
-    whetherUnderReview VARCHAR(30) NOT NULL DEFAULT '' COMMENT '是否审核中',
+    phone VARCHAR(11) COMMENT '手机',
     province VARCHAR(20) NOT NULL DEFAULT '' COMMENT '省',
     city VARCHAR(60) NOT NULL DEFAULT '' COMMENT '市',
     district VARCHAR(60) NOT NULL DEFAULT '' COMMENT '区',
@@ -137,33 +134,28 @@ const itemOrder = `
     confirmDeliveryTime DATETIME COMMENT '确认收货时间',
     productId VARCHAR(20) NOT NULL COMMENT '商品id',
     productSku VARCHAR(30) NOT NULL COMMENT '商品规格',
-    userBuyPhone VARCHAR(11) NOT NULL DEFAULT '' COMMENT '用户购买手机号',
+    numberOfProducts INTEGER UNSIGNED NOT NULL COMMENT '商品数量(件)',
     skuId VARCHAR(30) NOT NULL DEFAULT '' COMMENT '样式ID',
     merchantCodeSkuDimension VARCHAR(30) NOT NULL DEFAULT '' COMMENT '商家编码-SKU维度',
     merchantCodeProductDimension VARCHAR(30) NOT NULL DEFAULT '' COMMENT '商家编码-商品维度',
     trackingNumber VARCHAR(30) NOT NULL DEFAULT '' COMMENT '快递单号',
     courierCompany VARCHAR(30) NOT NULL DEFAULT '' COMMENT '快递公司',
-    haitaoCustomsOrderNumber VARCHAR(30) NOT NULL DEFAULT '' COMMENT '海淘清关订单号',
-    paymentId VARCHAR(30) NOT NULL DEFAULT '' COMMENT '支付ID',
-    paymentMethod VARCHAR(30) NOT NULL DEFAULT '' COMMENT '支付方式',
-    whetherDrawOrZeroYuanTry VARCHAR(10) NOT NULL DEFAULT '' COMMENT '是否抽奖或0元试用',
-    whetherShunfengAddPrice VARCHAR(10) NOT NULL DEFAULT '' COMMENT '是否顺丰加价',
     merchantNotes VARCHAR(60) NOT NULL DEFAULT '' COMMENT '商家备注',
-    afterSaleStatus VARCHAR(30) NOT NULL DEFAULT '' COMMENT '售后状态',
+    afterSaleStatus TINYINT UNSIGNED COMMENT '售后状态',
     buyerMessage VARCHAR(100) NOT NULL DEFAULT '' COMMENT '买家留言',
-    relatedGoodsCode VARCHAR(30) NOT NULL DEFAULT '' COMMENT '关联货品编码',
     goodsName VARCHAR(60) NOT NULL DEFAULT '' COMMENT '货品名称',
     goodsType VARCHAR(30) NOT NULL DEFAULT '' COMMENT '货品类型',
-    goodsChild VARCHAR(30) NOT NULL DEFAULT '' COMMENT '子货品',
-    warehouseName VARCHAR(30) NOT NULL DEFAULT '' COMMENT '仓库名称',
-    warehouseAddress VARCHAR(60) NOT NULL DEFAULT '' COMMENT '仓库所在地址',
-    whetherStoreMention VARCHAR(30) NOT NULL DEFAULT '' COMMENT '是否门店自提',
-    storeName VARCHAR(30) NOT NULL DEFAULT '' COMMENT '门店名称',
-    storeCustomCode VARCHAR(30) NOT NULL DEFAULT '' COMMENT '门店自定义编码',
-    travelInformation VARCHAR(30) NOT NULL DEFAULT '' COMMENT '旅行类信息',
-    consumerInformation VARCHAR(30) NOT NULL DEFAULT '' COMMENT '消费者资料'
   );
 `
+
+/*
+const alter = `
+  ALTER TABLE itemOrder
+  MODIFY COLUMN
+  phone VARCHAR(11) COMMENT '手机'
+  ;
+`
+*/
 
 /*
 const alter = `
@@ -173,30 +165,20 @@ const alter = `
   ;
 `
 */
+
 const alter = `
-  ALTER TABLE pddAdUnitDailyData
-  MODIFY COLUMN
-  uniqueView INTEGER UNSIGNED NOT NULL DEFAULT 0,
-  MODIFY COLUMN
-  costPerAppPay INTEGER UNSIGNED NOT NULL DEFAULT 0
+  ALTER TABLE itemOrder
+  ADD
+  mallId INTEGER UNSIGNED NOT NULL COMMENT '店铺id'
+  AFTER id
   ;
 `
+
 /*
 const alter = `
-  ALTER TABLE supplier
-  MODIFY COLUMN url VARCHAR(150) NOT NULL DEFAULT ''
+  ALTER TABLE itemOrder
+  DROP COLUMN
+  afterSaleStatus
   ;
 `
 */
-const addColumnAlter = `
-  ALTER TABLE supplier
-  ADD mallName VARCHAR(20) NOT NULL DEFAULT '',
-  ADD floor TINYINT NOT NULL DEFAULT 1,
-  ADD stallNumber VARCHAR(5) DEFAULT '',
-  ADD phone VARCHAR(11) NOT NULL DEFAULT '',
-  ADD telephone VARCHAR(13) NOT NULL DEFAULT '',
-  ADD wechat VARCHAR(20) NOT NULL DEFAULT '',
-  ADD qq VARCHAR(12) NOT NULL DEFAULT '',
-  ADD dataUrl VARCHAR(30) NOT NULL DEFAULT ''
-  ;
-`
