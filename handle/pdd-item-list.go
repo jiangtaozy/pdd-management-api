@@ -38,7 +38,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       soldQuantityForThirtyDays int64
       favCnt int64
       ifNewGoods bool
-      goodsInfoScr string
+      goodsInfoScr sql.NullString
       createdAt string
       name sql.NullString
     )
@@ -60,7 +60,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       "soldQuantityForThirtyDays": soldQuantityForThirtyDays,
       "favCnt": favCnt,
       "ifNewGoods": ifNewGoods,
-      "goodsInfoScr": goodsInfoScr,
+      "goodsInfoScr": goodsInfoScr.String,
       "createdAt": createdAt,
       "name": name.String,
     }
