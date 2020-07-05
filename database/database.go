@@ -17,6 +17,7 @@ var DB *sql.DB
 func InitDB() {
   ConnectDB()
   //execSQL(alter)
+  //execSQL(order1688)
   //execSQL(item)
   //execSQL(supplier)
   //execSQL(searchItem)

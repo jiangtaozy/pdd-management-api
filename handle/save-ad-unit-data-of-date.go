@@ -80,9 +80,11 @@ func SaveAdUnitDataOfDate(w http.ResponseWriter, r *http.Request) {
       unit["costPerAppPay"] = 0
     }
     if count == 0 {
-      _, err = stmtInsert.Exec(unit["adId"], unit["impression"], unit["click"], unit["ctr"], unit["transactionCost"], unit["spend"], unit["roi"], unit["orderNum"], unit["cpc"], unit["cvr"], unit["gmv"], unit["cpm"], unit["mallFavNum"], unit["goodsFavNum"], unit["inquiryNum"], unit["uniqueView"], unit["rankAverage"], unit["rankMedian"], unit["avgPayAmount"], unit["appActivateNum"], unit["costPerAppActivate"], unit["appActivateRate"], unit["appRegisterNum"], unit["costPerAppRegister"], unit["appPayNum"], unit["costPerAppPay"], date)
-      if err != nil {
-        log.Println("save-ad-unit-data-of-date-insert-exec-error: ", err)
+      if unit["impression"] != nil {
+        _, err = stmtInsert.Exec(unit["adId"], unit["impression"], unit["click"], unit["ctr"], unit["transactionCost"], unit["spend"], unit["roi"], unit["orderNum"], unit["cpc"], unit["cvr"], unit["gmv"], unit["cpm"], unit["mallFavNum"], unit["goodsFavNum"], unit["inquiryNum"], unit["uniqueView"], unit["rankAverage"], unit["rankMedian"], unit["avgPayAmount"], unit["appActivateNum"], unit["costPerAppActivate"], unit["appActivateRate"], unit["appRegisterNum"], unit["costPerAppRegister"], unit["appPayNum"], unit["costPerAppPay"], date)
+        if err != nil {
+          log.Println("save-ad-unit-data-of-date-insert-exec-error: ", err)
+        }
       }
     } else {
       _, err = stmtUpdate.Exec(unit["impression"], unit["click"], unit["ctr"], unit["transactionCost"], unit["spend"], unit["roi"], unit["orderNum"], unit["cpc"], unit["cvr"], unit["gmv"], unit["cpm"], unit["mallFavNum"], unit["goodsFavNum"], unit["inquiryNum"], unit["uniqueView"], unit["rankAverage"], unit["rankMedian"], unit["avgPayAmount"], unit["appActivateNum"], unit["costPerAppActivate"], unit["appActivateRate"], unit["appRegisterNum"], unit["costPerAppRegister"], unit["appPayNum"], unit["costPerAppPay"], unit["adId"], date)
