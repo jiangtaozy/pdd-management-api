@@ -30,7 +30,7 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
   sheet := xlFile.GetSheet(0)
   lines := int(sheet.MaxRow)
   db := database.DB
-  stmtInsert, err := db.Prepare("INSERT INTO order1688 (orderId, sellerCompany, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, postcode, phone, productTitle, price, amount, courierCompany, trackingNumber) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+  stmtInsert, err := db.Prepare("INSERT INTO order1688 (orderId, sellerCompany, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, postcode, phone, productTitle, price, amount, courierCompany, trackingNumber, orderType) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
   if err != nil {
     log.Println("upload-1688-order-file-insert-prepare-error: ", err)
   }
@@ -51,7 +51,14 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
     shippingFare := getCell(sheet.Row(0), row, "运费(元)")
     discount := getCell(sheet.Row(0), row, "涨价或折扣(元)")
     actualPayment := getCell(sheet.Row(0), row, "实付款(元)")
-    orderStatus := getCell(sheet.Row(0), row, "订单状态")
+    orderStatusStr := getCell(sheet.Row(0), row, "订单状态").(string)
+    orderStatusMap := map[string]interface{}{
+      "等待买家确认收货": 2,
+      "已收货": 3,
+      "交易成功": 4,
+      "交易关闭": 6,
+    }
+    orderStatus := orderStatusMap[orderStatusStr]
     orderCreatedTimeString := getCell(sheet.Row(0), row, "订单创建时间")
     orderCreatedTimeFloat, _ := strconv.ParseFloat(orderCreatedTimeString.(string), 64)
     orderCreatedTime := timeFromExcelTime(orderCreatedTimeFloat, false)
@@ -73,13 +80,14 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
       courierCompany = companyNumberArray[0]
       trackingNumber = companyNumberArray[1]
     }
+    orderType := 0
     var orderCount int
     err = db.QueryRow("SELECT COUNT(*) FROM order1688 WHERE orderId = ?", orderId).Scan(&orderCount)
     if err != nil {
       log.Println("upload-1688-order-file-count-error: ", err)
     }
     if orderCount == 0 {
-      _, err = stmtInsert.Exec(orderId, sellerCompany, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, postcode, phone, productTitle, price, amount, courierCompany, trackingNumber)
+      _, err = stmtInsert.Exec(orderId, sellerCompany, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, postcode, phone, productTitle, price, amount, courierCompany, trackingNumber, orderType)
       if err != nil {
         log.Println("upload-1688-order-file-insert-exec-error: ", err)
       }

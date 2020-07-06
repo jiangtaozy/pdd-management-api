@@ -25,7 +25,7 @@ func Order1688List(w http.ResponseWriter, r *http.Request) {
   for rows.Next() {
     var (
       orderId string
-      sellerCompany string
+      sellerCompany sql.NullString
       totalPrice float64
       shippingFare float64
       discount float64
@@ -35,7 +35,7 @@ func Order1688List(w http.ResponseWriter, r *http.Request) {
       orderPaymentTime string
       receiver string
       shippingAddress string
-      postcode string
+      postcode sql.NullString
       phone string
       productTitle string
       price float64
@@ -49,7 +49,7 @@ func Order1688List(w http.ResponseWriter, r *http.Request) {
     }
     order := map[string]interface{}{
       "orderId": orderId,
-      "sellerCompany": sellerCompany,
+      "sellerCompany": sellerCompany.String,
       "totalPrice": totalPrice,
       "shippingFare": shippingFare,
       "discount": discount,
@@ -59,7 +59,7 @@ func Order1688List(w http.ResponseWriter, r *http.Request) {
       "orderPaymentTime": orderPaymentTime,
       "receiver": receiver,
       "shippingAddress": shippingAddress,
-      "postcode": postcode,
+      "postcode": postcode.String,
       "phone": phone,
       "productTitle": productTitle,
       "price": price,
