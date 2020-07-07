@@ -50,6 +50,7 @@ func main() {
   mux.HandleFunc("/upload1688OrderFile", handle.Upload1688OrderFile)
   mux.HandleFunc("/order1688List", handle.Order1688List)
   mux.HandleFunc("/uploadHznzcnOrderFile", handle.UploadHznzcnOrderFile)
+  mux.HandleFunc("/orderStatistics", handle.OrderStatistics)
   mux.Handle("/", http.FileServer(http.Dir("/home/jemo/workspace/pdd/pdd-management-web/build")))
   handler := cors.Default().Handler(mux)
   log.Fatal(http.ListenAndServe(port, handler))
