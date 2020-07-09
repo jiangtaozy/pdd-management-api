@@ -16,7 +16,7 @@ import (
 
 func PddItemList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT pddItem.id, pddItem.quantity, pddItem.skuGroupPriceMin, pddItem.skuGroupPriceMax, pddItem.pddId, pddItem.goodsName, pddItem.displayPriority, pddItem.thumbUrl, pddItem.isOnsale, pddItem.soldQuantity, pddItem.outGoodsSn, pddItem.soldQuantityForThirtyDays, pddItem.favCnt, pddItem.ifNewGoods, pddItem.goodsInfoScr, pddItem.createdAt, searchItem.name FROM pddItem LEFT JOIN searchItem ON pddItem.outGoodsSn = searchItem.id ORDER BY createdAt DESC")
+  rows, err := db.Query("SELECT pddItem.id, pddItem.quantity, pddItem.skuGroupPriceMin, pddItem.skuGroupPriceMax, pddItem.pddId, pddItem.goodsName, pddItem.displayPriority, pddItem.thumbUrl, pddItem.isOnsale, pddItem.soldQuantity, pddItem.outGoodsSn, pddItem.soldQuantityForThirtyDays, pddItem.favCnt, pddItem.ifNewGoods, pddItem.goodsInfoScr, pddItem.createdAt, item.name, item.shippingPrice, item.suitPrice, item.siteType FROM pddItem LEFT JOIN item ON pddItem.outGoodsSn = item.searchId WHERE item.forSell = true OR item.forSell IS NULL ORDER BY pddItem.createdAt DESC")
   if err != nil {
     log.Println("pdd-item-list-query-error: ", err)
   }
@@ -41,8 +41,11 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       goodsInfoScr sql.NullString
       createdAt string
       name sql.NullString
+      shippingPrice sql.NullFloat64
+      suitPrice sql.NullFloat64
+      siteType sql.NullInt32
     )
-    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name); err != nil {
+    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name, &shippingPrice, &suitPrice, &siteType); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
     item := map[string]interface{}{
@@ -63,6 +66,9 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       "goodsInfoScr": goodsInfoScr.String,
       "createdAt": createdAt,
       "name": name.String,
+      "shippingPrice": shippingPrice.Float64,
+      "suitPrice": suitPrice.Float64,
+      "siteType": siteType.Int32,
     }
     itemList = append(itemList, item)
   }
