@@ -16,7 +16,7 @@ import (
 
 func AdUnitListAll(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT adUnit.mallId, adUnit.planId, adUnit.adId, adUnit.adName, adUnit.goodsId, adUnit.goodsName, adUnit.scenesType, adData.impression, adData.click, adData.spend, adData.orderNum, adData.gmv, adData.mallFavNum, adData.goodsFavNum, adPlan.planName FROM pddAdUnit AS adUnit LEFT JOIN (SELECT adId, SUM(impression) impression, SUM(click) click, SUM(spend) spend, SUM(orderNum) orderNum, SUM(gmv) gmv, SUM(mallFavNum) mallFavNum, SUM(goodsFavNum) goodsFavNum FROM pddAdUnitDailyData GROUP BY adId) AS adData ON adUnit.adId = adData.adId LEFT JOIN pddAdPlan AS adPlan ON adUnit.planId = adPlan.planId")
+  rows, err := db.Query("SELECT adUnit.mallId, adUnit.planId, adUnit.adId, adUnit.adName, adUnit.goodsId, adUnit.goodsName, adUnit.scenesType, adData.impression, adData.click, adData.spend, adData.orderNum, adData.gmv, adData.mallFavNum, adData.goodsFavNum, adPlan.planName FROM pddAdUnit AS adUnit LEFT JOIN (SELECT adId, SUM(impression) impression, SUM(click) click, SUM(spend) spend, SUM(orderNum) orderNum, SUM(gmv) gmv, SUM(mallFavNum) mallFavNum, SUM(goodsFavNum) goodsFavNum FROM pddAdUnitDailyData GROUP BY adId) AS adData ON adUnit.adId = adData.adId LEFT JOIN pddAdPlan AS adPlan ON adUnit.planId = adPlan.planId ORDER BY adData.orderNum DESC")
   if err != nil {
     log.Println("ad-unit-list-all-query-error: ", err)
   }

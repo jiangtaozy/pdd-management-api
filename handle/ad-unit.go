@@ -24,8 +24,12 @@ func AdUnit(w http.ResponseWriter, r *http.Request) {
     goodsId int64
     goodsName string
     thumbUrl sql.NullString
+    skuGroupPriceMax int64
+    shippingPrice float64
+    suitPrice float64
+    siteType int32
   )
-  err := db.QueryRow("SELECT pddAdUnit.adId, pddAdUnit.adName, pddAdUnit.goodsId, pddAdUnit.goodsName, pddItem.thumbUrl FROM pddAdUnit LEFT JOIN pddItem ON pddAdUnit.goodsId = pddItem.pddId WHERE pddAdUnit.adId = ?", adId).Scan(&adId, &adName, &goodsId, &goodsName, &thumbUrl)
+  err := db.QueryRow("SELECT pddAdUnit.adId, pddAdUnit.adName, pddAdUnit.goodsId, pddAdUnit.goodsName, pddItem.thumbUrl, pddItem.skuGroupPriceMax, item.shippingPrice, item.suitPrice, item.siteType FROM pddAdUnit LEFT JOIN pddItem ON pddAdUnit.goodsId = pddItem.pddId LEFT JOIN item ON pddItem.outGoodsSn = item.searchId WHERE (item.forSell = true OR item.forSell IS NULL) AND pddAdUnit.adId = ?", adId).Scan(&adId, &adName, &goodsId, &goodsName, &thumbUrl, &skuGroupPriceMax, &shippingPrice, &suitPrice, &siteType)
   if err != nil {
     log.Println("ad-unit-query-error: ", err)
   }
@@ -35,5 +39,9 @@ func AdUnit(w http.ResponseWriter, r *http.Request) {
     "goodsId": goodsId,
     "goodsName": goodsName,
     "thumbUrl": thumbUrl.String,
+    "skuGroupPriceMax": skuGroupPriceMax,
+    "shippingPrice": shippingPrice,
+    "suitPrice": suitPrice,
+    "siteType": siteType,
   })
 }
