@@ -27,6 +27,7 @@ func InitDB() {
   //execSQL(createPddAdUnit)
   //execSQL(createPddAdUnitDailyData)
   //execSQL(createStall)
+  //execSQL(createAdHead)
 }
 
 func ConnectDB() {
