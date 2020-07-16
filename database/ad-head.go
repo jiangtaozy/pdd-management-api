@@ -9,7 +9,8 @@ package database
 const createAdHead =`
   CREATE TABLE IF NOT EXISTS adHead (
     id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    headId INTEGER UNSIGNED NOT NULL COMMENT '团长id',
+    headId INTEGER UNSIGNED COMMENT '团长id',
+    headName VARCHAR(32) COMMENT '团长名称',
     dodokCommission INTEGER UNSIGNED COMMENT '多多客佣金%',
     headCommission INTEGER UNSIGNED COMMENT '团长佣金%',
     coupon INTEGER UNSIGNED COMMENT '优惠券金额',

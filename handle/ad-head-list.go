@@ -16,7 +16,7 @@ import (
 
 func AdHeadList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT id, headId, dodokCommission, headCommission, coupon, wechatNickname, wechatNumber, pddNickname FROM adHead")
+  rows, err := db.Query("SELECT id, headId, headName, dodokCommission, headCommission, coupon, wechatNickname, wechatNumber, pddNickname FROM adHead")
   if err != nil {
     log.Println("ad-head-list-query-error: ", err)
   }
@@ -25,7 +25,8 @@ func AdHeadList(w http.ResponseWriter, r *http.Request) {
   for rows.Next() {
     var (
       id int64
-      headId int64
+      headId sql.NullInt64
+      headName sql.NullString
       dodokCommission sql.NullInt64
       headCommission sql.NullInt64
       coupon sql.NullInt64
@@ -33,12 +34,13 @@ func AdHeadList(w http.ResponseWriter, r *http.Request) {
       wechatNumber sql.NullString
       pddNickname sql.NullString
     )
-    if err := rows.Scan(&id, &headId, &dodokCommission, &headCommission, &coupon, &wechatNickname, &wechatNumber, &pddNickname); err != nil {
+    if err := rows.Scan(&id, &headId, &headName, &dodokCommission, &headCommission, &coupon, &wechatNickname, &wechatNumber, &pddNickname); err != nil {
       log.Println("ad-head-list-scan-error: ", err)
     }
     adHead := map[string]interface{}{
       "id": id,
-      "headId": headId,
+      "headId": headId.Int64,
+      "headName": headName.String,
       "dodokCommission": dodokCommission.Int64,
       "headCommission": headCommission.Int64,
       "coupon": coupon.Int64,

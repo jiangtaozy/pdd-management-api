@@ -28,20 +28,20 @@ func AdHead(w http.ResponseWriter, r *http.Request) {
     log.Println("ad-head-count-error: ", err)
   }
   if count == 0 {
-    stmtInsert, err := db.Prepare("INSERT INTO adHead (headId, dodokCommission, headCommission, coupon, wechatNickname, wechatNumber, pddNickname) VALUES(?, ?, ?, ?, ?, ?, ?)")
+    stmtInsert, err := db.Prepare("INSERT INTO adHead (headId, headName, dodokCommission, headCommission, coupon, wechatNickname, wechatNumber, pddNickname) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
     if err != nil {
       log.Println("ad-head-insert-prepare-error: ", err)
     }
-    _, err = stmtInsert.Exec(body["headId"], body["dodokCommission"], body["headCommission"], body["coupon"], body["wechatNickname"], body["wechatNumber"], body["pddNickname"])
+    _, err = stmtInsert.Exec(body["headId"], body["headName"], body["dodokCommission"], body["headCommission"], body["coupon"], body["wechatNickname"], body["wechatNumber"], body["pddNickname"])
     if err != nil {
       log.Println("ad-head-insert-exec-error: ", err)
     }
   } else {
-    stmtUpdate, err := db.Prepare("UPDATE adHead SET headId = ?, dodokCommission = ?, headCommission = ?, coupon = ?, wechatNickname = ?, wechatNumber = ?, pddNickname = ? WHERE id = ?")
+    stmtUpdate, err := db.Prepare("UPDATE adHead SET headId = ?, headName = ?, dodokCommission = ?, headCommission = ?, coupon = ?, wechatNickname = ?, wechatNumber = ?, pddNickname = ? WHERE id = ?")
     if err != nil {
       log.Println("ad-head-update-prepare-error: ", err)
     }
-    _, err = stmtUpdate.Exec(body["headId"], body["dodokCommission"], body["headCommission"], body["coupon"], body["wechatNickname"], body["wechatNumber"], body["pddNickname"], body["id"])
+    _, err = stmtUpdate.Exec(body["headId"], body["headName"], body["dodokCommission"], body["headCommission"], body["coupon"], body["wechatNickname"], body["wechatNumber"], body["pddNickname"], body["id"])
     if err != nil {
       log.Println("ad-head-update-exec-error", err)
     }

@@ -150,14 +150,12 @@ const itemOrder = `
   );
 `
 
-/*
 const alter = `
-  ALTER TABLE itemOrder
+  ALTER TABLE adHead
   MODIFY COLUMN
-  phone VARCHAR(11) COMMENT '手机'
+  headId INTEGER UNSIGNED COMMENT '团长id'
   ;
 `
-*/
 
 /*
 const alter = `
@@ -168,13 +166,15 @@ const alter = `
 `
 */
 
+/*
 const alter = `
-  ALTER TABLE itemOrder
+  ALTER TABLE adHead
   ADD
-  mallId INTEGER UNSIGNED NOT NULL COMMENT '店铺id'
-  AFTER id
+  headName VARCHAR(32) COMMENT '团长名称'
+  AFTER headId
   ;
 `
+*/
 
 /*
 const alter = `
