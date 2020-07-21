@@ -28,6 +28,7 @@ func InitDB() {
   //execSQL(createPddAdUnitDailyData)
   //execSQL(createStall)
   //execSQL(createAdHead)
+  //execSQL(createPddActivity)
 }
 
 func ConnectDB() {
@@ -150,12 +151,14 @@ const itemOrder = `
   );
 `
 
+/*
 const alter = `
   ALTER TABLE adHead
   MODIFY COLUMN
   headId INTEGER UNSIGNED COMMENT '团长id'
   ;
 `
+*/
 
 /*
 const alter = `
@@ -166,15 +169,13 @@ const alter = `
 `
 */
 
-/*
 const alter = `
-  ALTER TABLE adHead
+  ALTER TABLE pddActivity
   ADD
-  headName VARCHAR(32) COMMENT '团长名称'
-  AFTER headId
+  activityStockQuantity INTEGER UNSIGNED NOT NULL COMMENT '活动优惠券数量'
+  AFTER activityQuantity
   ;
 `
-*/
 
 /*
 const alter = `

@@ -53,6 +53,8 @@ func main() {
   mux.HandleFunc("/orderStatistics", handle.OrderStatistics)
   mux.HandleFunc("/adHeadList", handle.AdHeadList)
   mux.HandleFunc("/adHead", handle.AdHead)
+  mux.HandleFunc("/savePddActivityData", handle.SavePddActivityData)
+  mux.HandleFunc("/pddActivityList", handle.PddActivityList)
   mux.Handle("/", http.FileServer(http.Dir("/home/jemo/workspace/pdd/pdd-management-web/build")))
   handler := cors.Default().Handler(mux)
   log.Fatal(http.ListenAndServe(port, handler))
