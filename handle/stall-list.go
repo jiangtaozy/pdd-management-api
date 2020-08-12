@@ -11,6 +11,7 @@ import (
   "log"
   "net/http"
   "github.com/jiangtaozy/pdd-management-api/database"
+  "database/sql"
 )
 
 func StallList(w http.ResponseWriter, r *http.Request) {
@@ -26,14 +27,14 @@ func StallList(w http.ResponseWriter, r *http.Request) {
       id int64
       name string
       city string
-      mallName string
-      floor int64
-      stallNumber string
-      phone string
-      telephone string
-      wechat string
-      qq string
-      dataUrl string
+      mallName sql.NullString
+      floor sql.NullInt64
+      stallNumber sql.NullString
+      phone sql.NullString
+      telephone sql.NullString
+      wechat sql.NullString
+      qq sql.NullString
+      dataUrl sql.NullString
       url string
       siteType int64
     )
@@ -44,14 +45,14 @@ func StallList(w http.ResponseWriter, r *http.Request) {
       "id": id,
       "name": name,
       "city": city,
-      "mallName": mallName,
-      "floor": floor,
-      "stallNumber": stallNumber,
-      "phone": phone,
-      "telephone": telephone,
-      "wechat": wechat,
-      "qq": qq,
-      "dataUrl": dataUrl,
+      "mallName": mallName.String,
+      "floor": floor.Int64,
+      "stallNumber": stallNumber.String,
+      "phone": phone.String,
+      "telephone": telephone.String,
+      "wechat": wechat.String,
+      "qq": qq.String,
+      "dataUrl": dataUrl.String,
       "url": url,
       "siteType": siteType,
     }

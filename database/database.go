@@ -88,14 +88,14 @@ const supplier = `
     city VARCHAR(60) NOT NULL DEFAULT '',
     url VARCHAR(150) NOT NULL DEFAULT '',
     siteType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '1: 1688, 2: hznzcn',
-    mallName VARCHAR(20) NOT NULL DEFAULT '',
-    floor TINYINT NOT NULL DEFAULT 1,
-    stallNumber VARCHAR(5) DEFAULT '',
-    phone VARCHAR(11) NOT NULL DEFAULT '',
-    telephone VARCHAR(13) NOT NULL DEFAULT '',
-    wechat VARCHAR(20) NOT NULL DEFAULT '',
-    qq VARCHAR(12) NOT NULL DEFAULT '',
-    dataUrl VARCHAR(30) NOT NULL DEFAULT ''
+    mallName VARCHAR(20),
+    floor TINYINT,
+    stallNumber VARCHAR(5),
+    phone VARCHAR(11),
+    telephone VARCHAR(13),
+    wechat VARCHAR(20),
+    qq VARCHAR(12),
+    dataUrl VARCHAR(30)
   );
 `
 
