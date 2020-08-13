@@ -112,6 +112,7 @@ const itemOrder = `
     mallId INTEGER UNSIGNED NOT NULL COMMENT '店铺id',
     productName VARCHAR(60) NOT NULL COMMENT '拼多多商品',
     orderId VARCHAR(30) NOT NULL COMMENT '拼多多订单号',
+    outerOrderId VARCHAR(30) COMMENT '外部订单号1688/女装网订单',
     orderStatus TINYINT NOT NULL COMMENT '拼多多订单状态，3：已发货，待签收；4：已签收，6：未发货退款成功',
     orderStatusStr VARCHAR(20) NOT NULL COMMENT '拼多多订单状态',
     productTotalPrice INTEGER UNSIGNED NOT NULL COMMENT '拼多多商品总价(分)',
@@ -170,10 +171,10 @@ const alter = `
 */
 
 const alter = `
-  ALTER TABLE pddActivity
+  ALTER TABLE itemOrder
   ADD
-  activityStockQuantity INTEGER UNSIGNED NOT NULL COMMENT '活动优惠券数量'
-  AFTER activityQuantity
+  outerOrderId VARCHAR(30) COMMENT '外部订单号1688/女装网订单'
+  AFTER orderId
   ;
 `
 

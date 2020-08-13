@@ -49,9 +49,11 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
     actualPayment := getXlsxCell(rows[0], row, "付款金额")
     orderStatusStr := getXlsxCell(rows[0], row, "订单状态").(string)
     orderStatusMap := map[string]interface{}{
+      "已付款": 1,
       "已发货": 2,
       "已完成": 4,
       "已退换货": 5,
+      "已退款": 5,
     }
     orderStatus := orderStatusMap[orderStatusStr]
     orderCreatedTime := getXlsxCell(rows[0], row, "下单日期")
@@ -70,6 +72,9 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
     paymentMethod := getXlsxCell(rows[0], row, "付款方式")
     outerOrderId := getXlsxCell(rows[0], row, "外部订单号")
     deliveryTime := getXlsxCell(rows[0], row, "发货时间")
+    if deliveryTime == "" {
+      deliveryTime = nil
+    }
     productStatus := getXlsxCell(rows[0], row, "货物状态")
     distributionAmount := getXlsxCell(rows[0], row, "已配数量")
     deliveryAmount := getXlsxCell(rows[0], row, "已发数量")
