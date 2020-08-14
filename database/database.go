@@ -29,6 +29,7 @@ func InitDB() {
   //execSQL(createStall)
   //execSQL(createAdHead)
   //execSQL(createPddActivity)
+  //execSQL(createAdUnitKeyword)
 }
 
 func ConnectDB() {
