@@ -53,10 +53,12 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
     actualPayment := getCell(sheet.Row(0), row, "实付款(元)")
     orderStatusStr := getCell(sheet.Row(0), row, "订单状态").(string)
     orderStatusMap := map[string]interface{}{
+      "等待卖家发货": 1,
       "等待买家确认收货": 2,
       "已收货": 3,
       "交易成功": 4,
       "交易关闭": 6,
+      "已发货": 2,
     }
     orderStatus := orderStatusMap[orderStatusStr]
     orderCreatedTimeString := getCell(sheet.Row(0), row, "订单创建时间")
@@ -90,6 +92,7 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
       _, err = stmtInsert.Exec(orderId, sellerCompany, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, postcode, phone, productTitle, price, amount, courierCompany, trackingNumber, orderType)
       if err != nil {
         log.Println("upload-1688-order-file-insert-exec-error: ", err)
+        log.Println("orderStatusStr: ", orderStatusStr)
       }
     } else {
       _, err = stmtUpdate.Exec(orderStatus, courierCompany, trackingNumber, orderId)

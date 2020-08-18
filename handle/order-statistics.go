@@ -15,7 +15,7 @@ import (
 
 func OrderStatistics(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT itemOrder.mallId, itemOrder.productTotalPrice, itemOrder.storeDiscount, itemOrder.platformDiscount, itemOrder.userPaidAmount, itemOrder.paymentTime, order1688.actualPayment FROM itemOrder AS itemOrder LEFT JOIN order1688 AS order1688 ON itemOrder.trackingNumber = order1688.trackingNumber WHERE itemOrder.orderStatus <> 6 AND order1688.actualPayment IS NOT NULL")
+  rows, err := db.Query("SELECT itemOrder.mallId, itemOrder.productTotalPrice, itemOrder.storeDiscount, itemOrder.platformDiscount, itemOrder.userPaidAmount, itemOrder.paymentTime, order1688.actualPayment FROM itemOrder AS itemOrder LEFT JOIN order1688 AS order1688 ON itemOrder.outerOrderId = order1688.orderId WHERE itemOrder.orderStatus <> 6 AND order1688.actualPayment IS NOT NULL")
   if err != nil {
     log.Println("order-statistics-query-error: ", err)
   }

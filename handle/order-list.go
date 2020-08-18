@@ -16,7 +16,7 @@ import (
 
 func OrderList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT itemOrder.id, itemOrder.mallId, itemOrder.productName, itemOrder.orderId, itemOrder.outerOrderId, itemOrder.orderStatus, itemOrder.orderStatusStr, itemOrder.productTotalPrice, itemOrder.storeDiscount, itemOrder.platformDiscount, itemOrder.postage, itemOrder.userPaidAmount, itemOrder.numberOfProducts, itemOrder.receiver, itemOrder.phone, itemOrder.province, itemOrder.city, itemOrder.district, itemOrder.street, itemOrder.paymentTime, itemOrder.joinSuccessTime, itemOrder.orderConfirmationTime, itemOrder.commitmentDeliveryTime, itemOrder.deliveryTime, itemOrder.confirmDeliveryTime, itemOrder.productId, itemOrder.productSku, itemOrder.skuId, itemOrder.trackingNumber, itemOrder.courierCompany, itemOrder.merchantNotes, itemOrder.afterSaleStatus, itemOrder.buyerMessage, item.detailUrl, order1688.orderId AS joinedOrderId FROM itemOrder LEFT JOIN pddItem ON itemOrder.productId = pddItem.pddId LEFT JOIN order1688 ON itemOrder.trackingNumber = order1688.trackingNumber LEFT JOIN item ON pddItem.outGoodsSn = item.searchId where item.forSell = TRUE OR item.forSell IS NULL ORDER BY itemOrder.paymentTime DESC")
+  rows, err := db.Query("SELECT itemOrder.id, itemOrder.mallId, itemOrder.productName, itemOrder.orderId, itemOrder.outerOrderId, itemOrder.orderStatus, itemOrder.orderStatusStr, itemOrder.productTotalPrice, itemOrder.storeDiscount, itemOrder.platformDiscount, itemOrder.postage, itemOrder.userPaidAmount, itemOrder.numberOfProducts, itemOrder.receiver, itemOrder.phone, itemOrder.province, itemOrder.city, itemOrder.district, itemOrder.street, itemOrder.paymentTime, itemOrder.joinSuccessTime, itemOrder.orderConfirmationTime, itemOrder.commitmentDeliveryTime, itemOrder.deliveryTime, itemOrder.confirmDeliveryTime, itemOrder.productId, itemOrder.productSku, itemOrder.skuId, itemOrder.trackingNumber, itemOrder.courierCompany, itemOrder.merchantNotes, itemOrder.afterSaleStatus, itemOrder.buyerMessage, item.detailUrl, order1688.orderStatus AS outerOrderStatus, order1688.actualPayment, order1688.productStatus FROM itemOrder LEFT JOIN pddItem ON itemOrder.productId = pddItem.pddId LEFT JOIN order1688 ON itemOrder.outerOrderId = order1688.orderId LEFT JOIN item ON pddItem.outGoodsSn = item.searchId where item.forSell = TRUE OR item.forSell IS NULL ORDER BY itemOrder.paymentTime DESC")
   if err != nil {
     log.Println("order-list-query-error: ", err)
   }
@@ -58,9 +58,11 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       afterSaleStatus sql.NullInt32
       buyerMessage string
       detailUrl sql.NullString
-      joinedOrderId sql.NullString
+      outerOrderStatus int64
+      actualPayment float64
+      productStatus sql.NullString
     )
-    if err := rows.Scan(&id, &mallId, &productName, &orderId, &outerOrderId, &orderStatus, &orderStatusStr, &productTotalPrice, &storeDiscount, &platformDiscount, &postage, &userPaidAmount, &numberOfProducts, &receiver, &phone, &province, &city, &district, &street, &paymentTime, &joinSuccessTime, &orderConfirmationTime, &commitmentDeliveryTime, &deliveryTime, &confirmDeliveryTime, &productId, &productSku, &skuId, &trackingNumber, &courierCompany, &merchantNotes, &afterSaleStatus, &buyerMessage, &detailUrl, &joinedOrderId); err != nil {
+    if err := rows.Scan(&id, &mallId, &productName, &orderId, &outerOrderId, &orderStatus, &orderStatusStr, &productTotalPrice, &storeDiscount, &platformDiscount, &postage, &userPaidAmount, &numberOfProducts, &receiver, &phone, &province, &city, &district, &street, &paymentTime, &joinSuccessTime, &orderConfirmationTime, &commitmentDeliveryTime, &deliveryTime, &confirmDeliveryTime, &productId, &productSku, &skuId, &trackingNumber, &courierCompany, &merchantNotes, &afterSaleStatus, &buyerMessage, &detailUrl, &outerOrderStatus, &actualPayment, &productStatus); err != nil {
       log.Println("order-list-scan-error: ", err)
     }
     order := map[string]interface{}{
@@ -98,7 +100,9 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "afterSaleStatus": afterSaleStatus.Int32,
       "buyerMessage": buyerMessage,
       "detailUrl": detailUrl.String,
-      "joinedOrderId": joinedOrderId.String,
+      "outerOrderStatus": outerOrderStatus,
+      "actualPayment": actualPayment,
+      "productStatus": productStatus.String,
     }
     orderList = append(orderList, order)
   }

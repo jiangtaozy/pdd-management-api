@@ -9,7 +9,7 @@ package database
 const order1688 =`
   CREATE TABLE IF NOT EXISTS order1688 (
     id BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    orderId VARCHAR(20) NOT NULL COMMENT '1688 订单号',
+    orderId VARCHAR(20) NOT NULL COMMENT '1688/女装网订单号',
     sellerCompany VARCHAR(60) COMMENT '卖家公司名',
     totalPrice DECIMAL(10,2) NOT NULL COMMENT '货品总价(元)',
     shippingFare DECIMAL(10,2) NOT NULL COMMENT '运费(元)',
