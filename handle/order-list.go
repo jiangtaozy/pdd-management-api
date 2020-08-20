@@ -25,7 +25,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
   for rows.Next() {
     var (
       id int64
-      mallId int64
+      mallId sql.NullInt64
       productName string
       orderId string
       outerOrderId sql.NullString
@@ -39,10 +39,10 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       numberOfProducts int64
       receiver string
       phone sql.NullString
-      province string
-      city string
-      district string
-      street string
+      province sql.NullString
+      city sql.NullString
+      district sql.NullString
+      street sql.NullString
       paymentTime string
       joinSuccessTime string
       orderConfirmationTime string
@@ -51,15 +51,15 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       confirmDeliveryTime sql.NullString
       productId string
       productSku string
-      skuId string
-      trackingNumber string
-      courierCompany string
+      skuId sql.NullString
+      trackingNumber sql.NullString
+      courierCompany sql.NullString
       merchantNotes string
       afterSaleStatus sql.NullInt32
       buyerMessage string
       detailUrl sql.NullString
-      outerOrderStatus int64
-      actualPayment float64
+      outerOrderStatus sql.NullInt32
+      actualPayment sql.NullFloat64
       productStatus sql.NullString
     )
     if err := rows.Scan(&id, &mallId, &productName, &orderId, &outerOrderId, &orderStatus, &orderStatusStr, &productTotalPrice, &storeDiscount, &platformDiscount, &postage, &userPaidAmount, &numberOfProducts, &receiver, &phone, &province, &city, &district, &street, &paymentTime, &joinSuccessTime, &orderConfirmationTime, &commitmentDeliveryTime, &deliveryTime, &confirmDeliveryTime, &productId, &productSku, &skuId, &trackingNumber, &courierCompany, &merchantNotes, &afterSaleStatus, &buyerMessage, &detailUrl, &outerOrderStatus, &actualPayment, &productStatus); err != nil {
@@ -67,7 +67,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
     }
     order := map[string]interface{}{
       "id": id,
-      "mallId": mallId,
+      "mallId": mallId.Int64,
       "productName": productName,
       "orderId": orderId,
       "outerOrderId": outerOrderId.String,
@@ -81,10 +81,10 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "numberOfProducts": numberOfProducts,
       "receiver": receiver,
       "phone": phone.String,
-      "province": province,
-      "city": city,
-      "district": district,
-      "street": street,
+      "province": province.String,
+      "city": city.String,
+      "district": district.String,
+      "street": street.String,
       "paymentTime": paymentTime,
       "joinSuccessTime": joinSuccessTime,
       "orderConfirmationTime": orderConfirmationTime,
@@ -93,15 +93,15 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "confirmDeliveryTime": confirmDeliveryTime.String,
       "productId": productId,
       "productSku": productSku,
-      "skuId": skuId,
-      "trackingNumber": trackingNumber,
-      "courierCompany": courierCompany,
+      "skuId": skuId.String,
+      "trackingNumber": trackingNumber.String,
+      "courierCompany": courierCompany.String,
       "merchantNotes": merchantNotes,
       "afterSaleStatus": afterSaleStatus.Int32,
       "buyerMessage": buyerMessage,
       "detailUrl": detailUrl.String,
-      "outerOrderStatus": outerOrderStatus,
-      "actualPayment": actualPayment,
+      "outerOrderStatus": outerOrderStatus.Int32,
+      "actualPayment": actualPayment.Float64,
       "productStatus": productStatus.String,
     }
     orderList = append(orderList, order)

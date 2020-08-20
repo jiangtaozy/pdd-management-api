@@ -10,6 +10,7 @@ import (
   "encoding/json"
   "log"
   "net/http"
+  "database/sql"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
@@ -23,7 +24,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
   var orderList []interface{}
   for rows.Next() {
     var (
-      mallId string
+      mallId sql.NullString
       productTotalPrice int64
       storeDiscount int64
       platformDiscount int64
@@ -36,7 +37,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       log.Println("order-statistics-scan-error: ", err)
     }
     order := map[string]interface{}{
-      "mallId": mallId,
+      "mallId": mallId.String,
       "productTotalPrice": productTotalPrice,
       "storeDiscount": storeDiscount,
       "platformDiscount": platformDiscount,
