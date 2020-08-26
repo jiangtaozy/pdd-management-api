@@ -17,7 +17,7 @@ import (
 func PddItemList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
-    SELECT pddItem.id, pddItem.quantity, pddItem.skuGroupPriceMin, pddItem.skuGroupPriceMax, pddItem.pddId, pddItem.goodsName, pddItem.displayPriority, pddItem.thumbUrl, pddItem.isOnsale, pddItem.soldQuantity, pddItem.outGoodsSn, pddItem.soldQuantityForThirtyDays, pddItem.favCnt, pddItem.ifNewGoods, pddItem.goodsInfoScr, pddItem.createdAt, item.name, item.shippingPrice, item.suitPrice, item.siteType, pddAdUnit.adId, pddAdUnit.scenesType, adData.impression, adData.click, adData.spend, adData.orderNum, adData.gmv, adData.mallFavNum, adData.goodsFavNum
+    SELECT pddItem.id, pddItem.quantity, pddItem.skuGroupPriceMin, pddItem.skuGroupPriceMax, pddItem.pddId, pddItem.goodsName, pddItem.displayPriority, pddItem.thumbUrl, pddItem.isOnsale, pddItem.soldQuantity, pddItem.outGoodsSn, pddItem.soldQuantityForThirtyDays, pddItem.favCnt, pddItem.ifNewGoods, pddItem.goodsInfoScr, pddItem.createdAt, item.name, item.shippingPrice, item.suitPrice, item.siteType, pddAdUnit.adId, pddAdUnit.scenesType, adData.impression, adData.click, adData.spend, adData.orderNum, adData.gmv, adData.mallFavNum, adData.goodsFavNum, itemOrder.orderStatus, itemOrder.afterSaleStatus, itemOrder.orderStatusStr, itemOrder.userPaidAmount, itemOrder.platformDiscount, itemOrder.orderId, order1688.actualPayment
     FROM pddItem AS pddItem
     LEFT JOIN item AS item
     ON pddItem.outGoodsSn = item.searchId
@@ -28,7 +28,12 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       FROM pddAdUnitDailyData
       GROUP BY adId) AS adData
     ON pddAdUnit.adId = adData.adId
-    WHERE item.forSell = true OR item.forSell IS NULL
+    LEFT JOIN itemOrder AS itemOrder
+    ON pddItem.pddId = itemOrder.productId
+    LEFT JOIN order1688 AS order1688
+    ON itemOrder.outerOrderId = order1688.orderId
+    WHERE (item.forSell = true OR item.forSell IS NULL)
+    AND (itemOrder.afterSaleStatus <> 5 OR itemOrder.afterSaleStatus IS NULL)
     ORDER BY pddItem.createdAt DESC`)
   if err != nil {
     log.Println("pdd-item-list-query-error: ", err)
@@ -66,8 +71,15 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       gmv sql.NullInt64
       mallFavNum sql.NullInt64
       goodsFavNum sql.NullInt64
+      orderStatus sql.NullInt64
+      afterSaleStatus sql.NullInt64
+      orderStatusStr sql.NullString
+      userPaidAmount sql.NullInt64
+      platformDiscount sql.NullInt64
+      orderId sql.NullString
+      actualPayment sql.NullFloat64
     )
-    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name, &shippingPrice, &suitPrice, &siteType, &adId, &scenesType, &impression, &click, &spend, &orderNum, &gmv, &mallFavNum, &goodsFavNum); err != nil {
+    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name, &shippingPrice, &suitPrice, &siteType, &adId, &scenesType, &impression, &click, &spend, &orderNum, &gmv, &mallFavNum, &goodsFavNum, &orderStatus, &afterSaleStatus, &orderStatusStr, &userPaidAmount, &platformDiscount, &orderId, &actualPayment); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
     ad := map[string]interface{}{
@@ -81,13 +93,44 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       "mallFavNum": mallFavNum.Int64,
       "goodsFavNum": goodsFavNum.Int64,
     }
+    order := map[string]interface{}{
+      "orderId": orderId.String,
+      "orderStatus": orderStatus.Int64,
+      "orderStatusStr": orderStatusStr.String,
+      "userPaidAmount": userPaidAmount.Int64,
+      "platformDiscount": platformDiscount.Int64,
+      "afterSaleStatus": afterSaleStatus.Int64,
+      "actualPayment": actualPayment.Float64,
+    }
     hasInList := false
     for i := 0; i < len(itemList); i++ {
       pddItem := itemList[i].(map[string]interface{})
       if pddItem["pddId"] == pddId {
         hasInList = true
         pddAdList := pddItem["adList"].([]interface{})
-        pddItem["adList"] = append(pddAdList, ad)
+        hasInAdList := false
+        for j := 0; j < len(pddAdList); j++ {
+          pddAd := pddAdList[j].(map[string]interface{})
+          if pddAd["adId"] == ad["adId"] {
+            hasInAdList = true
+            break
+          }
+        }
+        if !hasInAdList {
+          pddItem["adList"] = append(pddAdList, ad)
+        }
+        hasInOrderList := false
+        orderList := pddItem["orderList"].([]interface{})
+        for k := 0; k < len(orderList); k++ {
+          pddOrder := orderList[k].(map[string]interface{})
+          if pddOrder["orderId"] == order["orderId"] {
+            hasInOrderList = true
+            break
+          }
+        }
+        if !hasInOrderList {
+          pddItem["orderList"] = append(pddItem["orderList"].([]interface{}), order)
+        }
         break
       }
     }
@@ -95,6 +138,10 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       var adList []interface{}
       if adId.Valid {
         adList = append(adList, ad)
+      }
+      var orderList []interface{}
+      if orderId.Valid {
+        orderList = append(orderList, order)
       }
       item := map[string]interface{}{
         "id": id,
@@ -118,6 +165,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "suitPrice": suitPrice.Float64,
         "siteType": siteType.Int32,
         "adList": adList,
+        "orderList": orderList,
       }
       itemList = append(itemList, item)
     }
