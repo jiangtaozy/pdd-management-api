@@ -154,9 +154,9 @@ const itemOrder = `
 `
 
 const alter = `
-  ALTER TABLE itemOrder
+  ALTER TABLE pddAdPlan
   MODIFY COLUMN
-  goodsType VARCHAR(30) COMMENT '货品类型'
+  scenesType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0: 多多搜索，1: 聚焦展位，2: 多多场景'
   ;
 `
 
