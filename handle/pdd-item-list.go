@@ -17,21 +17,57 @@ import (
 func PddItemList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
-    SELECT pddItem.id, pddItem.quantity, pddItem.skuGroupPriceMin, pddItem.skuGroupPriceMax, pddItem.pddId, pddItem.goodsName, pddItem.displayPriority, pddItem.thumbUrl, pddItem.isOnsale, pddItem.soldQuantity, pddItem.outGoodsSn, pddItem.soldQuantityForThirtyDays, pddItem.favCnt, pddItem.ifNewGoods, pddItem.goodsInfoScr, pddItem.createdAt, item.name, item.shippingPrice, item.suitPrice, item.siteType, pddAdUnit.adId, pddAdUnit.scenesType, adData.impression, adData.click, adData.spend, adData.orderNum, adData.gmv, adData.mallFavNum, adData.goodsFavNum, itemOrder.orderStatus, itemOrder.afterSaleStatus, itemOrder.orderStatusStr, itemOrder.userPaidAmount, itemOrder.platformDiscount, itemOrder.orderId, order1688.actualPayment
+    SELECT
+      pddItem.id,
+      pddItem.quantity,
+      pddItem.skuGroupPriceMin,
+      pddItem.skuGroupPriceMax,
+      pddItem.pddId,
+      pddItem.goodsName,
+      pddItem.displayPriority,
+      pddItem.thumbUrl,
+      pddItem.isOnsale,
+      pddItem.soldQuantity,
+      pddItem.outGoodsSn,
+      pddItem.soldQuantityForThirtyDays,
+      pddItem.favCnt,
+      pddItem.ifNewGoods,
+      pddItem.goodsInfoScr,
+      pddItem.createdAt,
+      item.name,
+      item.shippingPrice,
+      item.suitPrice,
+      item.siteType,
+      pddAdUnit.adId,
+      pddAdUnit.scenesType,
+      adData.impression,
+      adData.click,
+      adData.spend,
+      adData.orderNum,
+      adData.gmv,
+      adData.mallFavNum,
+      adData.goodsFavNum,
+      itemOrder.orderStatus,
+      itemOrder.afterSaleStatus,
+      itemOrder.orderStatusStr,
+      itemOrder.userPaidAmount,
+      itemOrder.platformDiscount,
+      itemOrder.orderId,
+      order1688.actualPayment
     FROM pddItem AS pddItem
     LEFT JOIN item AS item
-    ON pddItem.outGoodsSn = item.searchId
+      ON pddItem.outGoodsSn = item.searchId
     LEFT JOIN pddAdUnit AS pddAdUnit
-    ON pddItem.pddId = pddAdUnit.goodsId
+      ON pddItem.pddId = pddAdUnit.goodsId
     LEFT JOIN
       (SELECT adId, SUM(impression) impression, SUM(click) click, SUM(spend) spend, SUM(orderNum) orderNum, SUM(gmv) gmv, SUM(mallFavNum) mallFavNum, SUM(goodsFavNum) goodsFavNum
       FROM pddAdUnitDailyData
       GROUP BY adId) AS adData
-    ON pddAdUnit.adId = adData.adId
+      ON pddAdUnit.adId = adData.adId
     LEFT JOIN itemOrder AS itemOrder
-    ON pddItem.pddId = itemOrder.productId
+      ON pddItem.pddId = itemOrder.productId
     LEFT JOIN order1688 AS order1688
-    ON itemOrder.outerOrderId = order1688.orderId
+      ON itemOrder.outerOrderId = order1688.orderId
     WHERE (item.forSell = true OR item.forSell IS NULL)
     AND (itemOrder.afterSaleStatus <> 5 OR itemOrder.afterSaleStatus IS NULL)
     ORDER BY pddItem.createdAt DESC`)
