@@ -147,7 +147,7 @@ const itemOrder = `
     trackingNumber VARCHAR(30) COMMENT '快递单号',
     courierCompany VARCHAR(30) COMMENT '快递公司',
     merchantNotes VARCHAR(60) NOT NULL DEFAULT '' COMMENT '商家备注',
-    afterSaleStatus TINYINT UNSIGNED COMMENT '售后状态',
+    afterSaleStatus TINYINT UNSIGNED COMMENT '售后状态: 0无售后, 5退款成功, 11买家已发货，待商家处理, 12售后取消，退款失败',
     buyerMessage VARCHAR(100) NOT NULL DEFAULT '' COMMENT '买家留言',
     goodsName VARCHAR(60) NOT NULL DEFAULT '' COMMENT '货品名称',
     goodsType VARCHAR(30) COMMENT '货品类型',

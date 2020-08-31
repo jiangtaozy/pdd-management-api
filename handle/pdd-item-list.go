@@ -38,6 +38,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       item.shippingPrice,
       item.suitPrice,
       item.siteType,
+      item.detailUrl,
       pddAdUnit.adId,
       pddAdUnit.scenesType,
       adData.impression,
@@ -98,6 +99,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       shippingPrice sql.NullFloat64
       suitPrice sql.NullFloat64
       siteType sql.NullInt32
+      detailUrl sql.NullString
       adId sql.NullInt64
       scenesType sql.NullInt64
       impression sql.NullInt64
@@ -115,7 +117,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       orderId sql.NullString
       actualPayment sql.NullFloat64
     )
-    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name, &shippingPrice, &suitPrice, &siteType, &adId, &scenesType, &impression, &click, &spend, &orderNum, &gmv, &mallFavNum, &goodsFavNum, &orderStatus, &afterSaleStatus, &orderStatusStr, &userPaidAmount, &platformDiscount, &orderId, &actualPayment); err != nil {
+    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name, &shippingPrice, &suitPrice, &siteType, &detailUrl, &adId, &scenesType, &impression, &click, &spend, &orderNum, &gmv, &mallFavNum, &goodsFavNum, &orderStatus, &afterSaleStatus, &orderStatusStr, &userPaidAmount, &platformDiscount, &orderId, &actualPayment); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
     ad := map[string]interface{}{
@@ -200,6 +202,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "shippingPrice": shippingPrice.Float64,
         "suitPrice": suitPrice.Float64,
         "siteType": siteType.Int32,
+        "detailUrl": detailUrl.String,
         "adList": adList,
         "orderList": orderList,
       }

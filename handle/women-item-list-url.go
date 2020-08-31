@@ -38,7 +38,7 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
     db := database.DB
     // insert search item
     priceStr = strings.Replace(priceStr, "￥", "", -1)
-    price, err := strconv.ParseFloat(priceStr, 64)
+    price, err := strconv.ParseFloat(strings.Trim(priceStr, " "), 64)
     if err != nil {
       log.Println("women-item-list-url-parse-float-error: ", err)
     }
@@ -100,6 +100,16 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
       _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, searchId, price, true)
       if err != nil {
         log.Println("women-item-list-url-insert-item-exec-error: ", err)
+      }
+    } else {
+      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ? WHERE searchId = ? AND supplierId = ?")
+      if err != nil {
+        log.Println("women-item-list-url-update-item-prepare-error: ", err)
+      }
+      defer updateItem.Close()
+      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, searchId, supplierId)
+      if err != nil {
+        log.Println("women-item-list-url-update-item-exec-error: ", err)
       }
     }
   })

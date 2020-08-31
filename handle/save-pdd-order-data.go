@@ -50,7 +50,10 @@ func SavePddOrderData(w http.ResponseWriter, r *http.Request) {
     payTime := time.Unix(int64(order["confirm_time"].(float64)), 0)
     groupTime := time.Unix(int64(order["confirm_time"].(float64)), 0)
     confirmTime := time.Unix(int64(order["confirm_time"].(float64)), 0)
-    promiseShippingTime := time.Unix(int64(order["promise_shipping_time"].(float64)), 0)
+    var promiseShippingTime time.Time
+    if order["promise_shipping_time"] != nil {
+      promiseShippingTime = time.Unix(int64(order["promise_shipping_time"].(float64)), 0)
+    }
     shippingTime := time.Unix(int64(order["shipping_time"].(float64)), 0)
     receiveTime := time.Unix(int64(order["shipping_time"].(float64)), 0)
     if orderCount == 0 {
