@@ -103,6 +103,7 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
         itemOrder.afterSaleStatus <> 5
         OR itemOrder.afterSaleStatus IS NULL
       )
+      AND itemOrder.orderStatus <> 2
   `, id)
   if err != nil {
     log.Println("pdd-item-data-query-order-error: ", err)

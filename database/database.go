@@ -115,7 +115,7 @@ const itemOrder = `
     productName VARCHAR(60) NOT NULL COMMENT '拼多多商品',
     orderId VARCHAR(30) NOT NULL COMMENT '拼多多订单号',
     outerOrderId VARCHAR(30) COMMENT '外部订单号1688/女装网订单',
-    orderStatus TINYINT NOT NULL COMMENT '拼多多订单状态，3：已发货，待签收；4：已签收，6：未发货退款成功',
+    orderStatus TINYINT NOT NULL COMMENT '拼多多订单状态，2: 已取消，3：已发货，待签收；4：已签收，6：未发货退款成功',
     orderStatusStr VARCHAR(20) NOT NULL COMMENT '拼多多订单状态',
     productTotalPrice INTEGER UNSIGNED NOT NULL COMMENT '拼多多商品总价(分)',
     storeDiscount INTEGER UNSIGNED NOT NULL COMMENT '店铺优惠折扣(分)',

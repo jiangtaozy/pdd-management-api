@@ -70,7 +70,6 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
     LEFT JOIN order1688 AS order1688
       ON itemOrder.outerOrderId = order1688.orderId
     WHERE (item.forSell = true OR item.forSell IS NULL)
-    AND (itemOrder.afterSaleStatus <> 5 OR itemOrder.afterSaleStatus IS NULL)
     ORDER BY pddItem.createdAt DESC`)
   if err != nil {
     log.Println("pdd-item-list-query-error: ", err)
