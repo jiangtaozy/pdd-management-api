@@ -15,7 +15,19 @@ import (
 
 func SearchTitleList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT * FROM searchItem ORDER BY id DESC")
+  rows, err := db.Query(`
+    SELECT
+      searchItem.id,
+      searchItem.name,
+      item.detailUrl
+    FROM searchItem
+    LEFT JOIN item
+      ON searchItem.id = item.searchId
+    WHERE
+      item.forSell = true OR
+      item.forSell IS NULL
+    ORDER BY id DESC
+  `)
   if err != nil {
     log.Println("search-title-list-query-error: ", err)
   }
@@ -25,13 +37,15 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     var (
       id int64
       name string
+      detailUrl string
     )
-    if err := rows.Scan(&id, &name); err != nil {
+    if err := rows.Scan(&id, &name, &detailUrl); err != nil {
       log.Println("search-title-list-scan-error: ", err)
     }
     title := map[string]interface{}{
       "id": id,
       "name": name,
+      "detailUrl": detailUrl,
     }
     titleList = append(titleList, title)
   }
