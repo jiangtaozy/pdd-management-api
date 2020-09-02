@@ -10,6 +10,7 @@ import (
   "encoding/json"
   "log"
   "net/http"
+  "database/sql"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
@@ -37,7 +38,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     var (
       id int64
       name string
-      detailUrl string
+      detailUrl sql.NullString
     )
     if err := rows.Scan(&id, &name, &detailUrl); err != nil {
       log.Println("search-title-list-scan-error: ", err)
@@ -45,7 +46,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     title := map[string]interface{}{
       "id": id,
       "name": name,
-      "detailUrl": detailUrl,
+      "detailUrl": detailUrl.String,
     }
     titleList = append(titleList, title)
   }
