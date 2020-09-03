@@ -19,6 +19,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
   rows, err := db.Query(`
     SELECT
     itemOrder.mallId,
+    itemOrder.orderId,
     itemOrder.productTotalPrice,
     itemOrder.storeDiscount,
     itemOrder.platformDiscount,
@@ -41,6 +42,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
   for rows.Next() {
     var (
       mallId sql.NullString
+      orderId sql.NullString
       productTotalPrice int64
       storeDiscount int64
       platformDiscount int64
@@ -48,12 +50,13 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       paymentTime string
       actualPayment float64
     )
-    err := rows.Scan(&mallId, &productTotalPrice, &storeDiscount, &platformDiscount, &userPaidAmount, &paymentTime, &actualPayment)
+    err := rows.Scan(&mallId, &orderId, &productTotalPrice, &storeDiscount, &platformDiscount, &userPaidAmount, &paymentTime, &actualPayment)
     if err != nil {
       log.Println("order-statistics-scan-error: ", err)
     }
     order := map[string]interface{}{
       "mallId": mallId.String,
+      "orderId": orderId.String,
       "productTotalPrice": productTotalPrice,
       "storeDiscount": storeDiscount,
       "platformDiscount": platformDiscount,

@@ -35,7 +35,7 @@ func SavePddOrderData(w http.ResponseWriter, r *http.Request) {
     log.Println("save-pdd-order-data-insert-prepare-error: ", err)
   }
   defer stmtInsert.Close()
-  stmtUpdate, err := db.Prepare("UPDATE itemOrder SET mallId = ?, orderStatus = ?, orderStatusStr = ?, deliveryTime = ?, confirmDeliveryTime = ?, trackingNumber = ?, afterSaleStatus = ?, productTotalPrice = ?, storeDiscount = ?, platformDiscount = ?, postage = ?, serviceAmount = ?, onsiteInstallationFee = ?, homeDeliveryFee = ?, homeDeliveryAndInstallationFee = ?, userPaidAmount = ? WHERE orderId = ?")
+  stmtUpdate, err := db.Prepare("UPDATE itemOrder SET mallId = ?, orderStatus = ?, orderStatusStr = ?, paymentTime = ?, joinSuccessTime = ?, orderConfirmationTime = ?, commitmentDeliveryTime = ?, deliveryTime = ?, confirmDeliveryTime = ?, trackingNumber = ?, afterSaleStatus = ?, productTotalPrice = ?, storeDiscount = ?, platformDiscount = ?, postage = ?, serviceAmount = ?, onsiteInstallationFee = ?, homeDeliveryFee = ?, homeDeliveryAndInstallationFee = ?, userPaidAmount = ? WHERE orderId = ?")
   if err != nil {
     log.Println("save-pdd-order-data-update-prepare-error: ", err)
   }
@@ -62,7 +62,7 @@ func SavePddOrderData(w http.ResponseWriter, r *http.Request) {
         log.Println("save-pdd-order-data-insert-exec-error: ", err)
       }
     } else {
-      _, err = stmtUpdate.Exec(order["mall_id"], order["order_status"], order["order_status_str"], shippingTime, receiveTime, order["tracking_number"], order["after_sales_status"], order["goods_amount"], order["merchant_discount"], order["platform_discount"], order["shipping_amount"], order["service_amount"], order["home_install_value"], order["delivery_home_value"], order["delivery_install_value"], order["order_amount"], order["order_sn"])
+      _, err = stmtUpdate.Exec(order["mall_id"], order["order_status"], order["order_status_str"], payTime, groupTime, confirmTime, promiseShippingTime, shippingTime, receiveTime, order["tracking_number"], order["after_sales_status"], order["goods_amount"], order["merchant_discount"], order["platform_discount"], order["shipping_amount"], order["service_amount"], order["home_install_value"], order["delivery_home_value"], order["delivery_install_value"], order["order_amount"], order["order_sn"])
       if err != nil {
         log.Println("save-pdd-order-data-update-exec-error: ", err)
       }
