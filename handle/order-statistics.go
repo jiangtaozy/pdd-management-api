@@ -30,7 +30,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
     LEFT JOIN order1688 AS order1688
     ON itemOrder.outerOrderId = order1688.orderId
     WHERE
-    (itemOrder.afterSaleStatus <> 5 OR itemOrder.afterSaleStatus IS NULL)
+    (itemOrder.afterSaleStatus = 12 OR itemOrder.afterSaleStatus IS NULL)
     AND itemOrder.orderStatus <> 2
     AND order1688.actualPayment IS NOT NULL
   `)

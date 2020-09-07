@@ -94,6 +94,7 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
       if err != nil {
         log.Println("upload-1688-order-file-insert-exec-error: ", err)
         log.Println("orderStatusStr: ", orderStatusStr)
+        log.Println("orderId: ", orderId)
       }
     } else {
       _, err = stmtUpdate.Exec(orderStatus, courierCompany, trackingNumber, orderId)

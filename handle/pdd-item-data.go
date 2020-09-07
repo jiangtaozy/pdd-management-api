@@ -100,7 +100,7 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
       ON itemOrder.outerOrderId = order1688.orderId
     WHERE itemOrder.productId = ?
       AND (
-        itemOrder.afterSaleStatus <> 5
+        itemOrder.afterSaleStatus = 12
         OR itemOrder.afterSaleStatus IS NULL
       )
       AND itemOrder.orderStatus <> 2
