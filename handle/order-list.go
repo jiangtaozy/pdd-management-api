@@ -16,7 +16,59 @@ import (
 
 func OrderList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT itemOrder.id, itemOrder.mallId, itemOrder.productName, itemOrder.orderId, itemOrder.outerOrderId, itemOrder.orderStatus, itemOrder.orderStatusStr, itemOrder.productTotalPrice, itemOrder.storeDiscount, itemOrder.platformDiscount, itemOrder.postage, itemOrder.userPaidAmount, itemOrder.numberOfProducts, itemOrder.receiver, itemOrder.phone, itemOrder.province, itemOrder.city, itemOrder.district, itemOrder.street, itemOrder.paymentTime, itemOrder.joinSuccessTime, itemOrder.orderConfirmationTime, itemOrder.commitmentDeliveryTime, itemOrder.deliveryTime, itemOrder.confirmDeliveryTime, itemOrder.productId, itemOrder.productSku, itemOrder.skuId, itemOrder.trackingNumber, itemOrder.courierCompany, itemOrder.merchantNotes, itemOrder.afterSaleStatus, itemOrder.buyerMessage, item.detailUrl, order1688.orderStatus AS outerOrderStatus, order1688.actualPayment, order1688.productStatus FROM itemOrder LEFT JOIN pddItem ON itemOrder.productId = pddItem.pddId LEFT JOIN order1688 ON itemOrder.outerOrderId = order1688.orderId LEFT JOIN item ON pddItem.outGoodsSn = item.searchId where item.forSell = TRUE OR item.forSell IS NULL ORDER BY itemOrder.paymentTime DESC")
+  rows, err := db.Query(`
+    SELECT
+      itemOrder.id,
+      itemOrder.mallId,
+      itemOrder.productName,
+      itemOrder.orderId,
+      itemOrder.outerOrderId,
+      itemOrder.orderStatus,
+      itemOrder.orderStatusStr,
+      itemOrder.productTotalPrice,
+      itemOrder.storeDiscount,
+      itemOrder.platformDiscount,
+      itemOrder.postage,
+      itemOrder.userPaidAmount,
+      itemOrder.numberOfProducts,
+      itemOrder.receiver,
+      itemOrder.phone,
+      itemOrder.province,
+      itemOrder.city,
+      itemOrder.district,
+      itemOrder.street,
+      itemOrder.paymentTime,
+      itemOrder.joinSuccessTime,
+      itemOrder.orderConfirmationTime,
+      itemOrder.commitmentDeliveryTime,
+      itemOrder.deliveryTime,
+      itemOrder.confirmDeliveryTime,
+      itemOrder.productId,
+      itemOrder.productSku,
+      itemOrder.skuId,
+      itemOrder.trackingNumber,
+      itemOrder.courierCompany,
+      itemOrder.merchantNotes,
+      itemOrder.afterSaleStatus,
+      itemOrder.buyerMessage,
+      item.detailUrl,
+      order1688.orderStatus AS outerOrderStatus,
+      order1688.actualPayment,
+      order1688.productStatus,
+      order1688.afterSaleStatusStr
+    FROM itemOrder
+    LEFT JOIN pddItem
+      ON itemOrder.productId = pddItem.pddId
+    LEFT JOIN order1688
+      ON itemOrder.outerOrderId = order1688.orderId
+    LEFT JOIN item
+      ON pddItem.outGoodsSn = item.searchId
+    WHERE
+      item.forSell = TRUE
+      OR
+      item.forSell IS NULL
+    ORDER BY itemOrder.paymentTime DESC
+  `)
   if err != nil {
     log.Println("order-list-query-error: ", err)
   }
@@ -61,8 +113,48 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       outerOrderStatus sql.NullInt32
       actualPayment sql.NullFloat64
       productStatus sql.NullString
+      afterSaleStatusStr sql.NullString
     )
-    if err := rows.Scan(&id, &mallId, &productName, &orderId, &outerOrderId, &orderStatus, &orderStatusStr, &productTotalPrice, &storeDiscount, &platformDiscount, &postage, &userPaidAmount, &numberOfProducts, &receiver, &phone, &province, &city, &district, &street, &paymentTime, &joinSuccessTime, &orderConfirmationTime, &commitmentDeliveryTime, &deliveryTime, &confirmDeliveryTime, &productId, &productSku, &skuId, &trackingNumber, &courierCompany, &merchantNotes, &afterSaleStatus, &buyerMessage, &detailUrl, &outerOrderStatus, &actualPayment, &productStatus); err != nil {
+    if err := rows.Scan(
+      &id,
+      &mallId,
+      &productName,
+      &orderId,
+      &outerOrderId,
+      &orderStatus,
+      &orderStatusStr,
+      &productTotalPrice,
+      &storeDiscount,
+      &platformDiscount,
+      &postage,
+      &userPaidAmount,
+      &numberOfProducts,
+      &receiver,
+      &phone,
+      &province,
+      &city,
+      &district,
+      &street,
+      &paymentTime,
+      &joinSuccessTime,
+      &orderConfirmationTime,
+      &commitmentDeliveryTime,
+      &deliveryTime,
+      &confirmDeliveryTime,
+      &productId,
+      &productSku,
+      &skuId,
+      &trackingNumber,
+      &courierCompany,
+      &merchantNotes,
+      &afterSaleStatus,
+      &buyerMessage,
+      &detailUrl,
+      &outerOrderStatus,
+      &actualPayment,
+      &productStatus,
+      &afterSaleStatusStr,
+    ); err != nil {
       log.Println("order-list-scan-error: ", err)
     }
     order := map[string]interface{}{
@@ -103,6 +195,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "outerOrderStatus": outerOrderStatus.Int32,
       "actualPayment": actualPayment.Float64,
       "productStatus": productStatus.String,
+      "afterSaleStatusStr": afterSaleStatusStr.String,
     }
     orderList = append(orderList, order)
   }
