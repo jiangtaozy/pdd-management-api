@@ -20,7 +20,6 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
   idList := query["id"]
   id := idList[0]
   db := database.DB
-  location, _ := time.LoadLocation("Local")
   // unit data
   rows, err := db.Query(`
     SELECT
@@ -55,7 +54,7 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
       gmv int64
       mallFavNum int64
       goodsFavNum int64
-      date string
+      date time.Time
     )
     err := rows.Scan(
       &adId,
@@ -99,11 +98,8 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
     LEFT JOIN order1688
       ON itemOrder.outerOrderId = order1688.orderId
     WHERE itemOrder.productId = ?
-      AND (
-        itemOrder.afterSaleStatus = 12
-        OR itemOrder.afterSaleStatus IS NULL
-      )
-      AND itemOrder.orderStatus <> 2
+      AND itemOrder.orderStatus = 1
+      AND itemOrder.afterSaleStatus IS NULL
   `, id)
   if err != nil {
     log.Println("pdd-item-data-query-order-error: ", err)
@@ -116,7 +112,7 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
       orderStatusStr string
       platformDiscount int64
       userPaidAmount int64
-      paymentTimeStr string
+      paymentTime time.Time
       actualPayment sql.NullFloat64
     )
     err := orderRows.Scan(
@@ -124,14 +120,12 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
       &orderStatusStr,
       &platformDiscount,
       &userPaidAmount,
-      &paymentTimeStr,
+      &paymentTime,
       &actualPayment,
     )
     if err != nil {
       log.Println("pdd-item-data-scan-order-error: ", err)
     }
-    paymentTime, err := time.Parse("2006-01-02 15:04:05", paymentTimeStr)
-    paymentTime = paymentTime.In(location)
     if err != nil {
       log.Println("pdd-item-data-payment-time-parse-error: ", err)
     }
@@ -175,8 +169,7 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
     date := order["paymentTime"].(time.Time)
     for j := 0; j < len(dataList); j++ {
       data := dataList[j].(map[string]interface{})
-      dataDate := data["date"].(string)
-      dateTime, err := time.ParseInLocation("2006-01-02", dataDate, location)
+      dateTime := data["date"].(time.Time)
       if err != nil {
         log.Println("pdd-item-data-parse-data-date-error: ", err)
       }

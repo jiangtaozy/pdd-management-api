@@ -1,4 +1,11 @@
 # database config
+# const dbUrl = "user:user#db@/db?parseTime=true&loc=Local"
 database/config.go
+
 # .swp
 *.swp
+
+# handle config
+# const appId = "appId"
+# const appSecret = "appSecret"
+handle/config.go

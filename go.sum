@@ -28,6 +28,10 @@ github.com/gocolly/colly/v2 v2.0.1/go.mod h1:ePrRZlJcLTU2C/f8pJzXfkdBtBDHL5hOaKL
 github.com/golang/protobuf v1.3.1 h1:YF8+flBXS5eO826T4nzqPrxfhQThhXl0YzfuUPu4SBg=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/jawher/mow.cli v1.1.0/go.mod h1:aNaQlc7ozF3vw6IJ2dHjp2ZFiA4ozMIYY6PyuRJwlUg=
+github.com/jiangtaozy/openapi-fxg v0.0.0-20200910092416-70f39f791a5e h1:3N6O7Gc5/QkcmwnuzMCy67uggTLjHfkschH+5wGfZ0Y=
+github.com/jiangtaozy/openapi-fxg v0.0.0-20200910092416-70f39f791a5e/go.mod h1:sUkPtrPqMhEXguaPlxIzIzJJhZdWcrZKktDenSo+VBU=
+github.com/jiangtaozy/openapi-fxg v0.0.0-20200910093016-9bb62d93ec5e h1:HmfR1qPyPgJ2OBjA0XnY+p99XIqWJ18UGp2p4rq0FJo=
+github.com/jiangtaozy/openapi-fxg v0.0.0-20200910093016-9bb62d93ec5e/go.mod h1:sUkPtrPqMhEXguaPlxIzIzJJhZdWcrZKktDenSo+VBU=
 github.com/kennygrant/sanitize v1.2.4 h1:gN25/otpP5vAsO2djbMhF/LQX6R7+O1TB4yv8NzpJ3o=
 github.com/kennygrant/sanitize v1.2.4/go.mod h1:LGsjYYtgxbetdg5owWB2mpgUL6e2nfw2eObZ0u0qvak=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=

@@ -20,6 +20,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     SELECT
       searchItem.id,
       searchItem.name,
+      item.price,
       item.detailUrl
     FROM searchItem
     LEFT JOIN item
@@ -38,14 +39,21 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     var (
       id int64
       name string
+      price sql.NullFloat64
       detailUrl sql.NullString
     )
-    if err := rows.Scan(&id, &name, &detailUrl); err != nil {
+    if err := rows.Scan(
+      &id,
+      &name,
+      &price,
+      &detailUrl,
+    ); err != nil {
       log.Println("search-title-list-scan-error: ", err)
     }
     title := map[string]interface{}{
       "id": id,
       "name": name,
+      "price": price.Float64,
       "detailUrl": detailUrl.String,
     }
     titleList = append(titleList, title)

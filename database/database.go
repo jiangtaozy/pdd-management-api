@@ -31,6 +31,7 @@ func InitDB() {
   //execSQL(createPddActivity)
   //execSQL(createAdUnitKeyword)
   //execSQL(createPddAdUnitHourlyData)
+  //execSQL(createDyAccessToken)
 }
 
 func ConnectDB() {
@@ -115,7 +116,7 @@ const itemOrder = `
     productName VARCHAR(60) NOT NULL COMMENT '拼多多商品',
     orderId VARCHAR(30) NOT NULL COMMENT '拼多多订单号',
     outerOrderId VARCHAR(30) COMMENT '外部订单号1688/女装网订单',
-    orderStatus TINYINT NOT NULL COMMENT '拼多多订单状态，2: 已取消，3：已发货，待签收；4：已签收，6：未发货退款成功',
+    orderStatus TINYINT NOT NULL COMMENT '拼多多订单状态，0: 待支付，1: 待发货/已发货，待签收/已签收/未发货，退款成功/已发货，退款成功，2: 已取消',
     orderStatusStr VARCHAR(20) NOT NULL COMMENT '拼多多订单状态',
     productTotalPrice INTEGER UNSIGNED NOT NULL COMMENT '拼多多商品总价(分)',
     storeDiscount INTEGER UNSIGNED NOT NULL COMMENT '店铺优惠折扣(分)',
@@ -147,19 +148,21 @@ const itemOrder = `
     trackingNumber VARCHAR(30) COMMENT '快递单号',
     courierCompany VARCHAR(30) COMMENT '快递公司',
     merchantNotes VARCHAR(60) NOT NULL DEFAULT '' COMMENT '商家备注',
-    afterSaleStatus TINYINT UNSIGNED COMMENT '售后状态: 0无售后, 5退款成功, 10商家同意退货退款，待买家发货，11用户已发货，待商家处理, 12售后取消，退款失败',
+    afterSaleStatus TINYINT UNSIGNED COMMENT '售后状态: NULL无售后, 5退款成功, 10商家同意退货退款，待买家发货，11用户已发货，待商家处理, 12售后取消，退款失败，18商家已发货，待消费者确认收货',
     buyerMessage VARCHAR(100) NOT NULL DEFAULT '' COMMENT '买家留言',
     goodsName VARCHAR(60) NOT NULL DEFAULT '' COMMENT '货品名称',
     goodsType VARCHAR(30) COMMENT '货品类型',
   );
 `
 
+/*
 const alter = `
   ALTER TABLE pddAdPlan
   MODIFY COLUMN
   scenesType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0: 多多搜索，1: 聚焦展位，2: 多多场景'
   ;
 `
+*/
 
 /*
 const alter = `
@@ -172,10 +175,10 @@ const alter = `
 
 /*
 const alter = `
-  ALTER TABLE itemOrder
+  ALTER TABLE dyAccessToken
   ADD
-  outerOrderId VARCHAR(30) COMMENT '外部订单号1688/女装网订单'
-  AFTER orderId
+  createdAt TIMESTAMP NOT NULL COMMENT '创建时间'
+  AFTER shopName
   ;
 `
 */

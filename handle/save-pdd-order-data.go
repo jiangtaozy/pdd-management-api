@@ -48,14 +48,14 @@ func SavePddOrderData(w http.ResponseWriter, r *http.Request) {
       log.Println("save-pdd-order-data-count-error: ", err)
     }
     payTime := time.Unix(int64(order["confirm_time"].(float64)), 0)
-    groupTime := time.Unix(int64(order["confirm_time"].(float64)), 0)
-    confirmTime := time.Unix(int64(order["confirm_time"].(float64)), 0)
+    groupTime := payTime
+    confirmTime := payTime
     var promiseShippingTime time.Time
     if order["promise_shipping_time"] != nil {
       promiseShippingTime = time.Unix(int64(order["promise_shipping_time"].(float64)), 0)
     }
     shippingTime := time.Unix(int64(order["shipping_time"].(float64)), 0)
-    receiveTime := time.Unix(int64(order["shipping_time"].(float64)), 0)
+    receiveTime := shippingTime
     if orderCount == 0 {
       _, err = stmtInsert.Exec(order["mall_id"], order["goods_name"], order["order_sn"], order["order_status"], order["order_status_str"], order["goods_amount"], order["merchant_discount"], order["platform_discount"], order["shipping_amount"], order["service_amount"], order["home_install_value"], order["delivery_home_value"], order["delivery_install_value"], order["order_amount"], order["receive_name"], order["mobile"], order["province_name"], order["city_name"], order["district_name"], order["shipping_address"], payTime, groupTime, confirmTime, promiseShippingTime, shippingTime, receiveTime, order["goods_id"], order["spec"], order["goods_number"], order["sku_id"], order["out_sku_sn"], order["out_goods_sn"], order["tracking_number"], order["after_sales_status"], order["buyer_memo"], order["goods_name"], order["goods_type"])
       if err != nil {

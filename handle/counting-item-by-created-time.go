@@ -24,7 +24,7 @@ func CountingItemByCreatedTime(w http.ResponseWriter, r *http.Request) {
   defer rows.Close()
   var timeList []interface{}
   for rows.Next() {
-    var createdAt string
+    var createdAt time.Time
     if err := rows.Scan(&createdAt); err != nil {
       log.Println("counting-item-by-created-time-scan-error: ", err)
     }
@@ -33,10 +33,9 @@ func CountingItemByCreatedTime(w http.ResponseWriter, r *http.Request) {
   length := len(timeList)
   var countList []interface{}
   if length > 0 {
-    start := timeList[0].(string)
-    startTime, _ := time.Parse("2006-01-02 15:04:05", start)
+    start := timeList[0].(time.Time)
     location, _ := time.LoadLocation("Local")
-    startDate := time.Date(startTime.Year(), startTime.Month(), startTime.Day(), 0, 0, 0, 0, location)
+    startDate := time.Date(start.Year(), start.Month(), start.Day(), 0, 0, 0, 0, location)
     now := time.Now()
     duration := now.Sub(startDate)
     days := int(math.Floor(duration.Hours() / 24))
@@ -44,8 +43,7 @@ func CountingItemByCreatedTime(w http.ResponseWriter, r *http.Request) {
       date := startDate.AddDate(0, 0, i)
       count := 0
       for j := 0; j < len(timeList); j++ {
-        timeStr := timeList[j].(string)
-        time, _ := time.Parse("2006-01-02 15:04:05", timeStr)
+        time := timeList[j].(time.Time)
         subTime := time.Sub(date)
         if subTime.Hours() > 0 && subTime.Hours() < 24 {
           count++
