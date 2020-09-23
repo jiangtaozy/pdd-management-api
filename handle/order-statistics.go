@@ -18,21 +18,24 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
     SELECT
-    itemOrder.mallId,
-    itemOrder.orderId,
-    itemOrder.productTotalPrice,
-    itemOrder.storeDiscount,
-    itemOrder.platformDiscount,
-    itemOrder.userPaidAmount,
-    itemOrder.paymentTime,
-    order1688.actualPayment
-    FROM itemOrder AS itemOrder
-    LEFT JOIN order1688 AS order1688
-    ON itemOrder.outerOrderId = order1688.orderId
+      itemOrder.mallId,
+      itemOrder.orderId,
+      itemOrder.productTotalPrice,
+      itemOrder.storeDiscount,
+      itemOrder.platformDiscount,
+      itemOrder.userPaidAmount,
+      itemOrder.paymentTime,
+      itemOrder.afterSaleStatus,
+      order1688.actualPayment
+    FROM
+      itemOrder AS itemOrder
+    LEFT JOIN
+      order1688 AS order1688
+    ON
+      itemOrder.outerOrderId = order1688.orderId
     WHERE
-    (itemOrder.afterSaleStatus = 12 OR itemOrder.afterSaleStatus IS NULL)
-    AND itemOrder.orderStatus <> 2
-    AND order1688.actualPayment IS NOT NULL
+      itemOrder.orderStatus = 1
+      AND order1688.actualPayment IS NOT NULL
   `)
   if err != nil {
     log.Println("order-statistics-query-error: ", err)
@@ -48,9 +51,20 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       platformDiscount int64
       userPaidAmount int64
       paymentTime string
+      afterSaleStatus sql.NullInt64
       actualPayment float64
     )
-    err := rows.Scan(&mallId, &orderId, &productTotalPrice, &storeDiscount, &platformDiscount, &userPaidAmount, &paymentTime, &actualPayment)
+    err := rows.Scan(
+      &mallId,
+      &orderId,
+      &productTotalPrice,
+      &storeDiscount,
+      &platformDiscount,
+      &userPaidAmount,
+      &paymentTime,
+      &afterSaleStatus,
+      &actualPayment,
+    )
     if err != nil {
       log.Println("order-statistics-scan-error: ", err)
     }
@@ -62,6 +76,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       "platformDiscount": platformDiscount,
       "userPaidAmount": userPaidAmount,
       "paymentTime": paymentTime,
+      "afterSaleStatus": afterSaleStatus.Int64,
       "actualPayment": actualPayment,
     }
     orderList = append(orderList, order)
@@ -71,4 +86,3 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
     log.Println("order-statistics-encode-err: ", err)
   }
 }
-
