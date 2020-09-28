@@ -11,6 +11,7 @@ import (
   "io"
   "log"
   "net/http"
+  "github.com/jiangtaozy/openapi-fxg"
 )
 
 func DyItemList(w http.ResponseWriter, r *http.Request) {
@@ -18,6 +19,11 @@ func DyItemList(w http.ResponseWriter, r *http.Request) {
   shopId := "973906"
   accessToken := GetAccessToken(shopId)
   log.Println("accessToken: ", accessToken)
+  itemList := openapiFxg.ProductList(
+    appId,
+    accessToken,
+  )
+  log.Println("itemList: ", itemList)
 
   io.WriteString(w, "ok")
 }

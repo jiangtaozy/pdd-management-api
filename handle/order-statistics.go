@@ -26,6 +26,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       itemOrder.userPaidAmount,
       itemOrder.paymentTime,
       itemOrder.afterSaleStatus,
+      itemOrder.orderStatusStr,
       order1688.actualPayment
     FROM
       itemOrder AS itemOrder
@@ -52,6 +53,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       userPaidAmount int64
       paymentTime string
       afterSaleStatus sql.NullInt64
+      orderStatusStr sql.NullString
       actualPayment float64
     )
     err := rows.Scan(
@@ -63,6 +65,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       &userPaidAmount,
       &paymentTime,
       &afterSaleStatus,
+      &orderStatusStr,
       &actualPayment,
     )
     if err != nil {
@@ -77,6 +80,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       "userPaidAmount": userPaidAmount,
       "paymentTime": paymentTime,
       "afterSaleStatus": afterSaleStatus.Int64,
+      "orderStatusStr": orderStatusStr.String,
       "actualPayment": actualPayment,
     }
     orderList = append(orderList, order)
