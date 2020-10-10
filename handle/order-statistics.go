@@ -26,6 +26,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       itemOrder.userPaidAmount,
       itemOrder.paymentTime,
       itemOrder.afterSaleStatus,
+      itemOrder.afterSaleApplyTime,
       itemOrder.orderStatusStr,
       order1688.actualPayment
     FROM
@@ -53,6 +54,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       userPaidAmount int64
       paymentTime string
       afterSaleStatus sql.NullInt64
+      afterSaleApplyTime sql.NullString
       orderStatusStr sql.NullString
       actualPayment float64
     )
@@ -65,6 +67,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       &userPaidAmount,
       &paymentTime,
       &afterSaleStatus,
+      &afterSaleApplyTime,
       &orderStatusStr,
       &actualPayment,
     )
@@ -80,6 +83,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       "userPaidAmount": userPaidAmount,
       "paymentTime": paymentTime,
       "afterSaleStatus": afterSaleStatus.Int64,
+      "afterSaleApplyTime": afterSaleApplyTime.String,
       "orderStatusStr": orderStatusStr.String,
       "actualPayment": actualPayment,
     }
