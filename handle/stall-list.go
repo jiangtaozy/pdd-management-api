@@ -16,7 +16,75 @@ import (
 
 func StallList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
-  rows, err := db.Query("SELECT id, name, city, mallName, floor, stallNumber, phone, telephone, wechat, qq, dataUrl, url, siteType FROM supplier")
+  rows, err := db.Query(`
+    SELECT
+      supplier.id,
+      supplier.name,
+      supplier.city,
+      supplier.mallName,
+      supplier.floor,
+      supplier.stallNumber,
+      supplier.phone,
+      supplier.telephone,
+      supplier.wechat,
+      supplier.qq,
+      supplier.dataUrl,
+      supplier.url,
+      supplier.siteType
+    FROM
+      supplier
+  `)
+  /*
+  rows, err := db.Query(`
+    SELECT
+      supplier.id,
+      supplier.name,
+      supplier.city,
+      supplier.mallName,
+      supplier.floor,
+      supplier.stallNumber,
+      supplier.phone,
+      supplier.telephone,
+      supplier.wechat,
+      supplier.qq,
+      supplier.dataUrl,
+      supplier.url,
+      supplier.siteType,
+      item.name,
+      pddItem.goodsName,
+      adData.impression,
+      adData.click,
+      adData.spend,
+      adData.orderNum,
+      adData.gmv,
+      adData.mallFavNum,
+      adData.goodsFavNum,
+      itemOrder.orderStatus,
+      itemOrder.afterSaleStatus,
+      itemOrder.orderStatusStr,
+      itemOrder.userPaidAmount,
+      itemOrder.platformDiscount,
+      itemOrder.orderId,
+      order1688.actualPayment
+    FROM
+      supplier
+    LEFT JOIN item
+      ON supplier.id = item.supplierId
+    LEFT JOIN pddItem
+      ON item.searchId = pddItem.outGoodsSn
+    LEFT JOIN pddAdUnit
+      ON pddItem.pddId = pddAdUnit.goodsId
+    LEFT JOIN
+      (SELECT adId, SUM(impression) impression, SUM(click) click, SUM(spend) spend, SUM(orderNum) orderNum, SUM(gmv) gmv, SUM(mallFavNum) mallFavNum, SUM(goodsFavNum) goodsFavNum
+      FROM pddAdUnitDailyData
+      GROUP BY adId) AS adData
+      ON pddAdUnit.adId = adData.adId
+    LEFT JOIN itemOrder AS itemOrder
+      ON pddItem.pddId = itemOrder.productId
+    LEFT JOIN order1688 AS order1688
+      ON itemOrder.outerOrderId = order1688.orderId
+  `)
+  */
   if err != nil {
     log.Println("stall-list-query-error: ", err)
   }

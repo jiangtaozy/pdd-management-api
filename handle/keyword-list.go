@@ -41,6 +41,8 @@ func KeywordList(w http.ResponseWriter, r *http.Request) {
       adUnitKeyword
     WHERE
       adId = ?
+    ORDER BY
+      date ASC
   `, id)
   if err != nil {
     log.Println("keyword-list-query-error: ", err)
