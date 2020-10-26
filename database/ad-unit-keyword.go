@@ -36,7 +36,7 @@ const createAdUnitKeyword =`
     appPayNum INTEGER UNSIGNED NOT NULL DEFAULT 0,
     costPerAppPay INTEGER UNSIGNED NOT NULL DEFAULT 0,
     date DATE NOT NULL,
-    entityId INTEGER UNSIGNED,
+    entityId BIGINT UNSIGNED,
     dimensionType TINYINT UNSIGNED,
     bid INTEGER UNSIGNED NOT NULL COMMENT '出价/厘',
     bidPremium INTEGER UNSIGNED NOT NULL COMMENT '精确匹配溢价/万分之一',
@@ -45,7 +45,7 @@ const createAdUnitKeyword =`
     keywordAdIdx VARCHAR(20) NOT NULL COMMENT '90天平均排名',
     qualityScore INTEGER UNSIGNED NOT NULL COMMENT '质量分',
     keywordAdIdxOri FLOAT UNSIGNED,
-    keywordId INTEGER UNSIGNED,
+    keywordId BIGINT UNSIGNED,
     keywordType INTEGER UNSIGNED,
     planStrategy INTEGER UNSIGNED,
     dataOperateStatus INTEGER UNSIGNED

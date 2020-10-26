@@ -90,6 +90,7 @@ func AdUnitKeywordCreate(w http.ResponseWriter, r *http.Request) {
         _, err = stmtInsert.Exec(keyword["adId"], keyword["mallId"], keyword["impression"], keyword["click"], keyword["ctr"], keyword["transactionCost"], keyword["spend"], keyword["roi"], keyword["orderNum"], keyword["cpc"], keyword["cvr"], keyword["gmv"], keyword["cpm"], keyword["mallFavNum"], keyword["goodsFavNum"], keyword["inquiryNum"], keyword["uniqueView"], keyword["rankAverage"], keyword["rankMedian"], keyword["avgPayAmount"], keyword["appActivateNum"], keyword["costPerAppActivate"], keyword["appActivateRate"], keyword["appRegisterNum"], keyword["costPerAppRegister"], keyword["appPayNum"], keyword["costPerAppPay"], date, keyword["entityId"], keyword["dimensionType"], keyword["bid"], keyword["bidPremium"], keyword["bidPremiumValue"], keyword["keyword"], keyword["keywordAdIdx"], keyword["qualityScore"], keyword["keywordAdIdxOri"], keyword["keywordId"], keyword["keywordType"], keyword["planStrategy"], keyword["dataOperateStatus"])
         if err != nil {
           log.Println("ad-unit-keyword-create-insert-exec-error: ", err)
+          log.Println("keyword: ", keyword)
         }
       }
     } else {
