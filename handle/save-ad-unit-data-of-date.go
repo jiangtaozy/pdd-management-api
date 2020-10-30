@@ -27,7 +27,7 @@ func SaveAdUnitDataOfDate(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     log.Println("save-ad-unit-data-of-date-json-unmarshal-error: ", err)
   }
-  list := unitListDataMap["result"].([]interface{})
+  list := unitListDataMap["result"].(map[string]interface{})["result"].([]interface{})
   var scenesType = 0
   db := database.DB
   // ad daily data
