@@ -28,7 +28,7 @@ func AfterSaleOrderDataSave(w http.ResponseWriter, r *http.Request) {
     log.Println("after-sale-order-data-save-json-unmarshal-error: ", err)
   }
   result := afterSaleOrderDataMap["result"].(map[string]interface{})
-  afterSalesList := result["afterSalesList"].([]interface{})
+  afterSalesList := result["list"].([]interface{})
   db := database.DB
   stmtUpdate, err := db.Prepare(`
     UPDATE
@@ -45,7 +45,7 @@ func AfterSaleOrderDataSave(w http.ResponseWriter, r *http.Request) {
   defer stmtUpdate.Close()
   for i := 0; i < len(afterSalesList); i++ {
     order := afterSalesList[i].(map[string]interface{})
-    afterSaleApplyTime := time.Unix(int64(order["createdTime"].(float64)), 0)
+    afterSaleApplyTime := time.Unix(int64(order["createdAt"].(float64)), 0)
     _, err = stmtUpdate.Exec(
       order["afterSalesStatus"],
       afterSaleApplyTime,
