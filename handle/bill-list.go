@@ -50,7 +50,7 @@ func BillList(w http.ResponseWriter, r *http.Request) {
       createdAt string
       extraInfo sql.NullString
       financeId int64
-      flowId int64
+      flowId sql.NullInt64
       mallId int64
       note sql.NullString
       orderSn sql.NullString
@@ -82,7 +82,7 @@ func BillList(w http.ResponseWriter, r *http.Request) {
       "createdAt": createdAt,
       "extraInfo": extraInfo.String,
       "financeId": financeId,
-      "flowId": flowId,
+      "flowId": flowId.Int64,
       "mallId": mallId,
       "note": note.String,
       "orderSn": orderSn.String,

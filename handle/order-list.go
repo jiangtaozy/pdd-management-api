@@ -55,7 +55,10 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       order1688.orderStatus AS outerOrderStatus,
       order1688.actualPayment,
       order1688.productStatus,
-      order1688.afterSaleStatusStr
+      order1688.afterSaleStatusStr,
+      order1688.receiver AS shippingName,
+      order1688.shippingAddress,
+      order1688.phone AS shippingPhone
     FROM itemOrder
     LEFT JOIN pddItem
       ON itemOrder.productId = pddItem.pddId
@@ -114,6 +117,9 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       actualPayment sql.NullFloat64
       productStatus sql.NullString
       afterSaleStatusStr sql.NullString
+      shippingName sql.NullString
+      shippingAddress sql.NullString
+      shippingPhone sql.NullString
     )
     if err := rows.Scan(
       &id,
@@ -154,6 +160,9 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       &actualPayment,
       &productStatus,
       &afterSaleStatusStr,
+      &shippingName,
+      &shippingAddress,
+      &shippingPhone,
     ); err != nil {
       log.Println("order-list-scan-error: ", err)
     }
@@ -196,6 +205,9 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "actualPayment": actualPayment.Float64,
       "productStatus": productStatus.String,
       "afterSaleStatusStr": afterSaleStatusStr.String,
+      "shippingName": shippingName.String,
+      "shippingAddress": shippingAddress.String,
+      "shippingPhone": shippingPhone.String,
     }
     orderList = append(orderList, order)
   }

@@ -15,7 +15,7 @@ const bill = `
     createdAt DATETIME NOT NULL COMMENT '入帐时间',
     extraInfo VARCHAR(20),
     financeId TINYINT NOT NULL,
-    flowId BIGINT NOT NULL,
+    flowId BIGINT,
     mallId INTEGER UNSIGNED NOT NULL,
     note VARCHAR(50) COMMENT '备注',
     orderSn VARCHAR(32) COMMENT '商户订单号',

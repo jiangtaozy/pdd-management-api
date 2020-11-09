@@ -37,7 +37,6 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       itemOrder.outerOrderId = order1688.orderId
     WHERE
       itemOrder.orderStatus = 1
-      AND order1688.actualPayment IS NOT NULL
   `)
   if err != nil {
     log.Println("order-statistics-query-error: ", err)
@@ -56,7 +55,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       afterSaleStatus sql.NullInt64
       afterSaleApplyTime sql.NullString
       orderStatusStr sql.NullString
-      actualPayment float64
+      actualPayment sql.NullFloat64
     )
     err := rows.Scan(
       &mallId,
@@ -85,7 +84,7 @@ func OrderStatistics(w http.ResponseWriter, r *http.Request) {
       "afterSaleStatus": afterSaleStatus.Int64,
       "afterSaleApplyTime": afterSaleApplyTime.String,
       "orderStatusStr": orderStatusStr.String,
-      "actualPayment": actualPayment,
+      "actualPayment": actualPayment.Float64,
     }
     orderList = append(orderList, order)
   }
