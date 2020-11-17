@@ -48,6 +48,7 @@ const createAdUnitKeyword =`
     keywordId BIGINT UNSIGNED,
     keywordType INTEGER UNSIGNED,
     planStrategy INTEGER UNSIGNED,
-    dataOperateStatus INTEGER UNSIGNED
+    dataOperateStatus INTEGER UNSIGNED,
+    INDEX adUnitKeywordIndex (mallId, adId, keywordId, date)
   );
 `

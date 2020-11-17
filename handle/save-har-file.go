@@ -8,8 +8,9 @@ package handle
 
 import (
   "io"
-  "encoding/json"
   "log"
+  "time"
+  "encoding/json"
   "net/http"
 )
 
@@ -27,6 +28,7 @@ func SaveHarFile(w http.ResponseWriter, r *http.Request) {
   }
   logMap := har["log"].(map[string]interface{})
   entries := logMap["entries"].([]interface{})
+  start := time.Now()
   for i := 0; i < len(entries); i++ {
     entry := entries[i].(map[string]interface{})
     request := entry["request"].(map[string]interface{})
@@ -43,20 +45,26 @@ func SaveHarFile(w http.ResponseWriter, r *http.Request) {
       }
     }
     response := entry["response"].(map[string]interface{})
-    content := response["content"].(map[string]interface{})
-    responseText := content["text"].(string)
-    responseMimeType := content["mimeType"]
+    responseContent := response["content"].(map[string]interface{})
     responseBody := make(map[string]interface{})
-    if responseMimeType == "application/json" {
-      err := json.Unmarshal([]byte(responseText), &responseBody)
-      if err != nil {
-        log.Println("save-har-file-unmarshal-response-text-error: ", err)
+    if responseContent["text"] != nil {
+      responseText := responseContent["text"].(string)
+      responseMimeType := responseContent["mimeType"]
+      if responseMimeType == "application/json" {
+        err := json.Unmarshal([]byte(responseText), &responseBody)
+        if err != nil {
+          log.Println("save-har-file-unmarshal-response-text-error: ", err)
+        }
       }
     }
     url := request["url"]
     if url == "https://mms.pinduoduo.com/venus/api/subway/keyword/listKeywordPage" {
-      SaveListKeywordPage(responseText)
+      SaveListKeywordPage(responseBody)
       log.Println("url: ", url)
+      now := time.Now()
+      diff := now.Sub(start)
+      log.Println("diff: ", diff)
+      start = now
     }
     if url == "https://mms.pinduoduo.com/mms-gateway/venus/api/unit/listPage" {
       SaveUnitListPage(requestBody, responseBody)

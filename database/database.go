@@ -193,3 +193,11 @@ const alter = `
   ;
 `
 */
+
+/*
+const alter = `
+  ALTER TABLE adUnitKeyword
+  ADD INDEX adUnitKeywordIndex (mallId, adId, keywordId, date)
+  ;
+`
+*/

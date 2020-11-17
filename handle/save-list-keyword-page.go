@@ -8,17 +8,11 @@ package handle
 
 import (
   "log"
-  "encoding/json"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
-func SaveListKeywordPage(keywordList string) {
-  keywordMap := make(map[string]interface{})
-  err := json.Unmarshal([]byte(keywordList), &keywordMap)
-  if err != nil {
-    log.Println("save-list-keyword-page-json-unmarshal-error: ", err)
-  }
-  result := keywordMap["result"].(map[string]interface{})
+func SaveListKeywordPage(responseBody map[string]interface{}) {
+  result := responseBody["result"].(map[string]interface{})
   list := result["keywordList"].([]interface{})
   db := database.DB
   stmtInsert, err := db.Prepare(`
