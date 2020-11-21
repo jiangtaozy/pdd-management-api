@@ -33,7 +33,7 @@ func OrderListByAdId(w http.ResponseWriter, r *http.Request) {
       order1688.afterSaleStatusStr
     FROM
       pddAdUnit
-    LEFT JOIN itemOrder
+    INNER JOIN itemOrder
       ON pddAdUnit.goodsId = itemOrder.productId
     LEFT JOIN order1688
       ON itemOrder.outerOrderId = order1688.orderId
@@ -73,6 +73,7 @@ func OrderListByAdId(w http.ResponseWriter, r *http.Request) {
       &afterSaleStatusStr,
     ); err != nil {
       log.Println("order-list-by-ad-id-scan-error: ", err)
+      log.Println("id: ", id)
     }
     order := map[string]interface{}{
       "orderId": orderId,
