@@ -239,7 +239,7 @@ func SaveUnitListPage(requestBody map[string]interface{}, responseBody map[strin
           log.Println("save-ad-unit-data-of-date-insert-exec-error: ", err)
         }
       }
-    } else {
+    } else if count == 1 {
       _, err = stmtUpdate.Exec(
         unit["impression"],
         unit["click"],
@@ -271,6 +271,26 @@ func SaveUnitListPage(requestBody map[string]interface{}, responseBody map[strin
       )
       if err != nil {
         log.Println("save-ad-unit-data-of-date-update-exec-error: ", err)
+      }
+    } else {
+      stmtDeleteDailyData, err := db.Prepare(`
+        DELETE
+        FROM
+          pddAdUnitDailyData
+        WHERE
+          adId = ? AND
+          date = ?
+        LIMIT 1
+      `)
+      if err != nil {
+        log.Println("save-unit-list-page-prepare-delete-daily-data-error: ", err)
+      }
+      _, err = stmtDeleteDailyData.Exec(
+        unit["adId"],
+        date,
+      )
+      if err != nil {
+        log.Println("save-unit-list-page-exec-delete-daily-data-error: ", err)
       }
     }
     // insert plan

@@ -58,7 +58,7 @@ func SaveHarFile(w http.ResponseWriter, r *http.Request) {
       }
     }
     url := request["url"]
-    if url == "https://mms.pinduoduo.com/venus/api/subway/keyword/listKeywordPage" {
+    if url == "https://yingxiao.pinduoduo.com/venus/api/subway/keyword/listKeywordPage" {
       SaveListKeywordPage(responseBody)
       log.Println("url: ", url)
       now := time.Now()
@@ -66,7 +66,7 @@ func SaveHarFile(w http.ResponseWriter, r *http.Request) {
       log.Println("diff: ", diff)
       start = now
     }
-    if url == "https://mms.pinduoduo.com/mms-gateway/venus/api/unit/listPage" {
+    if url == "https://yingxiao.pinduoduo.com/mms-gateway/venus/api/unit/listPage" {
       SaveUnitListPage(requestBody, responseBody)
       log.Println("url: ", url)
     }

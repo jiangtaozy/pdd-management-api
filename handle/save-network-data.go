@@ -34,15 +34,15 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   }
   url := body["requestUrl"].(string)
   start := time.Now()
-  if url == "https://mms.pinduoduo.com/venus/api/subway/keyword/listKeywordPage" {
+  if url == "https://yingxiao.pinduoduo.com/venus/api/subway/keyword/listKeywordPage" {
     SaveListKeywordPage(responseBody)
     log.Println("url: ", url)
   }
-  if url == "https://mms.pinduoduo.com/mms-gateway/venus/api/unit/listPage" {
+  if url == "https://yingxiao.pinduoduo.com/mms-gateway/venus/api/unit/listPage" {
     SaveUnitListPage(requestBody, responseBody)
     log.Println("url: ", url)
   }
-  if url == "https://mms.pinduoduo.com/apollo/api/report/queryHourlyReport" {
+  if url == "https://yingxiao.pinduoduo.com/apollo/api/report/queryHourlyReport" {
     SaveQueryHourlyReport(requestBody, responseBody)
     log.Println("url: ", url)
   }

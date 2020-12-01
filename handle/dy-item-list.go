@@ -9,19 +9,19 @@ package handle
 
 import (
   "net/http"
-  "encoding/json"
-  "github.com/jiangtaozy/openapi-fxg"
+  //"encoding/json"
+  //"github.com/jiangtaozy/openapi-fxg"
 )
 
 func DyItemList(w http.ResponseWriter, r *http.Request) {
   // get access token
-  shopId := "973906"
-  accessToken := GetAccessToken(shopId)
-  itemList := openapiFxg.ProductList(
-    appId,
-    appSecret,
-    accessToken,
-  )
-  json.NewEncoder(w).Encode(itemList)
+  //shopId := "973906"
+  //accessToken := GetAccessToken(shopId)
+  //itemList := openapiFxg.ProductList(
+  //  appId,
+  //  appSecret,
+  //  accessToken,
+  //)
+  //json.NewEncoder(w).Encode(itemList)
 }
 

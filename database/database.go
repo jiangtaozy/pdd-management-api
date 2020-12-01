@@ -34,6 +34,7 @@ func InitDB() {
   //execSQL(createDyAccessToken)
   //execSQL(bill)
   //execSQL(createPddAdHourlyData)
+  //execSQL(createDyItem)
 }
 
 func ConnectDB() {
