@@ -19,28 +19,35 @@ func DyItemList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
     SELECT
-      checkStatus,
-      createTime,
-      discountPrice,
-      extra,
-      firstCid,
-      img,
-      marketPrice,
-      mobile,
-      name,
-      outProductId,
-      payType,
-      productId,
-      productIdStr,
-      recommendRemark,
-      secondCid,
-      settlementPrice,
-      specId,
-      status,
-      thirdCid,
-      updateTime
+      dyItem.checkStatus,
+      dyItem.createTime,
+      dyItem.discountPrice,
+      dyItem.extra,
+      dyItem.firstCid,
+      dyItem.img,
+      dyItem.marketPrice,
+      dyItem.mobile,
+      dyItem.name,
+      dyItem.outProductId,
+      dyItem.payType,
+      dyItem.productId,
+      dyItem.productIdStr,
+      dyItem.recommendRemark,
+      dyItem.secondCid,
+      dyItem.settlementPrice,
+      dyItem.specId,
+      dyItem.status,
+      dyItem.thirdCid,
+      dyItem.updateTime,
+      item.price,
+      item.detailUrl,
+      item.name AS womenName
     FROM
       dyItem
+    LEFT JOIN
+      item
+    ON
+      dyItem.outProductId = item.womenProductId
   `)
   if err != nil {
     log.Println("dy-item-list-query-error: ", err)
@@ -71,6 +78,9 @@ func DyItemList(w http.ResponseWriter, r *http.Request) {
       status sql.NullInt64
       thirdCid sql.NullInt64
       updateTime sql.NullString
+      price sql.NullFloat64
+      detailUrl sql.NullString
+      womenName sql.NullString
     )
     err = rows.Scan(
       &checkStatus,
@@ -93,6 +103,9 @@ func DyItemList(w http.ResponseWriter, r *http.Request) {
       &status,
       &thirdCid,
       &updateTime,
+      &price,
+      &detailUrl,
+      &womenName,
     )
     if err != nil {
       log.Println("dy-item-list-scan-error: ", err)
@@ -120,6 +133,9 @@ func DyItemList(w http.ResponseWriter, r *http.Request) {
       "status": status.Int64,
       "thirdCid": thirdCid.Int64,
       "updateTime": updateTime.String,
+      "price": price.Float64,
+      "detailUrl": detailUrl.String,
+      "womenName": womenName.String,
     }
     list = append(list, item)
   }

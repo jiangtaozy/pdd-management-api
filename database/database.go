@@ -81,7 +81,7 @@ const item = `
     imgUrlOf100x100 VARCHAR(100) NOT NULL DEFAULT '',
     imgUrlOf150x150 VARCHAR(100) NOT NULL DEFAULT '',
     imgUrlOf220x220 VARCHAR(100) NOT NULL DEFAULT '',
-    womenProductId INTEGER UNSIGNED NOT NULL DEFAULT 0
+    womenProductId INTEGER UNSIGNED
   );
  `
 const supplier = `
