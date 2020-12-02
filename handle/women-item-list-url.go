@@ -92,22 +92,22 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
       log.Println("women-item-list-url-count-item-error: ", err)
     }
     if itemCount == 0 {
-      insertItem, err := db.Prepare("INSERT INTO item (name, price, imgUrl, detailUrl, siteType, supplierId, searchId, suitPrice, forSell) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
+      insertItem, err := db.Prepare("INSERT INTO item (name, price, imgUrl, detailUrl, siteType, supplierId, searchId, suitPrice, forSell, womenProductId) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
       if err != nil {
         log.Println("women-item-list-url-insert-item-prepare-error: ", err)
       }
       defer insertItem.Close()
-      _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, searchId, price, true)
+      _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, searchId, price, true, productid)
       if err != nil {
         log.Println("women-item-list-url-insert-item-exec-error: ", err)
       }
     } else {
-      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ? WHERE searchId = ? AND supplierId = ?")
+      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ?, womenProductId = ? WHERE searchId = ? AND supplierId = ?")
       if err != nil {
         log.Println("women-item-list-url-update-item-prepare-error: ", err)
       }
       defer updateItem.Close()
-      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, searchId, supplierId)
+      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, productid, searchId, supplierId)
       if err != nil {
         log.Println("women-item-list-url-update-item-exec-error: ", err)
       }
