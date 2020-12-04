@@ -18,11 +18,20 @@ import (
 )
 
 func SyncDyOrderData(w http.ResponseWriter, r *http.Request) {
+  query := r.URL.Query()
+  startTime := query["startTime"][0]
+  endTime := query["endTime"][0]
   shopId := "973906"
   accessToken := GetAccessToken(shopId)
   page := 0
   size := 10
-  data, err := getAndSaveOrderListByPage(page, size, accessToken)
+  data, err := getAndSaveOrderListByPage(
+    page,
+    size,
+    accessToken,
+    startTime,
+    endTime,
+  )
   if err != nil {
     log.Println("sync-dy-order-data-get-by-page-error: ", err)
     http.Error(w, err.Error(), 500)
@@ -31,7 +40,13 @@ func SyncDyOrderData(w http.ResponseWriter, r *http.Request) {
   total := int(data["total"].(float64))
   allPages := total / size + 1
   for i := 1; i < allPages; i++ {
-    _, err = getAndSaveOrderListByPage(i, size, accessToken)
+    _, err = getAndSaveOrderListByPage(
+      i,
+      size,
+      accessToken,
+      startTime,
+      endTime,
+    )
     if err != nil {
       log.Println("sync-dy-order-data-get-all-order-error: ", err)
       http.Error(w, err.Error(), 500)
@@ -45,13 +60,15 @@ func getAndSaveOrderListByPage(
   page int,
   size int,
   accessToken string,
+  startTime string,
+  endTime string,
 ) (
   map[string]interface{},
   error,
 ) {
   param := map[string]interface{}{
-    "start_time": "2020/11/20 00:00:00",
-    "end_time": "2020/11/23 00:00:00",
+    "start_time": startTime,
+    "end_time": endTime,
     "order_by": "create_time",
     "page": strconv.Itoa(page),
     "size": strconv.Itoa(size),
@@ -65,6 +82,9 @@ func getAndSaveOrderListByPage(
   if err != nil {
     log.Println("sync-dy-order-data-get-and-save-order-list-by-page-error: ", err)
     return nil, err
+  }
+  if data["list"] == nil {
+    return data, nil
   }
   list := data["list"].([]interface{})
   db := database.DB
