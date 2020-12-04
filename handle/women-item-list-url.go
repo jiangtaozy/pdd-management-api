@@ -87,7 +87,7 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
     }
     // insert item
     var itemCount int
-    err = db.QueryRow("SELECT COUNT(*) FROM item WHERE searchId = ? AND supplierId = ?", searchId, supplierId).Scan(&itemCount)
+    err = db.QueryRow("SELECT COUNT(*) FROM item WHERE womenProductId = ?", productid).Scan(&itemCount)
     if err != nil {
       log.Println("women-item-list-url-count-item-error: ", err)
     }
@@ -101,15 +101,24 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
       if err != nil {
         log.Println("women-item-list-url-insert-item-exec-error: ", err)
       }
-    } else {
-      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ?, womenProductId = ? WHERE searchId = ? AND supplierId = ?")
+    } else if itemCount == 1 {
+      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ? WHERE womenProductId = ?")
       if err != nil {
         log.Println("women-item-list-url-update-item-prepare-error: ", err)
       }
       defer updateItem.Close()
-      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, productid, searchId, supplierId)
+      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, productid)
       if err != nil {
         log.Println("women-item-list-url-update-item-exec-error: ", err)
+      }
+    } else {
+      stmtDeleteItem, err := db.Prepare("DELETE FROM item WHERE womenProductId = ?")
+      if err != nil {
+        log.Println("women-item-list-url-delete-item-prepare-error: ", err)
+      }
+      _, err = stmtDeleteItem.Exec(productid)
+      if err != nil {
+        log.Println("women-item-list-url-delete-item-exec-error: ", err)
       }
     }
   })
