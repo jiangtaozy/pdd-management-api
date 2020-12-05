@@ -8,7 +8,7 @@ package database
 
 const createDyItem = `
   CREATE TABLE IF NOT EXISTS dyItem (
-    checkStatus TINYINT UNSIGNED NOT NULL COMMENT '审核状态',
+    checkStatus TINYINT UNSIGNED NOT NULL COMMENT '商品审核状态：1未提审 2审核中 3审核通过 4审核驳回 5封禁',
     cosRatio TINYINT UNSIGNED,
     createTime DATETIME COMMENT '创建时间',
     description VARCHAR(4000) COMMENT '详情',
@@ -27,7 +27,7 @@ const createDyItem = `
     secondCid INTEGER UNSIGNED,
     settlementPrice INTEGER UNSIGNED COMMENT '结算价格',
     specId INTEGER UNSIGNED,
-    status TINYINT UNSIGNED,
+    status TINYINT UNSIGNED COMMENT '商品上下架状态：0上架 1下架',
     thirdCid INTEGER UNSIGNED,
     updateTime DATETIME COMMENT '更新时间',
     usp VARCHAR(100)

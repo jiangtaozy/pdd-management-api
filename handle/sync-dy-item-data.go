@@ -42,8 +42,6 @@ func getAndSaveProductListByPage(page int, accessToken string) (map[string]inter
   param := map[string]interface{}{
     "page": strconv.Itoa(page),
     "size": "10",
-    "status": "0",
-    "check_status": "3",
   }
   data, err := openapiFxg.ProductList(
     appId,
