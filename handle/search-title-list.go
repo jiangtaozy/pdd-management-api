@@ -7,10 +7,10 @@
 package handle
 
 import (
-  "encoding/json"
   "log"
   "net/http"
   "database/sql"
+  "encoding/json"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
@@ -21,14 +21,12 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       searchItem.id,
       searchItem.name,
       item.price,
+      item.imgUrl,
       item.detailUrl,
       item.womenProductId
     FROM searchItem
     LEFT JOIN item
       ON searchItem.id = item.searchId
-    WHERE
-      item.forSell = true OR
-      item.forSell IS NULL
     ORDER BY id DESC
   `)
   if err != nil {
@@ -40,6 +38,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     var (
       id int64
       name string
+      imgUrl sql.NullString
       price sql.NullFloat64
       detailUrl sql.NullString
       womenProductId sql.NullInt64
@@ -48,6 +47,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       &id,
       &name,
       &price,
+      &imgUrl,
       &detailUrl,
       &womenProductId,
     ); err != nil {
@@ -57,6 +57,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       "id": id,
       "name": name,
       "price": price.Float64,
+      "imgUrl": imgUrl.String,
       "detailUrl": detailUrl.String,
       "womenProductId": womenProductId.Int64,
     }
