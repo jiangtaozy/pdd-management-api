@@ -60,10 +60,21 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       ON pddItem.outGoodsSn = item.searchId
     LEFT JOIN pddAdUnit AS pddAdUnit
       ON pddItem.pddId = pddAdUnit.goodsId
-    LEFT JOIN
-      (SELECT adId, SUM(impression) impression, SUM(click) click, SUM(spend) spend, SUM(orderNum) orderNum, SUM(gmv) gmv, SUM(mallFavNum) mallFavNum, SUM(goodsFavNum) goodsFavNum
-      FROM pddAdUnitDailyData
-      GROUP BY adId) AS adData
+    LEFT JOIN (
+      SELECT
+        adId,
+        SUM(impression) impression,
+        SUM(click) click,
+        SUM(spend) spend,
+        SUM(orderNum) orderNum,
+        SUM(gmv) gmv,
+        SUM(mallFavNum) mallFavNum,
+        SUM(goodsFavNum) goodsFavNum
+      FROM
+        pddAdUnitDailyData
+      GROUP BY
+        adId
+    ) AS adData
       ON pddAdUnit.adId = adData.adId
     LEFT JOIN itemOrder AS itemOrder
       ON pddItem.pddId = itemOrder.productId
