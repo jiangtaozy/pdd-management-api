@@ -95,7 +95,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       skuGroupPriceMax int64
       pddId int64
       goodsName string
-      displayPriority string
+      displayPriority sql.NullString
       thumbUrl string
       isOnsale bool
       soldQuantity int64
@@ -198,7 +198,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "skuGroupPriceMax": skuGroupPriceMax,
         "pddId": pddId,
         "goodsName": goodsName,
-        "displayPriority": displayPriority,
+        "displayPriority": displayPriority.String,
         "thumbUrl": thumbUrl,
         "isOnsale": isOnsale,
         "soldQuantity": soldQuantity,
