@@ -34,12 +34,14 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
       data.goodsFavNum,
       data.date
     FROM pddAdUnit AS unit
-    LEFT JOIN pddAdUnitDailyData AS data
+    INNER JOIN pddAdUnitDailyData AS data
       ON data.adId = unit.adId
     WHERE unit.goodsId = ?
   `, id)
   if err != nil {
     log.Println("pdd-item-data-query-error: ", err)
+    http.Error(w, err.Error(), 500)
+    return
   }
   defer rows.Close()
   var unitList []interface{}
@@ -47,13 +49,13 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
     var (
       adId int64
       adName string
-      impression int64
-      click int64
-      spend int64
-      orderNum int64
-      gmv int64
-      mallFavNum int64
-      goodsFavNum int64
+      impression sql.NullInt64
+      click sql.NullInt64
+      spend sql.NullInt64
+      orderNum sql.NullInt64
+      gmv sql.NullInt64
+      mallFavNum sql.NullInt64
+      goodsFavNum sql.NullInt64
       date time.Time
     )
     err := rows.Scan(
@@ -70,17 +72,19 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
     )
     if err != nil {
       log.Println("pdd-item-data-scan-data-error: ", err)
+      http.Error(w, err.Error(), 500)
+      return
     }
     unit := map[string]interface{}{
       "adId": adId,
       "adName": adName,
-      "impression": impression,
-      "click": click,
-      "spend": spend,
-      "orderNum": orderNum,
-      "gmv": gmv,
-      "mallFavNum": mallFavNum,
-      "goodsFavNum": goodsFavNum,
+      "impression": impression.Int64,
+      "click": click.Int64,
+      "spend": spend.Int64,
+      "orderNum": orderNum.Int64,
+      "gmv": gmv.Int64,
+      "mallFavNum": mallFavNum.Int64,
+      "goodsFavNum": goodsFavNum.Int64,
       "date": date,
     }
     unitList = append(unitList, unit)
@@ -106,6 +110,8 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
   `, id)
   if err != nil {
     log.Println("pdd-item-data-query-order-error: ", err)
+    http.Error(w, err.Error(), 500)
+    return
   }
   defer orderRows.Close()
   var orderList []interface{}
@@ -128,9 +134,8 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
     )
     if err != nil {
       log.Println("pdd-item-data-scan-order-error: ", err)
-    }
-    if err != nil {
-      log.Println("pdd-item-data-payment-time-parse-error: ", err)
+      http.Error(w, err.Error(), 500)
+      return
     }
     order := map[string]interface{}{
       "orderId": orderId,
@@ -175,6 +180,8 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
       dateTime := data["date"].(time.Time)
       if err != nil {
         log.Println("pdd-item-data-parse-data-date-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
       }
       if dateTime.Year() == date.Year() &&
         dateTime.Month() == date.Month() &&
