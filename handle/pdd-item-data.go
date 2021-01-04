@@ -36,7 +36,10 @@ func PddItemData(w http.ResponseWriter, r *http.Request) {
     FROM pddAdUnit AS unit
     INNER JOIN pddAdUnitDailyData AS data
       ON data.adId = unit.adId
-    WHERE unit.goodsId = ?
+    WHERE
+      unit.goodsId = ?
+    ORDER BY
+      data.date ASC
   `, id)
   if err != nil {
     log.Println("pdd-item-data-query-error: ", err)
