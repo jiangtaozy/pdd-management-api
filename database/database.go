@@ -38,6 +38,7 @@ func InitDB() {
   //execSQL(createDyOrder)
   //execSQL(createDyChildOrder)
   //execSQL(createPddItemPriceHistory)
+  //execSQL(createPddCompetitor)
 }
 
 func ConnectDB() {
