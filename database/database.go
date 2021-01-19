@@ -40,6 +40,7 @@ func InitDB() {
   //execSQL(createPddItemPriceHistory)
   //execSQL(createPddCompetitor)
   //execSQL(createPddCompetitorItem)
+  //execSQL(createPddCompetitorItemSale)
 }
 
 func ConnectDB() {
