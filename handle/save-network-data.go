@@ -54,6 +54,10 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
     SyncPddOrder(requestBody, responseBody)
     log.Println("url: ", url)
   }
+  if url == "https://mms.pinduoduo.com/sydney/api/goodsDataShow/queryGoodsDetailVOList" {
+    SyncPddGoodsFlowData(requestBody, responseBody)
+    log.Println("url: ", url)
+  }
   now := time.Now()
   diff := now.Sub(start)
   log.Println("diff: ", diff)

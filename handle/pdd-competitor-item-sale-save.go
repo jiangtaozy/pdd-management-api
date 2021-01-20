@@ -25,7 +25,6 @@ func PddCompetitorItemSaleSave(w http.ResponseWriter, r *http.Request) {
     return
   }
   date, err := time.Parse(time.RFC3339, body["date"].(string))
-  log.Println("date: ", date)
   if err != nil {
     log.Println("pdd-competitor-item-sale-save-parse-date-error: ", err)
     http.Error(w, err.Error(), 500)
