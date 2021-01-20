@@ -54,7 +54,8 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       itemOrder.userPaidAmount,
       itemOrder.platformDiscount,
       itemOrder.orderId,
-      order1688.actualPayment
+      order1688.actualPayment,
+      pddGoodsFlowData.goodsPv
     FROM pddItem AS pddItem
     LEFT JOIN item AS item
       ON pddItem.outGoodsSn = item.searchId
@@ -80,6 +81,16 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       ON pddItem.pddId = itemOrder.productId
     LEFT JOIN order1688 AS order1688
       ON itemOrder.outerOrderId = order1688.orderId
+    LEFT JOIN (
+      SELECT
+        goodsId,
+        SUM(goodsPv) goodsPv
+      FROM
+        pddGoodsFlowData
+      GROUP BY
+        goodsId
+    ) AS pddGoodsFlowData
+      ON pddItem.pddId = pddGoodsFlowData.goodsId
     WHERE (item.forSell = true OR item.forSell IS NULL)
     ORDER BY pddItem.createdAt DESC`)
   if err != nil {
@@ -126,8 +137,47 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       platformDiscount sql.NullInt64
       orderId sql.NullString
       actualPayment sql.NullFloat64
+      goodsPv sql.NullInt64
     )
-    if err := rows.Scan(&id, &quantity, &skuGroupPriceMin, &skuGroupPriceMax, &pddId, &goodsName, &displayPriority, &thumbUrl, &isOnsale, &soldQuantity, &outGoodsSn, &soldQuantityForThirtyDays, &favCnt, &ifNewGoods, &goodsInfoScr, &createdAt, &name, &shippingPrice, &suitPrice, &siteType, &detailUrl, &adId, &scenesType, &impression, &click, &spend, &orderNum, &gmv, &mallFavNum, &goodsFavNum, &orderStatus, &afterSaleStatus, &orderStatusStr, &userPaidAmount, &platformDiscount, &orderId, &actualPayment); err != nil {
+    if err := rows.Scan(
+      &id,
+      &quantity,
+      &skuGroupPriceMin,
+      &skuGroupPriceMax,
+      &pddId,
+      &goodsName,
+      &displayPriority,
+      &thumbUrl,
+      &isOnsale,
+      &soldQuantity,
+      &outGoodsSn,
+      &soldQuantityForThirtyDays,
+      &favCnt,
+      &ifNewGoods,
+      &goodsInfoScr,
+      &createdAt,
+      &name,
+      &shippingPrice,
+      &suitPrice,
+      &siteType,
+      &detailUrl,
+      &adId,
+      &scenesType,
+      &impression,
+      &click,
+      &spend,
+      &orderNum,
+      &gmv,
+      &mallFavNum,
+      &goodsFavNum,
+      &orderStatus,
+      &afterSaleStatus,
+      &orderStatusStr,
+      &userPaidAmount,
+      &platformDiscount,
+      &orderId,
+      &actualPayment,
+      &goodsPv); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
     ad := map[string]interface{}{
@@ -215,6 +265,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "detailUrl": detailUrl.String,
         "adList": adList,
         "orderList": orderList,
+        "goodsPv": goodsPv.Int64,
       }
       itemList = append(itemList, item)
     }
