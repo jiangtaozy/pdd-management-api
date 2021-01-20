@@ -16,7 +16,6 @@ func SyncPddGoodsFlowData(requestBody map[string]interface{}, responseBody map[s
   startDate := requestBody["startDate"]
   endDate := requestBody["endDate"]
   if startDate != endDate {
-    log.Println("return")
     return
   }
   var result = responseBody["result"].(map[string]interface{})
