@@ -43,6 +43,7 @@ func InitDB() {
   //execSQL(createPddCompetitorItemSale)
   //execSQL(createPddGoodsFlowData)
   //execSQL(createPddShopFlowData)
+  //execSQL(createWomenItem)
 }
 
 func ConnectDB() {
