@@ -13,6 +13,7 @@ import (
   "math"
   "regexp"
   "strconv"
+  "strings"
   "encoding/json"
   "net/http"
   "github.com/gocolly/colly/v2"
@@ -246,9 +247,110 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         return
       }
     }
-    // todo 规格
+    // 保存womenItemSku
     spec, _ := e.DOM.Find("#SpecPrice").Attr("value")
-    log.Println("spec: ", spec)
+    specList := strings.Split(spec, "|")
+    stmtInsertSku, err := db.Prepare(`
+      INSERT INTO womenItemSku (
+        searchId,
+        productId,
+        skuDesc,
+        skuKey,
+        price,
+        isOnShelf,
+        stock
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `)
+    if err != nil {
+      log.Println("get-women-detail-data-insert-women-item-sku-prepare-error: ", err)
+      http.Error(w, err.Error(), 500)
+      return
+    }
+    defer stmtInsertSku.Close()
+    stmtUpdateSku, err := db.Prepare(`
+      UPDATE
+        womenItemSku
+      SET
+        productId = ?,
+        skuDesc = ?,
+        price = ?,
+        isOnShelf = ?,
+        stock = ?
+      WHERE
+        searchId = ?
+      AND
+        skuKey = ?
+    `)
+    if err != nil {
+      log.Println("get-women-detail-data-update-women-item-sku-prepare-error: ", err)
+      http.Error(w, err.Error(), 500)
+      return
+    }
+    defer stmtUpdateSku.Close()
+    for i := 0; i < len(specList); i++ {
+      sku := specList[i]
+      keyList := strings.Split(sku, ";")
+      skuDesc := keyList[0]
+      skuKey := keyList[1]
+      priceStr := keyList[2]
+      isOnShelf := keyList[3]
+      stock := keyList[4]
+      price, err := strconv.ParseFloat(priceStr, 32);
+      if err != nil {
+        log.Println("get-women-detail-data-parse-sku-price-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
+      price = math.Round(price *  100)
+      var skuCount int
+      err = db.QueryRow(`
+        SELECT
+          COUNT(*)
+        FROM
+          womenItemSku
+        WHERE
+          searchId = ?
+        AND
+          skuKey = ?
+      `, id, keyList[1]).Scan(&skuCount)
+      if err != nil {
+        log.Println("get-women-detail-data-women-item-sku-count-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
+      if skuCount == 0 {
+        _, err = stmtInsertSku.Exec(
+          id,
+          productId,
+          skuDesc,
+          skuKey,
+          price,
+          isOnShelf,
+          stock,
+        )
+        if err != nil {
+          log.Println("get-women-detail-data-insert-women-item-sku-exec-error: ", err)
+          http.Error(w, err.Error(), 500)
+          return
+        }
+      } else {
+        _, err = stmtUpdateSku.Exec(
+          productId,
+          skuDesc,
+          price,
+          isOnShelf,
+          stock,
+          id,
+          skuKey,
+        )
+        if err != nil {
+          log.Println("get-women-detail-data-update-women-item-sku-exec-error: ", err)
+          http.Error(w, err.Error(), 500)
+          return
+        }
+      }
+    }
+
     // todo 主图
     mainImgs := e.DOM.Find("#imageMenu ul li a img")
     mainImgs.Each(func(i int, s *goquery.Selection) {
