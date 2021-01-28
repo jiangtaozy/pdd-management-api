@@ -350,16 +350,16 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         }
       }
     }
-
-    // todo 主图
+    // 保存主图
     mainImgs := e.DOM.Find("#imageMenu ul li a img")
     mainImgs.Each(func(i int, s *goquery.Selection) {
-      img225, _ := s.Attr("src")
-      log.Println("img225: ", img225)
-      img500, _ := s.Attr("name")
-      log.Println("img500: ", img500)
       img800, _ := s.Attr("id")
-      log.Println("img800: ", img800)
+      err = SaveWomenItemMainImage(id, productId, img800)
+      if err != nil {
+        log.Println("get-women-detail-data-save-women-item-main-image-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
     })
     // todo 属性
     attributes := e.DOM.Find("#tab0_detail #props ul li")
@@ -384,4 +384,47 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     return
   })
   collector.Visit(detailUrl)
+}
+
+func SaveWomenItemMainImage(searchId float64, productId string, src string) error {
+  db := database.DB
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO womenItemMainImage (
+      searchId,
+      productId,
+      src
+    ) VALUES (?, ?, ?)
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-main-image-insert-prepare-error: ", err)
+    return err
+  }
+  defer stmtInsert.Close()
+  var count int
+  err = db.QueryRow(`
+    SELECT
+      COUNT(*)
+    FROM
+      womenItemMainImage
+    WHERE
+      searchId = ?
+    AND
+      src = ?
+  `, searchId, src).Scan(&count)
+  if err != nil {
+    log.Println("get-women-detail-data-save-main-image-count-error: ", err)
+    return err
+  }
+  if count == 0 {
+    _, err = stmtInsert.Exec(
+      searchId,
+      productId,
+      src,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-main-image-insert-exec-error: ", err)
+      return err
+    }
+  }
+  return nil
 }
