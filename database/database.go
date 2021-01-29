@@ -46,6 +46,7 @@ func InitDB() {
   //execSQL(createWomenItem)
   //execSQL(createWomenItemSku)
   //execSQL(createWomenItemMainImage)
+  //execSQL(createWomenItemAttribute)
 }
 
 func ConnectDB() {

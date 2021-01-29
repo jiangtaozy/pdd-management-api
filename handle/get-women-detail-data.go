@@ -361,13 +361,19 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         return
       }
     })
-    // todo 属性
+    // 保存属性
     attributes := e.DOM.Find("#tab0_detail #props ul li")
     attributes.Each(func(i int, s *goquery.Selection) {
       value, _ := s.Attr("title")
-      log.Println("value: ", value)
+      value = strings.Trim(value, " ")
       key := s.Find("span").Text()
-      log.Println("key: ", key)
+      key = strings.Trim(key, "：")
+      err = SaveWomenItemAttribute(id, productId, key, value)
+      if err != nil {
+        log.Println("get-women-detail-data-save-women-item-attribute-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
     })
     // todo 详情图
     detailImgs := e.DOM.Find("#detail_img").Find("img")
@@ -423,6 +429,78 @@ func SaveWomenItemMainImage(searchId float64, productId string, src string) erro
     )
     if err != nil {
       log.Println("get-women-detail-data-save-main-image-insert-exec-error: ", err)
+      return err
+    }
+  }
+  return nil
+}
+
+func SaveWomenItemAttribute(searchId float64, productId string, key string, value string) error {
+  db := database.DB
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO womenItemAttribute (
+      searchId,
+      productId,
+      attributeKey,
+      attributeValue
+    ) VALUES (?, ?, ?, ?)
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-attribute-insert-prepare-error: ", err)
+    return err
+  }
+  defer stmtInsert.Close()
+  stmtUpdate, err := db.Prepare(`
+    UPDATE
+      womenItemAttribute
+    SET
+      productId = ?,
+      attributeValue = ?
+    WHERE
+      searchId = ?
+    AND
+      attributeKey = ?
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-attribute-update-prepare-error: ", err)
+    return err
+  }
+  defer stmtUpdate.Close()
+  var count int
+  err = db.QueryRow(`
+    SELECT
+      COUNT(*)
+    FROM
+      womenItemAttribute
+    WHERE
+      searchId = ?
+    AND
+      attributeKey = ?
+  `, searchId, key).Scan(&count)
+  if err != nil {
+    log.Println("get-women-detail-data-save-attribute-count-error: ", err)
+    return err
+  }
+  if count == 0 {
+    _, err = stmtInsert.Exec(
+      searchId,
+      productId,
+      key,
+      value,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-attribute-insert-exec-error: ", err)
+      return err
+    }
+  } else {
+    _, err = stmtUpdate.Exec(
+      productId,
+      value,
+      searchId,
+      key,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-attribute-update-exec-error: ", err)
       return err
     }
   }
