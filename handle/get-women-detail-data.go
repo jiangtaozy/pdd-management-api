@@ -375,11 +375,16 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         return
       }
     })
-    // todo 详情图
+    // 保存详情图
     detailImgs := e.DOM.Find("#detail_img").Find("img")
     detailImgs.Each(func(i int, s *goquery.Selection) {
       src, _ := s.Attr("data-original")
-      log.Println("src: ", src)
+      err = SaveWomenItemDetailImage(id, productId, src)
+      if err != nil {
+        log.Println("get-women-detail-data-save-women-item-detail-image-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
     })
 
     io.WriteString(w, "ok")
@@ -501,6 +506,49 @@ func SaveWomenItemAttribute(searchId float64, productId string, key string, valu
     )
     if err != nil {
       log.Println("get-women-detail-data-save-attribute-update-exec-error: ", err)
+      return err
+    }
+  }
+  return nil
+}
+
+func SaveWomenItemDetailImage(searchId float64, productId string, src string) error {
+  db := database.DB
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO womenItemDetailImage (
+      searchId,
+      productId,
+      src
+    ) VALUES (?, ?, ?)
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-detail-image-insert-prepare-error: ", err)
+    return err
+  }
+  defer stmtInsert.Close()
+  var count int
+  err = db.QueryRow(`
+    SELECT
+      COUNT(*)
+    FROM
+      womenItemDetailImage
+    WHERE
+      searchId = ?
+    AND
+      src = ?
+  `, searchId, src).Scan(&count)
+  if err != nil {
+    log.Println("get-women-detail-data-save-detail-image-count-error: ", err)
+    return err
+  }
+  if count == 0 {
+    _, err = stmtInsert.Exec(
+      searchId,
+      productId,
+      src,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-detail-image-insert-exec-error: ", err)
       return err
     }
   }
