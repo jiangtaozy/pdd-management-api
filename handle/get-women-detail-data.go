@@ -31,8 +31,6 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     http.Error(w, err.Error(), 500)
     return
   }
-  log.Println("detailUrl: ", detailUrl)
-  log.Println("id: ", id)
   collector := colly.NewCollector()
   collector.OnHTML("body", func(e *colly.HTMLElement) {
     isLightningDelivery := e.DOM.Find(".sdfhLabelIco").Length()
@@ -361,6 +359,20 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         return
       }
     })
+    // 保存颜色
+    colors := e.DOM.Find("#em0 span")
+    colors.Each(func(i int, s *goquery.Selection) {
+      color, _ := s.Attr("text")
+      thumbnail, _ := s.Attr("thumbnailaddress")
+      hrthumbnail, _ := s.Attr("hrthumbnail")
+      original, _ := s.Attr("originaladdress")
+      err = SaveWomenItemColor(id, productId, color, thumbnail, hrthumbnail, original)
+      if err != nil {
+        log.Println("get-women-detail-data-save-women-item-color-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
+    })
     // 保存属性
     attributes := e.DOM.Find("#tab0_detail #props ul li")
     attributes.Each(func(i int, s *goquery.Selection) {
@@ -434,6 +446,86 @@ func SaveWomenItemMainImage(searchId float64, productId string, src string) erro
     )
     if err != nil {
       log.Println("get-women-detail-data-save-main-image-insert-exec-error: ", err)
+      return err
+    }
+  }
+  return nil
+}
+
+func SaveWomenItemColor(searchId float64, productId string, color string, thumbnail string, hrthumbnail string, original string) error {
+  db := database.DB
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO womenItemColor (
+      searchId,
+      productId,
+      color,
+      thumbnail,
+      hrthumbnail,
+      original
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-color-insert-prepare-error: ", err)
+    return err
+  }
+  defer stmtInsert.Close()
+  stmtUpdate, err := db.Prepare(`
+    UPDATE
+      womenItemColor
+    SET
+      productId = ?,
+      thumbnail = ?,
+      hrthumbnail = ?,
+      original = ?
+    WHERE
+      searchId = ?
+    AND
+      color = ?
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-color-update-prepare-error: ", err)
+    return err
+  }
+  defer stmtUpdate.Close()
+  var count int
+  err = db.QueryRow(`
+    SELECT
+      COUNT(*)
+    FROM
+      womenItemColor
+    WHERE
+      searchId = ?
+    AND
+      color = ?
+  `, searchId, color).Scan(&count)
+  if err != nil {
+    log.Println("get-women-detail-data-save-color-count-error: ", err)
+    return err
+  }
+  if count == 0 {
+    _, err = stmtInsert.Exec(
+      searchId,
+      productId,
+      color,
+      thumbnail,
+      hrthumbnail,
+      original,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-color-insert-exec-error: ", err)
+      return err
+    }
+  } else {
+    _, err = stmtUpdate.Exec(
+      productId,
+      thumbnail,
+      hrthumbnail,
+      original,
+      searchId,
+      color,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-color-update-exec-error: ", err)
       return err
     }
   }
