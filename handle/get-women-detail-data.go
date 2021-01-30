@@ -351,8 +351,10 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     // 保存主图
     mainImgs := e.DOM.Find("#imageMenu ul li a img")
     mainImgs.Each(func(i int, s *goquery.Selection) {
+      img225, _ := s.Attr("src")
+      img500, _ := s.Attr("name")
       img800, _ := s.Attr("id")
-      err = SaveWomenItemMainImage(id, productId, img800)
+      err = SaveWomenItemMainImage(id, productId, img225, img500, img800)
       if err != nil {
         log.Println("get-women-detail-data-save-women-item-main-image-error: ", err)
         http.Error(w, err.Error(), 500)
@@ -369,6 +371,17 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
       err = SaveWomenItemColor(id, productId, color, thumbnail, hrthumbnail, original)
       if err != nil {
         log.Println("get-women-detail-data-save-women-item-color-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
+    })
+    // 保存尺码
+    sizes := e.DOM.Find("#em1 table tr")
+    sizes.Each(func(i int, s *goquery.Selection) {
+      size, _ := s.Attr("sizevalue")
+      err = SaveWomenItemSize(id, productId, size)
+      if err != nil {
+        log.Println("get-women-detail-data-save-women-item-size-error: ", err)
         http.Error(w, err.Error(), 500)
         return
       }
@@ -398,7 +411,6 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         return
       }
     })
-
     io.WriteString(w, "ok")
   })
   collector.OnError(func(_ *colly.Response, err error) {
@@ -409,14 +421,16 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
   collector.Visit(detailUrl)
 }
 
-func SaveWomenItemMainImage(searchId float64, productId string, src string) error {
+func SaveWomenItemMainImage(searchId float64, productId string, img225 string, img500 string, img800 string) error {
   db := database.DB
   stmtInsert, err := db.Prepare(`
     INSERT INTO womenItemMainImage (
       searchId,
       productId,
-      src
-    ) VALUES (?, ?, ?)
+      img225,
+      img500,
+      img800
+    ) VALUES (?, ?, ?, ?, ?)
   `)
   if err != nil {
     log.Println("get-women-detail-data-save-main-image-insert-prepare-error: ", err)
@@ -432,8 +446,8 @@ func SaveWomenItemMainImage(searchId float64, productId string, src string) erro
     WHERE
       searchId = ?
     AND
-      src = ?
-  `, searchId, src).Scan(&count)
+      img800 = ?
+  `, searchId, img800).Scan(&count)
   if err != nil {
     log.Println("get-women-detail-data-save-main-image-count-error: ", err)
     return err
@@ -442,7 +456,9 @@ func SaveWomenItemMainImage(searchId float64, productId string, src string) erro
     _, err = stmtInsert.Exec(
       searchId,
       productId,
-      src,
+      img225,
+      img500,
+      img800,
     )
     if err != nil {
       log.Println("get-women-detail-data-save-main-image-insert-exec-error: ", err)
@@ -526,6 +542,49 @@ func SaveWomenItemColor(searchId float64, productId string, color string, thumbn
     )
     if err != nil {
       log.Println("get-women-detail-data-save-color-update-exec-error: ", err)
+      return err
+    }
+  }
+  return nil
+}
+
+func SaveWomenItemSize(searchId float64, productId string, size string) error {
+  db := database.DB
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO womenItemSize (
+      searchId,
+      productId,
+      size
+    ) VALUES (?, ?, ?)
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-size-insert-prepare-error: ", err)
+    return err
+  }
+  defer stmtInsert.Close()
+  var count int
+  err = db.QueryRow(`
+    SELECT
+      COUNT(*)
+    FROM
+      womenItemSize
+    WHERE
+      searchId = ?
+    AND
+      size = ?
+  `, searchId, size).Scan(&count)
+  if err != nil {
+    log.Println("get-women-detail-data-save-size-count-error: ", err)
+    return err
+  }
+  if count == 0 {
+    _, err = stmtInsert.Exec(
+      searchId,
+      productId,
+      size,
+    )
+    if err != nil {
+      log.Println("get-women-detail-data-save-size-insert-exec-error: ", err)
       return err
     }
   }
