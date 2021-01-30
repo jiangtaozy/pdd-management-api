@@ -32,6 +32,7 @@ const createWomenItem =`
     isOriginalImage BOOLEAN COMMENT '是否原图保证',
     isPowerMerchant BOOLEAN COMMENT '是否实力商家',
     isFactory BOOLEAN COMMENT '是否工厂认证',
-    isLimitPrice BOOLEAN COMMENT '是否厂商控价'
+    isLimitPrice BOOLEAN COMMENT '是否厂商控价',
+    video VARCHAR(150) COMMENT '视频'
   );
 `

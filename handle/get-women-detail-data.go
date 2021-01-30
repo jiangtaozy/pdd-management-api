@@ -94,6 +94,7 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     isPowerMerchant := e.DOM.Find(".adlRg .shili").Length()
     isFactory := e.DOM.Find(".adlRg .gongchang").Length()
     isLimitPrice := e.DOM.Find(".adlRg .jia").Length()
+    video, _ := e.DOM.Find("#J_playVideo").Attr("videourl")
     // 保存 womenItem
     db := database.DB
     stmtInsertWomenItem, err := db.Prepare(`
@@ -121,8 +122,9 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         isOriginalImage,
         isPowerMerchant,
         isFactory,
-        isLimitPrice
-      ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        isLimitPrice,
+        video
+      ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     if err != nil {
       log.Println("get-women-detail-data-insert-women-item-prepare-error: ", err)
@@ -156,7 +158,8 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         isOriginalImage = ?,
         isPowerMerchant = ?,
         isFactory = ?,
-        isLimitPrice = ?
+        isLimitPrice = ?,
+        video = ?
       WHERE
         searchId = ?
     `)
@@ -206,6 +209,7 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         isPowerMerchant,
         isFactory,
         isLimitPrice,
+        video,
       )
       if err != nil {
         log.Println("get-women-detail-data-insert-women-item-exec-error: ", err)
@@ -237,6 +241,7 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         isPowerMerchant,
         isFactory,
         isLimitPrice,
+        video,
         id,
       )
       if err != nil {
