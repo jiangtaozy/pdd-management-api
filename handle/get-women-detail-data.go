@@ -49,13 +49,16 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     }
     price = math.Round(price * 100)
     presentPriceStr := e.DOM.Find(".presentPrice span").Text()
-    presentPrice, err := strconv.ParseFloat(presentPriceStr, 32)
-    if err != nil {
-      log.Println("get-women-detail-data-parse-present-price-error: ", err)
-      http.Error(w, err.Error(), 500)
-      return
+    var presentPrice float64
+    if presentPriceStr != "" {
+      presentPrice, err = strconv.ParseFloat(presentPriceStr, 32)
+      if err != nil {
+        log.Println("get-women-detail-data-parse-present-price-error: ", err)
+        http.Error(w, err.Error(), 500)
+        return
+      }
+      presentPrice = math.Round(presentPrice * 100)
     }
-    presentPrice = math.Round(presentPrice * 100)
     goodsNo := e.DOM.Find("#productCoodsNo").Text()
     createdTime := e.DOM.Find(`.midbrand-1[style="text-align: center;"] label`).Text()
     updatedTime := e.DOM.Find(".midbrand-2 label").Text()

@@ -55,7 +55,8 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       itemOrder.platformDiscount,
       itemOrder.orderId,
       order1688.actualPayment,
-      pddGoodsFlowData.goodsPv
+      pddGoodsFlowData.goodsPv,
+      womenItem.isCloudWarehouse
     FROM pddItem AS pddItem
     LEFT JOIN item AS item
       ON pddItem.outGoodsSn = item.searchId
@@ -91,6 +92,8 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         goodsId
     ) AS pddGoodsFlowData
       ON pddItem.pddId = pddGoodsFlowData.goodsId
+    LEFT JOIN womenItem AS womenItem
+      ON pddItem.outGoodsSn = womenItem.searchId
     WHERE (item.forSell = true OR item.forSell IS NULL)
     ORDER BY pddItem.createdAt DESC`)
   if err != nil {
@@ -138,6 +141,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       orderId sql.NullString
       actualPayment sql.NullFloat64
       goodsPv sql.NullInt64
+      isCloudWarehouse sql.NullBool
     )
     if err := rows.Scan(
       &id,
@@ -177,7 +181,9 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       &platformDiscount,
       &orderId,
       &actualPayment,
-      &goodsPv); err != nil {
+      &goodsPv,
+      &isCloudWarehouse,
+    ); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
     ad := map[string]interface{}{
@@ -266,6 +272,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "adList": adList,
         "orderList": orderList,
         "goodsPv": goodsPv.Int64,
+        "isCloudWarehouse": isCloudWarehouse.Bool,
       }
       itemList = append(itemList, item)
     }
