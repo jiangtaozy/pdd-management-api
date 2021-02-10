@@ -27,7 +27,38 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
   }
   rows, err := xlFile.GetRows("订单导出")
   db := database.DB
-  stmtInsert, err := db.Prepare("INSERT INTO order1688 (orderId, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, phone, productTitle, price, amount, courierCompany, trackingNumber, orderType, productSku, orderTotalPrice, agentDeliveryFee, paymentMethod, outerOrderId, deliveryTime, productStatus, distributionAmount, deliveryAmount) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO order1688 (
+      orderId,
+      totalPrice,
+      shippingFare,
+      discount,
+      actualPayment,
+      orderStatus,
+      orderCreatedTime,
+      orderPaymentTime,
+      receiver,
+      shippingAddress,
+      phone,
+      productTitle,
+      price,
+      amount,
+      courierCompany,
+      trackingNumber,
+      orderType,
+      productSku,
+      orderTotalPrice,
+      agentDeliveryFee,
+      paymentMethod,
+      outerOrderId,
+      deliveryTime,
+      productStatus,
+      distributionAmount,
+      deliveryAmount
+    ) VALUES(
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+  `)
   if err != nil {
     log.Println("upload-hznzcn-order-file-insert-prepare-error: ", err)
   }
@@ -52,12 +83,16 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
       "已付款": 1,
       "已发货": 2,
       "已完成": 4,
-      "已退换货": 5,
-      "已退款": 5,
+      "已退换货": 5, // 已换货
+      "已退款": 5, // 已退货
+      "已作废": 6,
     }
     orderStatus := orderStatusMap[orderStatusStr]
     orderCreatedTime := getXlsxCell(rows[0], row, "下单日期")
     orderPaymentTime := getXlsxCell(rows[0], row, "付款时间")
+    if orderPaymentTime == "" {
+      orderPaymentTime = nil
+    }
     receiver := getXlsxCell(rows[0], row, "收货人姓名")
     shippingAddress := getXlsxCell(rows[0], row, "收货人地址")
     phone := getXlsxCell(rows[0], row, "收货人手机")
@@ -85,9 +120,38 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
       log.Println("upload-hznzcn-order-file-count-error: ", err)
     }
     if orderCount == 0 {
-      _, err = stmtInsert.Exec(orderId, totalPrice, shippingFare, discount, actualPayment, orderStatus, orderCreatedTime, orderPaymentTime, receiver, shippingAddress, phone, productTitle, price, amount, courierCompany, trackingNumber, orderType, productSku, orderTotalPrice, agentDeliveryFee, paymentMethod, outerOrderId, deliveryTime, productStatus, distributionAmount, deliveryAmount)
+      _, err = stmtInsert.Exec(
+        orderId,
+        totalPrice,
+        shippingFare,
+        discount,
+        actualPayment,
+        orderStatus,
+        orderCreatedTime,
+        orderPaymentTime,
+        receiver,
+        shippingAddress,
+        phone,
+        productTitle,
+        price,
+        amount,
+        courierCompany,
+        trackingNumber,
+        orderType,
+        productSku,
+        orderTotalPrice,
+        agentDeliveryFee,
+        paymentMethod,
+        outerOrderId,
+        deliveryTime,
+        productStatus,
+        distributionAmount,
+        deliveryAmount,
+      )
       if err != nil {
         log.Println("upload-hznzcn-order-file-insert-exec-error: ", err)
+        log.Println("orderStatusStr: ", orderStatusStr)
+        log.Println("orderPaymentTime: ", orderPaymentTime)
       }
     } else {
       _, err = stmtUpdate.Exec(orderStatus, courierCompany, trackingNumber, productStatus, orderId)

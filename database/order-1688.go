@@ -18,7 +18,7 @@ const order1688 =`
     orderStatus TINYINT NOT NULL COMMENT '订单状态，0: 待付款，1: 待发货，2: 待收货，3: 已收货，4: 交易成功，5: 已退换货，6: 交易关闭',
     afterSaleStatusStr VARCHAR(30) COMMENT '退货状态',
     orderCreatedTime DATETIME NOT NULL COMMENT '订单创建时间',
-    orderPaymentTime DATETIME NOT NULL COMMENT '订单付款时间',
+    orderPaymentTime DATETIME COMMENT '订单付款时间',
     receiver VARCHAR(30) NOT NULL COMMENT '收货人姓名',
     shippingAddress VARCHAR(100) NOT NULL COMMENT '收货地址',
     postcode VARCHAR(6) COMMENT '邮编',
