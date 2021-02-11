@@ -11,6 +11,7 @@ import (
   "io"
   "log"
   "time"
+  "strings"
   "strconv"
   "net/http"
   "encoding/json"
@@ -60,8 +61,10 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
       productId,
       skuDesc,
       ycAvailNum,
-      ycStockTips
-    ) VALUES (?, ?, ?, ?, ?)
+      ycStockTips,
+      skuColor,
+      skuSize
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `)
   if err != nil {
     log.Println("get-women-cloud-warehouse-stock-insert-prepare-error: ", err)
@@ -88,7 +91,10 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   defer stmtUpdate.Close()
   for i := 0; i < len(result); i++ {
     sku := result[i].(map[string]interface{})
-    skuDesc := sku["Spec"]
+    skuDesc := sku["Spec"].(string)
+    skuDescList := strings.Split(skuDesc, ",")
+    skuColor := skuDescList[0]
+    skuSize := skuDescList[1]
     ycAvailNum := sku["ycAvailNum"]
     ycStockTips := sku["ycStockTips"]
     var count int
@@ -114,6 +120,8 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
         skuDesc,
         ycAvailNum,
         ycStockTips,
+        skuColor,
+        skuSize,
       )
       if err != nil {
         log.Println("get-women-cloud-warehouse-stock-insert-exec-error: ", err)

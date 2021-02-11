@@ -9,6 +9,7 @@ package handle
 import (
   "log"
   "time"
+  "strings"
   "encoding/json"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
@@ -367,9 +368,11 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
       skuId,
       skuQuantity,
       skuSoldQuantity,
-      spec
+      spec,
+      specColor,
+      specSize
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `)
   if err != nil {
     log.Println("sync-pdd-item-save-sku-list-insert-prepare-error: ", err)
@@ -388,7 +391,9 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
       outSkuSn = ?,
       skuQuantity = ?,
       skuSoldQuantity = ?,
-      spec = ?
+      spec = ?,
+      specColor = ?,
+      specSize = ?
     WHERE
       pddId = ?
     AND
@@ -409,7 +414,10 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
     skuId := sku["skuId"]
     skuQuantity := sku["skuQuantity"]
     skuSoldQuantity := sku["skuSoldQuantity"]
-    spec := sku["spec"]
+    spec := sku["spec"].(string)
+    specList := strings.Split(spec, " ")
+    specColor := specList[0]
+    specSize := specList[1]
     var count int
     err = db.QueryRow(`
       SELECT
@@ -438,6 +446,8 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
         skuQuantity,
         skuSoldQuantity,
         spec,
+        specColor,
+        specSize,
       )
       if err != nil {
         log.Println("sync-pdd-item-save-sku-list-insert-exec-error: ", err)
@@ -454,6 +464,8 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
         skuQuantity,
         skuSoldQuantity,
         spec,
+        specColor,
+        specSize,
         pddId,
         skuId,
       )
