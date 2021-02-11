@@ -39,6 +39,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       item.suitPrice,
       item.siteType,
       item.detailUrl,
+      item.womenProductId,
       pddAdUnit.adId,
       pddAdUnit.scenesType,
       adData.impression,
@@ -124,6 +125,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       suitPrice sql.NullFloat64
       siteType sql.NullInt32
       detailUrl sql.NullString
+      womenProductId sql.NullInt64
       adId sql.NullInt64
       scenesType sql.NullInt64
       impression sql.NullInt64
@@ -165,6 +167,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       &suitPrice,
       &siteType,
       &detailUrl,
+      &womenProductId,
       &adId,
       &scenesType,
       &impression,
@@ -269,6 +272,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "suitPrice": suitPrice.Float64,
         "siteType": siteType.Int32,
         "detailUrl": detailUrl.String,
+        "womenProductId": womenProductId.Int64,
         "adList": adList,
         "orderList": orderList,
         "goodsPv": goodsPv.Int64,
