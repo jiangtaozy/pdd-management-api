@@ -347,7 +347,120 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
     }
     // sync pdd item price history
     PddItemPriceHistorySync(goods["id"].(float64), skuGroupPrice[0].(float64), skuGroupPrice[1].(float64));
+    // 保存skuList
+    SaveSkuList(goods["id"].(float64), goods["out_goods_sn"].(string), goods["sku_list"].([]interface{}))
   }
 }
 
-
+// 保存skuList
+func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
+  db := database.DB
+  stmtInsert, err := db.Prepare(`
+    INSERT INTO pddItemSku (
+      pddId,
+      outGoodsSn,
+      activityGroupPrice,
+      groupPrice,
+      isOnsale,
+      normalPrice,
+      outSkuSn,
+      skuId,
+      skuQuantity,
+      skuSoldQuantity,
+      spec
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `)
+  if err != nil {
+    log.Println("sync-pdd-item-save-sku-list-insert-prepare-error: ", err)
+    return
+  }
+  defer stmtInsert.Close()
+  stmtUpdate, err := db.Prepare(`
+    UPDATE
+      pddItemSku
+    SET
+      outGoodsSn = ?,
+      activityGroupPrice = ?,
+      groupPrice = ?,
+      isOnsale = ?,
+      normalPrice = ?,
+      outSkuSn = ?,
+      skuQuantity = ?,
+      skuSoldQuantity = ?,
+      spec = ?
+    WHERE
+      pddId = ?
+    AND
+      skuId = ?
+  `)
+  if err != nil {
+    log.Println("sync-pdd-item-save-sku-list-update-prepare-error: ", err)
+    return
+  }
+  defer stmtUpdate.Close()
+  for i := 0; i < len(skuList); i++ {
+    sku := skuList[i].(map[string]interface{})
+    activityGroupPrice := sku["activityGroupPrice"]
+    groupPrice := sku["groupPrice"]
+    isOnsale := sku["isOnsale"]
+    normalPrice := sku["normalPrice"]
+    outSkuSn := sku["outSkuSn"]
+    skuId := sku["skuId"]
+    skuQuantity := sku["skuQuantity"]
+    skuSoldQuantity := sku["skuSoldQuantity"]
+    spec := sku["spec"]
+    var count int
+    err = db.QueryRow(`
+      SELECT
+        COUNT(*)
+      FROM
+        pddItemSku
+      WHERE
+        pddId = ?
+      AND
+        skuId = ?
+    `, pddId, skuId).Scan(&count)
+    if err != nil {
+      log.Println("sync-pdd-item-save-sku-list-count-error: ", err)
+      return
+    }
+    if count == 0 {
+      _, err = stmtInsert.Exec(
+        pddId,
+        outGoodsSn,
+        activityGroupPrice,
+        groupPrice,
+        isOnsale,
+        normalPrice,
+        outSkuSn,
+        skuId,
+        skuQuantity,
+        skuSoldQuantity,
+        spec,
+      )
+      if err != nil {
+        log.Println("sync-pdd-item-save-sku-list-insert-exec-error: ", err)
+        return
+      }
+    } else {
+      _, err = stmtUpdate.Exec(
+        outGoodsSn,
+        activityGroupPrice,
+        groupPrice,
+        isOnsale,
+        normalPrice,
+        outSkuSn,
+        skuQuantity,
+        skuSoldQuantity,
+        spec,
+        pddId,
+        skuId,
+      )
+      if err != nil {
+        log.Println("sync-pdd-item-save-sku-list-update-exec-error: ", err)
+        return
+      }
+    }
+  }
+}
