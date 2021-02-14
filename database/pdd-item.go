@@ -65,6 +65,7 @@ const createPddItem =`
     preSaleTime INTEGER UNSIGNED NOT NULL DEFAULT 0,
     shipmentLimitSecond INTEGER UNSIGNED NOT NULL DEFAULT 0,
     isGroupPreSale BOOLEAN NOT NULL DEFAULT false,
+    isPreSale BOOLEAN COMMENT '是否预售',
     guideTarget INTEGER UNSIGNED NOT NULL DEFAULT 0,
     overSell BOOLEAN NOT NULL DEFAULT false,
     marketLabels VARCHAR(50),

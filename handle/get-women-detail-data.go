@@ -419,6 +419,13 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         return
       }
     })
+    // 保存item中womenProductId
+    err = SaveWomenProductId(id, productId)
+    if err != nil {
+      log.Println("get-women-detail-data-save-women-product-id-error: ", err)
+      http.Error(w, err.Error(), 500)
+      return
+    }
     io.WriteString(w, "ok")
   })
   collector.OnError(func(_ *colly.Response, err error) {
@@ -710,6 +717,32 @@ func SaveWomenItemDetailImage(searchId float64, productId string, src string) er
       log.Println("get-women-detail-data-save-detail-image-insert-exec-error: ", err)
       return err
     }
+  }
+  return nil
+}
+
+func SaveWomenProductId(searchId float64, productId string) error {
+  db := database.DB
+  stmtUpdate, err := db.Prepare(`
+    UPDATE
+      item
+    SET
+      womenProductId = ?
+    WHERE
+      searchId = ?
+  `)
+  if err != nil {
+    log.Println("get-women-detail-data-save-women-product-id-update-prepare-error: ", err)
+    return err
+  }
+  defer stmtUpdate.Close()
+  _, err = stmtUpdate.Exec(
+    productId,
+    searchId,
+  )
+  if err != nil {
+    log.Println("get-women-detail-data-save-women-product-id-update-exec-error: ", err)
+    return err
   }
   return nil
 }

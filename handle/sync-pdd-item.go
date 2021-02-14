@@ -76,6 +76,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
       preSaleTime,
       shipmentLimitSecond,
       isGroupPreSale,
+      isPreSale,
       guideTarget,
       overSell,
       marketLabels,
@@ -86,7 +87,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
       rejectStatus,
       rejectReason
     ) VALUES(
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     )
   `)
   if err != nil {
@@ -152,6 +153,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
       preSaleTime = ?,
       shipmentLimitSecond = ?,
       isGroupPreSale = ?,
+      isPreSale = ?,
       guideTarget = ?,
       overSell = ?,
       marketLabels = ?,
@@ -260,6 +262,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
         goods["pre_sale_time"],
         goods["shipment_limit_second"],
         goods["is_group_pre_sale"],
+        goods["is_pre_sale"],
         goods["guide_target"],
         goods["over_sell"],
         marketLabels,
@@ -331,6 +334,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
         goods["pre_sale_time"],
         goods["shipment_limit_second"],
         goods["is_group_pre_sale"],
+        goods["is_pre_sale"],
         goods["guide_target"],
         goods["over_sell"],
         marketLabels,
