@@ -24,10 +24,20 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   id := body["id"].(float64)
   womenProductId := strconv.Itoa(int(body["womenProductId"].(float64)))
   if err != nil {
-    log.Println("get-women-detail-data-decode-body-err: ", err)
+    log.Println("get-women-cloud-warehouse-stock-decode-body-err: ", err)
     http.Error(w, err.Error(), 500)
     return
   }
+  err = FetchWomenCloudWarehouseStock(id, womenProductId)
+  if err != nil {
+    log.Println("get-women-cloud-warehouse-stock-fetch-err: ", err)
+    http.Error(w, err.Error(), 500)
+    return
+  }
+  io.WriteString(w, "ok")
+}
+
+func FetchWomenCloudWarehouseStock(id float64, womenProductId string) error {
   timeStamp := strconv.Itoa(int(time.Now().UnixNano() / 1000000))
   client := &http.Client{}
   req, err := http.NewRequest(
@@ -37,8 +47,7 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   )
   if err != nil {
     log.Println("get-women-cloud-warehouse-stock-new-request-error: ", err)
-    http.Error(w, err.Error(), 500)
-    return
+    return err
   }
   query := req.URL.Query()
   query.Add("Option", "OutOffList")
@@ -49,8 +58,7 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   resp, err := client.Do(req)
   if err != nil {
     log.Println("get-women-cloud-warehouse-stock-client-do-error: ", err)
-    http.Error(w, err.Error(), 500)
-    return
+    return err
   }
   var result []interface{}
   json.NewDecoder(resp.Body).Decode(&result)
@@ -68,8 +76,7 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   `)
   if err != nil {
     log.Println("get-women-cloud-warehouse-stock-insert-prepare-error: ", err)
-    http.Error(w, err.Error(), 500)
-    return
+    return err
   }
   defer stmtInsert.Close()
   stmtUpdate, err := db.Prepare(`
@@ -77,7 +84,9 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
       womenItemCloudWarehouseSku
     SET
       ycAvailNum = ?,
-      ycStockTips = ?
+      ycStockTips = ?,
+      skuColor = ?,
+      skuSize = ?
     WHERE
       searchId = ?
     AND
@@ -85,8 +94,7 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   `)
   if err != nil {
     log.Println("get-women-cloud-warehouse-stock-update-prepare-error: ", err)
-    http.Error(w, err.Error(), 500)
-    return
+    return err
   }
   defer stmtUpdate.Close()
   for i := 0; i < len(result); i++ {
@@ -95,6 +103,9 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
     skuDescList := strings.Split(skuDesc, ",")
     skuColor := skuDescList[0]
     skuSize := skuDescList[1]
+    if skuSize == "XXL" {
+      skuSize = "2XL"
+    }
     ycAvailNum := sku["ycAvailNum"]
     ycStockTips := sku["ycStockTips"]
     var count int
@@ -110,8 +121,7 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
     `, id, skuDesc).Scan(&count)
     if err != nil {
       log.Println("get-women-cloud-warehouse-stock-count-error: ", err)
-      http.Error(w, err.Error(), 500)
-      return
+      return err
     }
     if count == 0 {
       _, err = stmtInsert.Exec(
@@ -125,22 +135,22 @@ func GetWomenCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
       )
       if err != nil {
         log.Println("get-women-cloud-warehouse-stock-insert-exec-error: ", err)
-        http.Error(w, err.Error(), 500)
-        return
+        return err
       }
     } else {
       _, err = stmtUpdate.Exec(
         ycAvailNum,
         ycStockTips,
+        skuColor,
+        skuSize,
         id,
         skuDesc,
       )
       if err != nil {
         log.Println("get-women-cloud-warehouse-stock-update-exec-error: ", err)
-        http.Error(w, err.Error(), 500)
-        return
+        return err
       }
     }
   }
-  io.WriteString(w, "ok")
+  return nil
 }
