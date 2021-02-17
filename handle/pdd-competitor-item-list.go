@@ -11,6 +11,7 @@ import (
   "log"
   "net/http"
   "encoding/json"
+  "database/sql"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
@@ -20,14 +21,19 @@ func PddCompetitorItemList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
     SELECT
-      id,
-      name,
-      price,
-      goodsId,
-      competitorId,
-      relatedItemId
+      item.id,
+      item.name,
+      item.price,
+      item.goodsId,
+      item.competitorId,
+      item.relatedItemId,
+      sale.sale
     FROM
-      pddCompetitorItem
+      pddCompetitorItem AS item
+    LEFT JOIN
+      pddCompetitorItemSale AS sale
+      ON
+      item.goodsId = sale.goodsId
     WHERE
       relatedItemId = ?
   `, itemId)
@@ -46,6 +52,7 @@ func PddCompetitorItemList(w http.ResponseWriter, r *http.Request) {
       goodsId string
       competitorId int64
       relatedItemId int64
+      sale sql.NullInt64
     )
     if err := rows.Scan(
       &id,
@@ -54,20 +61,33 @@ func PddCompetitorItemList(w http.ResponseWriter, r *http.Request) {
       &goodsId,
       &competitorId,
       &relatedItemId,
+      &sale,
     ); err != nil {
       log.Println("pdd-competitor-item-list-scan-error: ", err)
       http.Error(w, err.Error(), 500)
       return
     }
-    pddCompetitorItem := map[string]interface{}{
-      "id": id,
-      "name": name,
-      "price": price,
-      "goodsId": goodsId,
-      "competitorId": competitorId,
-      "relatedItemId": relatedItemId,
+    hasInList := false
+    for i := 0; i < len(list); i++ {
+      item := list[i].(map[string]interface{})
+      if id == item["id"] {
+        item["sale"] = append(item["sale"].([]int64), sale.Int64)
+        hasInList = true
+        break
+      }
     }
-    list = append(list, pddCompetitorItem)
+    if !hasInList {
+      pddCompetitorItem := map[string]interface{}{
+        "id": id,
+        "name": name,
+        "price": price,
+        "goodsId": goodsId,
+        "competitorId": competitorId,
+        "relatedItemId": relatedItemId,
+        "sale": []int64{sale.Int64},
+      }
+      list = append(list, pddCompetitorItem)
+    }
   }
   json.NewEncoder(w).Encode(list)
 }
