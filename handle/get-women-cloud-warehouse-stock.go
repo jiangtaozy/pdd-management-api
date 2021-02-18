@@ -105,6 +105,16 @@ func FetchWomenCloudWarehouseStock(id float64, womenProductId string) error {
     skuSize := skuDescList[1]
     if skuSize == "XXL" {
       skuSize = "2XL"
+    } else if skuSize == "L(120-135斤)" {
+      skuSize = "L"
+    } else if skuSize == "M（110-125斤）" {
+      skuSize = "M"
+    } else if skuSize == "S（100-115斤）" {
+      skuSize = "S"
+    } else if skuSize == "XL（130-160斤）" {
+      skuSize = "XL"
+    } else if skuSize == "XS(100斤以内)" {
+      skuSize = "XS"
     }
     ycAvailNum := sku["ycAvailNum"]
     ycStockTips := sku["ycStockTips"]

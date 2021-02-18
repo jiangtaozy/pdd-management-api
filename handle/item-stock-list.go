@@ -39,7 +39,8 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
       womenSku.skuColor,
       womenSku.skuSize,
       pddItem.isPreSale,
-      womenItem.isCloudWarehouse
+      womenItem.isCloudWarehouse,
+      womenItemSku.isOnShelf
     FROM pddItemSku AS pddSku
     LEFT JOIN womenItemCloudWarehouseSku AS womenSku
       ON pddSku.outGoodsSn = womenSku.searchId
@@ -49,6 +50,9 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
       ON pddSku.pddId = pddItem.pddId
     LEFT JOIN womenItem
       ON pddSku.outGoodsSn = womenItem.searchId
+    LEFT JOIN womenItemSku
+      ON womenSku.searchId = womenItemSku.searchId
+      AND womenSku.skuDesc = womenItemSku.skuDesc
   `)
   if err != nil {
     log.Println("item-stock-list-query-error: ", err)
@@ -80,6 +84,7 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
       skuSize sql.NullString
       isPreSale sql.NullBool
       isCloudWarehouse sql.NullBool
+      isOnShelf sql.NullBool
     )
     if err := rows.Scan(
       &pddId,
@@ -103,6 +108,7 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
       &skuSize,
       &isPreSale,
       &isCloudWarehouse,
+      &isOnShelf,
     ); err != nil {
       log.Println("item-stock-list-scan-error: ", err)
       http.Error(w, err.Error(), 500)
@@ -130,6 +136,7 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
       "skuSize": skuSize.String,
       "isPreSale": isPreSale.Bool,
       "isCloudWarehouse": isCloudWarehouse.Bool,
+      "isOnShelf": isOnShelf.Bool,
     }
     list = append(list, sku)
   }
