@@ -18,19 +18,17 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
     SELECT
-      searchItem.id,
-      searchItem.name,
+      item.searchId,
+      item.name,
       item.price,
       item.imgUrl,
       item.detailUrl,
       item.womenProductId,
       pddItem.goodsName
-    FROM searchItem
-    LEFT JOIN item
-      ON searchItem.id = item.searchId
+    FROM item
     LEFT JOIN pddItem
-      ON searchItem.id = pddItem.outGoodsSn
-    ORDER BY id DESC
+      ON item.searchId = pddItem.outGoodsSn
+    ORDER BY searchId DESC
   `)
   if err != nil {
     log.Println("search-title-list-query-error: ", err)
