@@ -34,30 +34,37 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   }
   url := body["requestUrl"].(string)
   start := time.Now()
+  // 关键词
   if url == "https://yingxiao.pinduoduo.com/mms-gateway/venus/api/subway/keyword/listKeywordPage" {
     SaveListKeywordPage(responseBody)
     log.Println("url: ", url)
   }
+  // 单元列表
   if url == "https://yingxiao.pinduoduo.com/mms-gateway/venus/api/unit/listPage" {
     SaveUnitListPage(requestBody, responseBody)
     log.Println("url: ", url)
   }
-  if url == "https://yingxiao.pinduoduo.com/apollo/api/report/queryHourlyReport" {
+  // 小时数据
+  if url == "https://yingxiao.pinduoduo.com/mms-gateway/apollo/api/report/queryHourlyReport" {
     SaveQueryHourlyReport(requestBody, responseBody)
     log.Println("url: ", url)
   }
+  // 商品列表
   if url == "https://mms.pinduoduo.com/vodka/v2/mms/query/display/mall/goodsList" {
     SyncPddItem(requestBody, responseBody)
     log.Println("url: ", url)
   }
+  // 订单列表
   if url == "https://mms.pinduoduo.com/mangkhut/mms/recentOrderList" {
     SyncPddOrder(requestBody, responseBody)
     log.Println("url: ", url)
   }
+  // 流量数据
   if url == "https://mms.pinduoduo.com/sydney/api/goodsDataShow/queryGoodsDetailVOList" {
     SyncPddGoodsFlowData(requestBody, responseBody)
     log.Println("url: ", url)
   }
+  // 流量详情
   if url == "https://mms.pinduoduo.com/sydney/api/goodsDataShow/queryGoodsPageOverView" {
     SyncPddShopFlowData(requestBody, responseBody)
     log.Println("url: ", url)
