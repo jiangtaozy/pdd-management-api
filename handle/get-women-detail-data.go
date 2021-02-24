@@ -31,6 +31,11 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     http.Error(w, err.Error(), 500)
     return
   }
+  CollyGetWomenDetailData(w, detailUrl, id)
+  io.WriteString(w, "ok")
+}
+
+func CollyGetWomenDetailData(w http.ResponseWriter, detailUrl string, id float64) {
   collector := colly.NewCollector()
   collector.OnHTML("body", func(e *colly.HTMLElement) {
     isLightningDelivery := e.DOM.Find(".sdfhLabelIco").Length()
@@ -264,8 +269,10 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         skuKey,
         price,
         isOnShelf,
-        stock
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        stock,
+        skuColor,
+        skuSize
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     if err != nil {
       log.Println("get-women-detail-data-insert-women-item-sku-prepare-error: ", err)
@@ -278,14 +285,16 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         womenItemSku
       SET
         productId = ?,
-        skuDesc = ?,
+        skuKey = ?,
         price = ?,
         isOnShelf = ?,
-        stock = ?
+        stock = ?,
+        skuColor = ?,
+        skuSize = ?
       WHERE
         searchId = ?
       AND
-        skuKey = ?
+        skuDesc = ?
     `)
     if err != nil {
       log.Println("get-women-detail-data-update-women-item-sku-prepare-error: ", err)
@@ -297,6 +306,26 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
       sku := specList[i]
       keyList := strings.Split(sku, ";")
       skuDesc := keyList[0]
+      skuDescList := strings.Split(skuDesc, ",")
+      skuColor := skuDescList[0]
+      skuSize := skuDescList[1]
+      if skuSize == "XXL" {
+        skuSize = "2XL"
+      } else if skuSize == "XXXL" {
+        skuSize = "3XL"
+      } else if skuSize == "XXXXL" {
+        skuSize = "4XL"
+      } else if skuSize == "L(120-135斤)" {
+        skuSize = "L"
+      } else if skuSize == "M（110-125斤）" {
+        skuSize = "M"
+      } else if skuSize == "S（100-115斤）" {
+        skuSize = "S"
+      } else if skuSize == "XL（130-160斤）" {
+        skuSize = "XL"
+      } else if skuSize == "XS(100斤以内)" {
+        skuSize = "XS"
+      }
       skuKey := keyList[1]
       priceStr := keyList[2]
       isOnShelf := keyList[3]
@@ -317,8 +346,8 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
         WHERE
           searchId = ?
         AND
-          skuKey = ?
-      `, id, keyList[1]).Scan(&skuCount)
+          skuDesc = ?
+      `, id, skuDesc).Scan(&skuCount)
       if err != nil {
         log.Println("get-women-detail-data-women-item-sku-count-error: ", err)
         http.Error(w, err.Error(), 500)
@@ -333,6 +362,8 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
           price,
           isOnShelf,
           stock,
+          skuColor,
+          skuSize,
         )
         if err != nil {
           log.Println("get-women-detail-data-insert-women-item-sku-exec-error: ", err)
@@ -342,12 +373,14 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
       } else {
         _, err = stmtUpdateSku.Exec(
           productId,
-          skuDesc,
+          skuKey,
           price,
           isOnShelf,
           stock,
+          skuColor,
+          skuSize,
           id,
-          skuKey,
+          skuDesc,
         )
         if err != nil {
           log.Println("get-women-detail-data-update-women-item-sku-exec-error: ", err)
@@ -426,7 +459,6 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
       http.Error(w, err.Error(), 500)
       return
     }
-    io.WriteString(w, "ok")
   })
   collector.OnError(func(_ *colly.Response, err error) {
     log.Println("get-women-detail-data-collector-on-error:", err)
@@ -434,6 +466,7 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
     return
   })
   collector.Visit(detailUrl)
+  collector.Wait()
 }
 
 func SaveWomenItemMainImage(searchId float64, productId string, img225 string, img500 string, img800 string) error {

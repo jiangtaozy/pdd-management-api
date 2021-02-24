@@ -51,8 +51,11 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
     LEFT JOIN womenItem
       ON pddSku.outGoodsSn = womenItem.searchId
     LEFT JOIN womenItemSku
-      ON womenSku.searchId = womenItemSku.searchId
-      AND womenSku.skuDesc = womenItemSku.skuDesc
+      ON pddSku.outGoodsSn = womenItemSku.searchId
+      AND pddSku.specColor = womenItemSku.skuColor
+      AND pddSku.specSize = womenItemSku.skuSize
+    WHERE
+      pddItem.isOnsale IS TRUE
   `)
   if err != nil {
     log.Println("item-stock-list-query-error: ", err)

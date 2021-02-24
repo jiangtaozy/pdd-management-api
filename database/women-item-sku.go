@@ -15,6 +15,8 @@ const createWomenItemSku =`
     skuKey VARCHAR(30) NOT NULL COMMENT 'sku关键字，如YYG82590-5',
     price INTEGER UNSIGNED COMMENT 'sku价格，单位：分',
     isOnShelf BOOLEAN COMMENT '是否上架',
-    stock INTEGER UNSIGNED COMMENT 'sku库存'
+    stock INTEGER UNSIGNED COMMENT 'sku库存',
+    skuColor VARCHAR(20) NOT NULL COMMENT 'sku颜色，如红色',
+    skuSize VARCHAR(20) NOT NULL COMMENT 'sku尺码，如M'
   );
 `

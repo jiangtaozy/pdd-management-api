@@ -19,8 +19,8 @@ func SyncCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
     SELECT
-      searchId,
-      productId
+      womenItem.searchId,
+      womenItem.productId
     FROM
       womenItem
     LEFT JOIN
@@ -28,9 +28,9 @@ func SyncCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
     ON
       womenItem.searchId = pddItem.outGoodsSn
     WHERE
-      isCloudWarehouse IS TRUE
+      womenItem.isCloudWarehouse IS TRUE
       AND
-      isOnSale IS TRUE
+      pddItem.isOnsale IS TRUE
   `)
   if err != nil {
     log.Println("sync-cloud-warehouse-stock.go-query-error: ", err)
