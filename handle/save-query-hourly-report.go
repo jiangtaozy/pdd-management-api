@@ -138,6 +138,9 @@ func SaveQueryHourlyReport(requestBody map[string]interface{}, responseBody map[
   defer stmtUpdate.Close()
   for i := 0; i < len(list); i++ {
     data := list[i].(map[string]interface{})
+    if data["rankMedian"] == nil {
+      data["rankMedian"] = 0
+    }
     var count int
     err = db.QueryRow(`
       SELECT COUNT(*)
