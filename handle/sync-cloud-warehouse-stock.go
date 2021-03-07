@@ -10,6 +10,8 @@ package handle
 import (
   "io"
   "log"
+  "time"
+  "math/rand"
   "net/http"
   "database/sql"
   "github.com/jiangtaozy/pdd-management-api/database"
@@ -52,6 +54,8 @@ func SyncCloudWarehouseStock(w http.ResponseWriter, r *http.Request) {
       http.Error(w, err.Error(), 500)
       return
     }
+    num := rand.Int31n(10)
+    time.Sleep(time.Duration(num) * time.Second)
     err = FetchWomenCloudWarehouseStock(searchId, productId.String)
     if err != nil {
       log.Println("sync-cloud-warehouse-stock.go-fetch-err: ", err)

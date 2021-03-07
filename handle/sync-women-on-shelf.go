@@ -10,6 +10,8 @@ package handle
 import (
   "io"
   "log"
+  "time"
+  "math/rand"
   "net/http"
   "database/sql"
   "github.com/jiangtaozy/pdd-management-api/database"
@@ -56,6 +58,8 @@ func SyncWomenOnShelf(w http.ResponseWriter, r *http.Request) {
       http.Error(w, err.Error(), 500)
       return
     }
+    num := rand.Int31n(10)
+    time.Sleep(time.Duration(num) * time.Second)
     CollyGetWomenDetailData(w, detailUrl.String, searchId)
   }
   io.WriteString(w, "ok")

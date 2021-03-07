@@ -11,6 +11,7 @@ import (
   "io"
   "log"
   "time"
+  "errors"
   "strings"
   "strconv"
   "net/http"
@@ -62,6 +63,9 @@ func FetchWomenCloudWarehouseStock(id float64, womenProductId string) error {
   }
   var result []interface{}
   json.NewDecoder(resp.Body).Decode(&result)
+  if len(result) == 0 {
+    return errors.New("结果为空")
+  }
   db := database.DB
   stmtInsert, err := db.Prepare(`
     INSERT INTO womenItemCloudWarehouseSku (
