@@ -88,6 +88,7 @@ func main() {
   mux.HandleFunc("/syncCloudWarehouseStock", handle.SyncCloudWarehouseStock)
   mux.HandleFunc("/syncWomenOnShelf", handle.SyncWomenOnShelf)
   mux.HandleFunc("/getWomenImage", handle.GetWomenImage)
+  mux.HandleFunc("/downloadLimitTime", handle.DownloadLimitTime)
   mux.HandleFunc("/test", handle.Test)
   mux.Handle("/", http.FileServer(http.Dir("/home/jemo/workspace/pdd/pdd-management-web/build")))
   handler := cors.Default().Handler(mux)

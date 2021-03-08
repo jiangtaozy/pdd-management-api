@@ -12,6 +12,7 @@ require (
 	github.com/gocolly/colly/v2 v2.0.1
 	github.com/jiangtaozy/openapi-fxg v0.0.0-20200910093016-9bb62d93ec5e
 	github.com/rs/cors v1.7.0 // indirect
+	github.com/tealeg/xlsx/v3 v3.2.3
 	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f
 )
 
