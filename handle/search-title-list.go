@@ -18,6 +18,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
   db := database.DB
   rows, err := db.Query(`
     SELECT
+      item.id,
       item.searchId,
       item.name,
       item.price,
@@ -38,6 +39,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
   for rows.Next() {
     var (
       id int64
+      searchId int64
       name string
       imgUrl sql.NullString
       price sql.NullFloat64
@@ -47,6 +49,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     )
     if err := rows.Scan(
       &id,
+      &searchId,
       &name,
       &price,
       &imgUrl,
@@ -58,6 +61,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     }
     title := map[string]interface{}{
       "id": id,
+      "searchId": searchId,
       "name": name,
       "price": price.Float64,
       "imgUrl": imgUrl.String,

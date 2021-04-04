@@ -1,7 +1,7 @@
 /*
  * Maintained by jemo from 2020.5.13 to now
  * Created by jemo on 2020.5.13 17:36:27
- * Delete Search Title
+ * Delete Item
  */
 
 package handle
@@ -21,9 +21,8 @@ func DeleteSearchTitle(w http.ResponseWriter, r *http.Request) {
     log.Println("delete-search-data-error: ", err)
   }
   var id = body["id"]
-  log.Println("id: ", id)
   db := database.DB
-  stmtDelete, err := db.Prepare("DELETE FROM searchItem WHERE id = ?")
+  stmtDelete, err := db.Prepare("DELETE FROM item WHERE id = ?")
   if err != nil {
     log.Println("delete-search-title-prepare-error: ", err)
   }
