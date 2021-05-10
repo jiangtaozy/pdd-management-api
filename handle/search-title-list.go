@@ -25,6 +25,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       item.imgUrl,
       item.detailUrl,
       item.womenProductId,
+      item.keyName,
       pddItem.goodsName
     FROM item
     LEFT JOIN pddItem
@@ -45,6 +46,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       price sql.NullFloat64
       detailUrl sql.NullString
       womenProductId sql.NullInt64
+      keyName sql.NullString
       goodsName sql.NullString
     )
     if err := rows.Scan(
@@ -55,6 +57,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       &imgUrl,
       &detailUrl,
       &womenProductId,
+      &keyName,
       &goodsName,
     ); err != nil {
       log.Println("search-title-list-scan-error: ", err)
@@ -67,6 +70,7 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
       "imgUrl": imgUrl.String,
       "detailUrl": detailUrl.String,
       "womenProductId": womenProductId.Int64,
+      "keyName": keyName.String,
       "goodsName": goodsName.String,
     }
     titleList = append(titleList, title)

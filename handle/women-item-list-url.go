@@ -29,6 +29,7 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
   collector.OnHTML("#BrandProductListDiv ul li", func(e *colly.HTMLElement) {
     productid, _ := e.DOM.Attr("productid")
     title, _ := e.DOM.Find(".insideBox .pic a img").Attr("title")
+    keyName, _ := e.DOM.Find(".insideBox .outWidth .dsrs .brandProductSearch").Attr("title")
     itemUrl, _ := e.DOM.Find(".insideBox .pic a").Attr("href")
     imgUrl, _ := e.DOM.Find(".insideBox .pic a img").Attr("data-original")
     priceStr := e.DOM.Find(".rowPri .price").Text()
@@ -92,22 +93,22 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
       log.Println("women-item-list-url-count-item-error: ", err)
     }
     if itemCount == 0 {
-      insertItem, err := db.Prepare("INSERT INTO item (name, price, imgUrl, detailUrl, siteType, supplierId, searchId, suitPrice, forSell, womenProductId) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+      insertItem, err := db.Prepare("INSERT INTO item (name, price, imgUrl, detailUrl, siteType, supplierId, searchId, suitPrice, forSell, womenProductId, keyName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
       if err != nil {
         log.Println("women-item-list-url-insert-item-prepare-error: ", err)
       }
       defer insertItem.Close()
-      _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, searchId, price, true, productid)
+      _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, searchId, price, true, productid, keyName)
       if err != nil {
         log.Println("women-item-list-url-insert-item-exec-error: ", err)
       }
     } else if itemCount == 1 {
-      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ? WHERE womenProductId = ?")
+      updateItem, err := db.Prepare("UPDATE item SET price = ?, imgUrl = ?, detailUrl = ?, suitPrice = ?, keyName = ? WHERE womenProductId = ?")
       if err != nil {
         log.Println("women-item-list-url-update-item-prepare-error: ", err)
       }
       defer updateItem.Close()
-      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, productid)
+      _, err = updateItem.Exec(price, imgUrl, itemUrl, price, keyName, productid)
       if err != nil {
         log.Println("women-item-list-url-update-item-exec-error: ", err)
       }

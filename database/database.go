@@ -98,7 +98,8 @@ const item = `
     imgUrlOf100x100 VARCHAR(100) NOT NULL DEFAULT '',
     imgUrlOf150x150 VARCHAR(100) NOT NULL DEFAULT '',
     imgUrlOf220x220 VARCHAR(100) NOT NULL DEFAULT '',
-    womenProductId INTEGER UNSIGNED
+    womenProductId INTEGER UNSIGNED,
+    keyName VARCHAR(200)
   );
  `
 const supplier = `
