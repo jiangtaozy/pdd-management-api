@@ -43,7 +43,12 @@ func HangAfterSaleOrderUpload(w http.ResponseWriter, r *http.Request) {
       for _, attr := range node.Attr {
         if attr.Key == "class" && attr.Val == "lsRowTd6" {
           text := node.FirstChild
-          list[len(list) - 1].(map[string]interface{})["afterSaleStatusStr"] = strings.TrimSpace(text.Data)
+          var data = strings.TrimSpace(text.Data)
+          // 售后审核不通过
+          if text.NextSibling != nil {
+            data += text.NextSibling.FirstChild.Data
+          }
+          list[len(list) - 1].(map[string]interface{})["afterSaleStatusStr"] = data
         }
       }
     }
