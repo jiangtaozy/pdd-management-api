@@ -39,6 +39,7 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
     db := database.DB
     // insert search item
     priceStr = strings.Replace(priceStr, "￥", "", -1)
+    priceStr = strings.Replace(priceStr, "补贴价", "", -1)
     price, err := strconv.ParseFloat(strings.Trim(priceStr, " "), 64)
     if err != nil {
       log.Println("women-item-list-url-parse-float-error: ", err)
