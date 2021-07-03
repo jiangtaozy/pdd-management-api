@@ -37,6 +37,7 @@ const order1688 =`
     deliveryTime DATETIME COMMENT '发货时间',
     productStatus VARCHAR(10) COMMENT '货物状态',
     distributionAmount INTEGER COMMENT '已配数量',
-    deliveryAmount INTEGER COMMENT '已发数量'
+    deliveryAmount INTEGER COMMENT '已发数量',
+    INDEX orderIdIndex(orderId)
   );
 `

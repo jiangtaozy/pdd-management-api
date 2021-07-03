@@ -99,7 +99,9 @@ const item = `
     imgUrlOf150x150 VARCHAR(100) NOT NULL DEFAULT '',
     imgUrlOf220x220 VARCHAR(100) NOT NULL DEFAULT '',
     womenProductId INTEGER UNSIGNED,
-    keyName VARCHAR(200)
+    keyName VARCHAR(200),
+    INDEX searchIdIndex(searchId),
+    INDEX forSellIndex(forSell)
   );
  `
 const supplier = `
@@ -177,6 +179,15 @@ const itemOrder = `
     goodsType VARCHAR(30) COMMENT '货品类型',
   );
 `
+
+/*
+const alter = `
+  ALTER TABLE item
+  ADD INDEX
+  forSellIndex(forSell)
+  ;
+`
+*/
 
 /*
 const alter = `

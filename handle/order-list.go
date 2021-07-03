@@ -7,14 +7,16 @@
 package handle
 
 import (
+  "log"
+  "time"
+  "net/http"
   "encoding/json"
   "database/sql"
-  "log"
-  "net/http"
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
 func OrderList(w http.ResponseWriter, r *http.Request) {
+  start := time.Now()
   db := database.DB
   rows, err := db.Query(`
     SELECT
@@ -211,5 +213,8 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
     }
     orderList = append(orderList, order)
   }
+  now := time.Now()
+  diff := now.Sub(start)
+  log.Println("time: ", diff)
   json.NewEncoder(w).Encode(orderList)
 }
