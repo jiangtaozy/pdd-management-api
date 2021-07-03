@@ -8,6 +8,7 @@ package handle
 
 import (
   "log"
+  "time"
   "net/http"
   "database/sql"
   "encoding/json"
@@ -15,8 +16,11 @@ import (
 )
 
 func SearchTitleList(w http.ResponseWriter, r *http.Request) {
+  start := time.Now()
   db := database.DB
-  rows, err := db.Query(`
+  query := r.URL.Query()
+  keyword := query["keyword"][0]
+  sqlStr := `
     SELECT
       item.id,
       item.searchId,
@@ -30,10 +34,14 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     FROM item
     LEFT JOIN pddItem
       ON item.searchId = pddItem.outGoodsSn
-    ORDER BY searchId DESC
-  `)
+  `
+  if len(keyword) > 0 {
+    sqlStr += `WHERE item.keyName LIKE ?`
+    keyword = "%" + keyword + "%"
+  }
+  rows, err := db.Query(sqlStr, keyword)
   if err != nil {
-    log.Println("search-title-list-query-error: ", err)
+    log.Println("search-title-list-query-keyword-error: ", err)
   }
   defer rows.Close()
   var titleList []interface{}
@@ -75,5 +83,8 @@ func SearchTitleList(w http.ResponseWriter, r *http.Request) {
     }
     titleList = append(titleList, title)
   }
+  now := time.Now()
+  diff := now.Sub(start)
+  log.Println("time: ", diff)
   json.NewEncoder(w).Encode(titleList)
 }

@@ -75,6 +75,7 @@ const createPddItem =`
     skuList VARCHAR(50),
     rejectStatus VARCHAR(50),
     rejectReason VARCHAR(50),
-    INDEX pddIdIndex(pddId)
+    INDEX pddIdIndex(pddId),
+    INDEX outGoodsSnIndex(outGoodsSn)
   );
 `
