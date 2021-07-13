@@ -69,6 +69,11 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
     SyncPddShopFlowData(requestBody, responseBody)
     log.Println("url: ", url)
   }
+  // 售后列表
+  if url == "https://mms.pinduoduo.com/mercury/mms/afterSales/queryList" {
+    SyncPddAfterSalesOrder(requestBody, responseBody)
+    log.Println("url: ", url)
+  }
   now := time.Now()
   diff := now.Sub(start)
   log.Println("diff: ", diff)

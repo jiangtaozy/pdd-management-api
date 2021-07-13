@@ -52,6 +52,7 @@ func InitDB() {
   //execSQL(createWomenItemSize)
   //execSQL(createWomenItemCloudWarehouseSku)
   //execSQL(createPddItemSku)
+  //execSQL(createPddAfterSalesOrder)
 }
 
 func ConnectDB() {
@@ -176,7 +177,7 @@ const itemOrder = `
     afterSaleApplyTime DATETIME COMMENT '售后申请时间',
     buyerMessage VARCHAR(100) NOT NULL DEFAULT '' COMMENT '买家留言',
     goodsName VARCHAR(60) NOT NULL DEFAULT '' COMMENT '货品名称',
-    goodsType VARCHAR(30) COMMENT '货品类型',
+    goodsType VARCHAR(30) COMMENT '货品类型'
   );
 `
 
