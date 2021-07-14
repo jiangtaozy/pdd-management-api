@@ -28,7 +28,8 @@ func AfterSalesOrder(w http.ResponseWriter, r *http.Request) {
       pddAfterSalesOrder.sellerAfterSalesShippingStatusDesc,
       pddAfterSalesOrder.createdAt,
       itemOrder.outerOrderId,
-      order1688.afterSaleStatusStr
+      order1688.afterSaleStatusStr,
+      order1688.orderStatusStr
     FROM
       pddAfterSalesOrder
     LEFT JOIN itemOrder
@@ -55,6 +56,7 @@ func AfterSalesOrder(w http.ResponseWriter, r *http.Request) {
       createdAt sql.NullInt64
       outerOrderId sql.NullString
       womenAfterSaleStatusStr sql.NullString
+      orderStatusStr sql.NullString
     )
     err := rows.Scan(
       &afterSalesReasonDesc,
@@ -67,6 +69,7 @@ func AfterSalesOrder(w http.ResponseWriter, r *http.Request) {
       &createdAt,
       &outerOrderId,
       &womenAfterSaleStatusStr,
+      &orderStatusStr,
     )
     if err != nil {
       log.Println("after-sales-order-scan-error: ", err)
@@ -82,6 +85,7 @@ func AfterSalesOrder(w http.ResponseWriter, r *http.Request) {
       "createdAt": createdAt.Int64,
       "outerOrderId": outerOrderId.String,
       "womenAfterSaleStatusStr": womenAfterSaleStatusStr.String,
+      "orderStatusStr": orderStatusStr.String,
     }
     list = append(list, order)
   }

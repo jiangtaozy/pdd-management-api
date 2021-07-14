@@ -35,6 +35,7 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
       discount,
       actualPayment,
       orderStatus,
+      orderStatusStr,
       orderCreatedTime,
       orderPaymentTime,
       receiver,
@@ -56,14 +57,14 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
       distributionAmount,
       deliveryAmount
     ) VALUES(
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     )
   `)
   if err != nil {
     log.Println("upload-hznzcn-order-file-insert-prepare-error: ", err)
   }
   defer stmtInsert.Close()
-  stmtUpdate, err := db.Prepare("UPDATE order1688 SET orderStatus = ?, courierCompany = ?, trackingNumber = ?, productStatus = ? WHERE orderId = ?")
+  stmtUpdate, err := db.Prepare("UPDATE order1688 SET orderStatus = ?, orderStatusStr = ?, courierCompany = ?, trackingNumber = ?, productStatus = ? WHERE orderId = ?")
   if err != nil {
     log.Println("upload-hznzcn-order-file-update-prepare-error: ", err)
   }
@@ -127,6 +128,7 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
         discount,
         actualPayment,
         orderStatus,
+        orderStatusStr,
         orderCreatedTime,
         orderPaymentTime,
         receiver,
@@ -154,7 +156,7 @@ func UploadHznzcnOrderFile(w http.ResponseWriter, r *http.Request) {
         log.Println("orderPaymentTime: ", orderPaymentTime)
       }
     } else {
-      _, err = stmtUpdate.Exec(orderStatus, courierCompany, trackingNumber, productStatus, orderId)
+      _, err = stmtUpdate.Exec(orderStatus, orderStatusStr, courierCompany, trackingNumber, productStatus, orderId)
       if err != nil {
         log.Println("upload-hznzcn-order-file-update-exec-error: ", err)
       }
