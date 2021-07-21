@@ -10,6 +10,7 @@ import (
   "io"
   "log"
   "time"
+  "strings"
   "encoding/json"
   "net/http"
 )
@@ -20,11 +21,13 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     log.Println("save-network-data-err: ", err)
   }
-  requestText := body["requestText"].(string)
   requestBody := make(map[string]interface{})
-  err = json.Unmarshal([]byte(requestText), &requestBody)
-  if err != nil {
-    log.Println("save-network-data-unmarshal-request-text-error: ", err)
+  requestText := body["requestText"]
+  if requestText != nil {
+    err = json.Unmarshal([]byte(requestText.(string)), &requestBody)
+    if err != nil {
+      log.Println("save-network-data-unmarshal-request-text-error: ", err)
+    }
   }
   responseContent := body["responseContent"].(string)
   responseBody := make(map[string]interface{})
@@ -72,6 +75,11 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   // 售后列表
   if url == "https://mms.pinduoduo.com/mercury/mms/afterSales/queryList" {
     SyncPddAfterSalesOrder(requestBody, responseBody)
+    log.Println("url: ", url)
+  }
+  // 女装网订单列表
+  if strings.Contains(url, "https://www.hznzcn.com/order/query_my_order_list") {
+    SyncWomenOrder(requestBody, responseBody)
     log.Println("url: ", url)
   }
   now := time.Now()
