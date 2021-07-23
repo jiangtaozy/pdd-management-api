@@ -21,6 +21,7 @@ func SyncWomenOrder(requestBody map[string]interface{}, responseBody map[string]
       shippingFare,
       actualPayment,
       orderStatus,
+      orderStatusStr,
       orderCreatedTime,
       receiver,
       shippingAddress,
@@ -30,7 +31,7 @@ func SyncWomenOrder(requestBody map[string]interface{}, responseBody map[string]
       deliveryTime,
       productStatus
     ) VALUES(
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     )
   `)
   if err != nil {
@@ -42,6 +43,7 @@ func SyncWomenOrder(requestBody map[string]interface{}, responseBody map[string]
       order1688
     SET
       orderStatus = ?,
+      orderStatusStr = ?,
       courierCompany = ?,
       trackingNumber = ?,
       productStatus = ?
@@ -65,6 +67,7 @@ func SyncWomenOrder(requestBody map[string]interface{}, responseBody map[string]
       log.Println("sync-women-order-parse-total-fee-error: ", err)
     }
     orderStatus := order["orderStatus"]
+    orderStatusStr := order["statusName"]
     orderCreatedTime := order["created"]
     receiver := order["consigneeRealName"]
     shippingAddress := order["consigneeAddress"]
@@ -93,6 +96,7 @@ func SyncWomenOrder(requestBody map[string]interface{}, responseBody map[string]
         shippingFare,
         actualPayment,
         orderStatus,
+        orderStatusStr,
         orderCreatedTime,
         receiver,
         shippingAddress,
@@ -108,6 +112,7 @@ func SyncWomenOrder(requestBody map[string]interface{}, responseBody map[string]
     } else {
       _, err = stmtUpdate.Exec(
         orderStatus,
+        orderStatusStr,
         courierCompany,
         trackingNumber,
         productStatus,
