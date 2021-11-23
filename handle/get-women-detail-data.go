@@ -37,7 +37,16 @@ func GetWomenDetailData(w http.ResponseWriter, r *http.Request) {
 
 func CollyGetWomenDetailData(w http.ResponseWriter, detailUrl string, id float64) {
   collector := colly.NewCollector()
+  collector.OnResponse(func(r *colly.Response) {
+    //log.Println("string(r.Body): ", string(r.Body))
+  })
   collector.OnHTML("body", func(e *colly.HTMLElement) {
+    if strings.Index(e.Text, "跳转中") >= 0 {
+      hrefRegx := regexp.MustCompile("window.location.href =\"(.*)\"")
+      href := hrefRegx.FindStringSubmatch(e.Text)
+      collector.Visit("https://www.hznzcn.com" + href[1])
+      return
+    }
     isLightningDelivery := e.DOM.Find(".sdfhLabelIco").Length()
     isCloudWarehouse := e.DOM.Find(".yuncang").Length()
     isWechatMerchant := e.DOM.Find(".weishang").Length()

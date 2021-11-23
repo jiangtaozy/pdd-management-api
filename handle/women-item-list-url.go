@@ -11,6 +11,7 @@ import (
   "encoding/json"
   "io"
   "log"
+  "regexp"
   "net/http"
   "strings"
   "strconv"
@@ -26,6 +27,13 @@ func WomenItemListUrl(w http.ResponseWriter, r *http.Request) {
   }
   womenItemListUrl := body["womenItemListUrl"].(string)
   collector := colly.NewCollector()
+  collector.OnHTML("body", func(e *colly.HTMLElement) {
+    if strings.Index(e.Text, "跳转中") >= 0 {
+      hrefRegx := regexp.MustCompile("window.location.href =\"(.*)\"")
+      href := hrefRegx.FindStringSubmatch(e.Text)
+      collector.Visit("https://www.hznzcn.com" + href[1])
+    }
+  })
   collector.OnHTML("#BrandProductListDiv ul li", func(e *colly.HTMLElement) {
     productid, _ := e.DOM.Attr("productid")
     title, _ := e.DOM.Find(".insideBox .pic a img").Attr("title")

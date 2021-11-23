@@ -44,6 +44,7 @@ func SyncWomenOnShelf(w http.ResponseWriter, r *http.Request) {
     return
   }
   defer rows.Close()
+  i := 1
   for rows.Next() {
     var (
       searchId float64
@@ -61,6 +62,9 @@ func SyncWomenOnShelf(w http.ResponseWriter, r *http.Request) {
     num := rand.Int31n(10)
     time.Sleep(time.Duration(num) * time.Second)
     CollyGetWomenDetailData(w, detailUrl.String, searchId)
+    log.Println("i: ", i)
+    i++
   }
+  log.Println("ok")
   io.WriteString(w, "ok")
 }

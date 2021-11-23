@@ -11,6 +11,7 @@ import (
   "log"
   "time"
   "strings"
+  "regexp"
   "encoding/json"
   "net/http"
 )
@@ -31,9 +32,12 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   }
   responseContent := body["responseContent"].(string)
   responseBody := make(map[string]interface{})
-  err = json.Unmarshal([]byte(responseContent), &responseBody)
-  if err != nil {
-    log.Println("save-network-data-unmarshal-response-content-error: ", err)
+  responseContentMimeType := body["responseContentMimeType"].(string)
+  if responseContentMimeType == "application/json" {
+    err = json.Unmarshal([]byte(responseContent), &responseBody)
+    if err != nil {
+      log.Println("save-network-data-unmarshal-response-content-error: ", err)
+    }
   }
   url := body["requestUrl"].(string)
   start := time.Now()
@@ -81,6 +85,11 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   if strings.Contains(url, "https://www.hznzcn.com/order/query_my_order_list") {
     SyncWomenOrder(requestBody, responseBody)
     log.Println("url: ", url)
+  }
+  // 女装网杭州女装新款列表
+  isWomenList, _ := regexp.MatchString(`https://www.hznzcn.com/hz/gallery-[\d-]+-grid.html`, url)
+  if isWomenList {
+    SyncWomenList(responseContent)
   }
   now := time.Now()
   diff := now.Sub(start)
