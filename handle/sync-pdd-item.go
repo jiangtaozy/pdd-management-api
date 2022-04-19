@@ -421,7 +421,10 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
     spec := sku["spec"].(string)
     specList := strings.Split(spec, " ")
     specColor := specList[0]
-    specSize := specList[1]
+    specSize := ""
+    if len(specList) > 1 {
+      specSize = specList[1]
+    }
     var count int
     err = db.QueryRow(`
       SELECT

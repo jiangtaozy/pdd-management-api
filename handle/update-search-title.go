@@ -20,32 +20,24 @@ func UpdateSearchTitle(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     log.Println("update-search-data-error: ", err)
   }
-  var id = body["id"]
-  var name = body["name"].(string)
+  var searchId = body["searchId"]
+  var itemTypeKey = body["itemTypeKey"]
+  var itemNum = body["itemNum"]
   db := database.DB
-  stmtUpdate, err := db.Prepare("UPDATE searchItem SET name = ? WHERE id = ?")
+  stmtUpdate, err := db.Prepare(`
+    update
+      item
+    set
+      itemTypeKey = ?,
+      itemNum = ?
+    where searchId = ?
+  `)
   if err != nil {
     log.Println("update-search-title-prepare-error: ", err)
   }
-  _, err = stmtUpdate.Exec(name, id)
+  _, err = stmtUpdate.Exec(itemTypeKey, itemNum, searchId)
   if err != nil {
     log.Println("update-search-title-exec-error: ", err)
-  }
-  stmtUpdateItem, err := db.Prepare(`
-    UPDATE
-      item
-    SET
-      womenProductId = ?
-    WHERE
-      searchId = ?
-  `)
-  if err != nil {
-    log.Println("update-search-title-prepare-update-item-error: ", err)
-  }
-  womenProductId := body["womenProductId"]
-  _, err = stmtUpdateItem.Exec(womenProductId, id)
-  if err != nil {
-    log.Println("update-search-title-update-item-exec-error: ", err)
   }
   io.WriteString(w, "ok")
 }

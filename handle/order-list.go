@@ -54,6 +54,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       itemOrder.afterSaleStatus,
       itemOrder.buyerMessage,
       item.detailUrl,
+      item.originalId,
       order1688.orderStatus AS outerOrderStatus,
       order1688.actualPayment,
       order1688.productStatus,
@@ -69,9 +70,10 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
     LEFT JOIN item
       ON pddItem.outGoodsSn = item.searchId
     WHERE
-      item.forSell = TRUE
+      (item.forSell = TRUE
       OR
-      item.forSell IS NULL
+      item.forSell IS NULL)
+      and itemOrder.paymentTime > SUBDATE(CURDATE(),INTERVAL 3 month)
     ORDER BY itemOrder.paymentTime DESC
   `)
   if err != nil {
@@ -115,6 +117,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       afterSaleStatus sql.NullInt32
       buyerMessage string
       detailUrl sql.NullString
+      originalId sql.NullString
       outerOrderStatus sql.NullInt32
       actualPayment sql.NullFloat64
       productStatus sql.NullString
@@ -158,6 +161,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       &afterSaleStatus,
       &buyerMessage,
       &detailUrl,
+      &originalId,
       &outerOrderStatus,
       &actualPayment,
       &productStatus,
@@ -203,6 +207,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "afterSaleStatus": afterSaleStatus.Int32,
       "buyerMessage": buyerMessage,
       "detailUrl": detailUrl.String,
+      "originalId": originalId.String,
       "outerOrderStatus": outerOrderStatus.Int32,
       "actualPayment": actualPayment.Float64,
       "productStatus": productStatus.String,

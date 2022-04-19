@@ -53,6 +53,7 @@ func Upload1688OrderFile(w http.ResponseWriter, r *http.Request) {
     actualPayment := getCell(sheet.Row(0), row, "实付款(元)")
     orderStatusStr := getCell(sheet.Row(0), row, "订单状态").(string)
     orderStatusMap := map[string]interface{}{
+      "等待买家付款": 0,
       "等待卖家发货": 1,
       "等待买家确认收货": 2,
       "已收货": 3,

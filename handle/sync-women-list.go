@@ -19,7 +19,12 @@ func SyncWomenList(html string) {
   if err != nil {
     log.Println("sync-women-list-goquery-err: ", err)
   }
+  // 女装网新品/云仓/闪电发货
   doc.Find("#productList_Div ul li").Each(func(i int, s *goquery.Selection) {
+    ImportWomenItem(s)
+  })
+  // 女装网店铺商品列表
+  doc.Find("#BrandProductListDiv ul li").Each(func(i int, s *goquery.Selection) {
     ImportWomenItem(s)
   })
 }
@@ -27,7 +32,12 @@ func SyncWomenList(html string) {
 func ImportWomenItem(s *goquery.Selection) {
   productid, _ := s.Attr("productid")
   title, _ := s.Find(".insideBox .pic a img").Attr("title")
+  // 每日新款
   keyName := s.Find(".insideBox .outWidth .dsrs a").Text()
+  // 云仓
+  if keyName == "" {
+    keyName = s.Find(".insideBox .dsrs a").Text()
+  }
   itemUrl, _ := s.Find(".insideBox .pic a").Attr("href")
   imgUrl, _ := s.Find(".insideBox .pic a img").Attr("data-original")
   priceStr := s.Find(".rowPri .price").Text()
@@ -41,27 +51,6 @@ func ImportWomenItem(s *goquery.Selection) {
   price, err := strconv.ParseFloat(strings.Trim(priceStr, " "), 64)
   if err != nil {
     log.Println("women-item-list-url-parse-float-error: ", err)
-  }
-  insertSearchItem, err := db.Prepare("INSERT INTO searchItem (name) VALUES(?)")
-  if err != nil {
-    log.Println("women-item-list-url-insert-search-item-exec-error: ", err)
-  }
-  defer insertSearchItem.Close()
-  var searchItemCount int
-  err = db.QueryRow("SELECT COUNT(*) FROM searchItem WHERE name = ?", title).Scan(&searchItemCount)
-  if err != nil {
-    log.Println("women-item-list-url-count-search-item-error: ", err)
-  }
-  if searchItemCount == 0 {
-    _, err = insertSearchItem.Exec(title)
-    if err != nil {
-      log.Println("women-item-list-url-insert-search-item-exec-error: ", err)
-    }
-  }
-  var searchId int64
-  err = db.QueryRow("SELECT id FROM searchItem WHERE name = ?", title).Scan(&searchId)
-  if err != nil {
-    log.Println("women-item-list-url-query-search-item-id-error: ", err)
   }
   // insert supplier
   var supplierCount int
@@ -92,12 +81,12 @@ func ImportWomenItem(s *goquery.Selection) {
     log.Println("women-item-list-url-count-item-error: ", err)
   }
   if itemCount == 0 {
-    insertItem, err := db.Prepare("INSERT INTO item (name, price, imgUrl, detailUrl, siteType, supplierId, searchId, suitPrice, forSell, womenProductId, keyName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    insertItem, err := db.Prepare("INSERT INTO item (name, price, imgUrl, detailUrl, siteType, supplierId, suitPrice, forSell, womenProductId, keyName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     if err != nil {
       log.Println("women-item-list-url-insert-item-prepare-error: ", err)
     }
     defer insertItem.Close()
-    _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, searchId, price, true, productid, keyName)
+    _, err = insertItem.Exec(title, price, imgUrl, itemUrl, 2, supplierId, price, true, productid, keyName)
     if err != nil {
       log.Println("women-item-list-url-insert-item-exec-error: ", err)
     }

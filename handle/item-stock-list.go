@@ -56,6 +56,9 @@ func ItemStockList(w http.ResponseWriter, r *http.Request) {
       AND pddSku.specSize = womenItemSku.skuSize
     WHERE
       pddItem.isOnsale IS TRUE
+      and womenItemSku.isOnShelf = 0
+      and pddSku.skuQuantity > 0
+      AND pddItem.id <= 200
   `)
   if err != nil {
     log.Println("item-stock-list-query-error: ", err)

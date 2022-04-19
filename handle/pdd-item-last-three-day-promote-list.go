@@ -28,7 +28,7 @@ func PddItemLastThreeDayPromoteList(w http.ResponseWriter, r *http.Request) {
     ON
       daily.adId = unit.adId
     WHERE
-      daily.date >= ( CURDATE() - INTERVAL 3 DAY )
+      daily.date >= CURDATE()
     GROUP BY
       daily.adId
   `)

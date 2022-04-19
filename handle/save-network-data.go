@@ -91,6 +91,46 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   if isWomenList {
     SyncWomenList(responseContent)
   }
+  // 女装网云仓
+  if url == "https://www.hznzcn.com/yuncang/" {
+    SyncWomenList(responseContent)
+    log.Println("url: ", url)
+  }
+  // 女装网闪电发货
+  if strings.Contains(url, "https://www.hznzcn.com/sendfast.html") {
+    SyncWomenList(responseContent)
+    log.Println("url: ", url)
+  }
+  // 女装网童装闪电发货
+  isSendFast, _ := regexp.MatchString(`https:\/\/www.hznzcn.com\/sendfast-\d+.html`, url)
+  if isSendFast {
+    SyncWomenList(responseContent)
+    log.Println("url: ", url)
+  }
+  // 女装网下一页闪电发货
+  isNextPageSendFast, _ := regexp.MatchString(`https:\/\/www.hznzcn.com\/null\/sendfast-[\d-]+.html`, url)
+  //log.Println("isNextPageSendFast: ", isNextPageSendFast)
+  if isNextPageSendFast {
+    SyncWomenList(responseContent)
+    log.Println("url: ", url)
+  }
+  // 女装网店铺商品列表
+  isBrandList, _ := regexp.MatchString(`https://www.hznzcn.com/brand-\d+.html`, url)
+  if isBrandList {
+    SyncWomenList(responseContent)
+    log.Println("url: ", url)
+  }
+  // 阿里巴巴详情页
+  isAliDetail, _ := regexp.MatchString(`https:\/\/detail.1688.com\/offer\/\d+.html`, url)
+  if isAliDetail {
+    SyncAliDetail(responseContent)
+    log.Println("url: ", url)
+  }
+  // 阿里巴巴订单列表
+  if strings.Contains(url, "https://trade.1688.com/order/buyer_order_list.htm") {
+    SyncAliOrderList(responseContent)
+    log.Println("url: ", url)
+  }
   now := time.Now()
   diff := now.Sub(start)
   log.Println("diff: ", diff)

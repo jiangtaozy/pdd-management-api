@@ -57,7 +57,8 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       itemOrder.orderId,
       order1688.actualPayment,
       pddGoodsFlowData.goodsPv,
-      womenItem.isCloudWarehouse
+      womenItem.isCloudWarehouse,
+      item.keyName
     FROM pddItem AS pddItem
     LEFT JOIN item AS item
       ON pddItem.outGoodsSn = item.searchId
@@ -96,6 +97,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
     LEFT JOIN womenItem AS womenItem
       ON pddItem.outGoodsSn = womenItem.searchId
     WHERE (item.forSell = true OR item.forSell IS NULL)
+    AND pddItem.isOnSale = true
     ORDER BY pddItem.createdAt DESC`)
   if err != nil {
     log.Println("pdd-item-list-query-error: ", err)
@@ -144,6 +146,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       actualPayment sql.NullFloat64
       goodsPv sql.NullInt64
       isCloudWarehouse sql.NullBool
+      keyName sql.NullString
     )
     if err := rows.Scan(
       &id,
@@ -186,6 +189,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
       &actualPayment,
       &goodsPv,
       &isCloudWarehouse,
+      &keyName,
     ); err != nil {
       log.Println("pdd-item-list-scan-error: ", err)
     }
@@ -277,6 +281,7 @@ func PddItemList(w http.ResponseWriter, r *http.Request) {
         "orderList": orderList,
         "goodsPv": goodsPv.Int64,
         "isCloudWarehouse": isCloudWarehouse.Bool,
+        "keyName": keyName.String,
       }
       itemList = append(itemList, item)
     }
