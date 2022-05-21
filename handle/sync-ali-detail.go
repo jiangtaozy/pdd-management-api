@@ -40,7 +40,7 @@ func SyncAliDetail(html string) {
     orderParam := orderParamModel["orderParam"].(map[string]interface{})
     skuParam := orderParam["skuParam"].(map[string]interface{})
     skuRangePrices := skuParam["skuRangePrices"].([]interface{})
-    maxPrice := skuRangePrices[1].(map[string]interface{})["price"].(string)
+    maxPrice := skuRangePrices[0].(map[string]interface{})["price"].(string)
     companyName := tempModel["companyName"].(string)
     offerBaseInfo := globalData["offerBaseInfo"].(map[string]interface{})
     sellerWinportUrl := offerBaseInfo["sellerWinportUrl"].(string)

@@ -32,6 +32,10 @@ func ItemSkuUpdate(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     log.Println("item-sku-update-exec-error: ", err)
   }
+  if shortSkuNum == "" {
+    io.WriteString(w, "ok")
+    return
+  }
   var count int
   err = db.QueryRow("select count(*) from itemSkuNum where shortSkuName = ?", shortSkuName).Scan(&count)
   if err != nil {

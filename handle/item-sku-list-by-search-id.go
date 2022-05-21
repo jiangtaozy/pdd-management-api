@@ -18,7 +18,7 @@ func ItemSkuListBySearchId(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
   searchId := query["searchId"][0]
   db := database.DB
-  rows, err := db.Query("select itemSku.id, itemSku.skuName, itemSku.price, itemSku.canBookCount, itemSku.shortSkuName, itemSkuNum.shortSkuNum from itemSku left join itemSkuNum on itemSku.shortSkuName = itemSkuNum.shortSkuName where searchId = ?", searchId)
+  rows, err := db.Query("select itemSku.id, itemSku.skuName, itemSku.price, itemSku.canBookCount, itemSku.shortSkuName, itemSkuNum.shortSkuNum from itemSku left join itemSkuNum on itemSku.shortSkuName = itemSkuNum.shortSkuName where searchId = ? order by itemSku.skuName", searchId)
   if err != nil {
     log.Println("item-sku-list-by-search-id-query-error: ", err)
   }
