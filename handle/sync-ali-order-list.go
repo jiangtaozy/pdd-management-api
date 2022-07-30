@@ -30,6 +30,9 @@ func ImportOrder(s *goquery.Selection) {
   sellerCompany, _ := s.Find(".bannerCorp").Attr("data-copytitle")
   totalPrice := strings.TrimSpace(s.Find(".s6 .total").Text())
   shippingFare := strings.ReplaceAll(strings.TrimSpace(s.Find(".s6 .fare").Text()), "含运费", "")
+  if shippingFare == "" {
+    shippingFare = "0"
+  }
   actualPayment := totalPrice
   orderStatusStr := strings.TrimSpace(s.Find(".s7 div").First().Text())
   orderStatusMap := map[string]interface{}{

@@ -29,7 +29,7 @@ const order1688 =`
     amount INTEGER UNSIGNED COMMENT '数量',
     courierCompany VARCHAR(30) COMMENT '物流公司',
     trackingNumber VARCHAR(30) COMMENT '运单号',
-    orderType TINYINT NOT NULL COMMENT '订单类型，0: 1688, 1: 女装网',
+    orderType TINYINT DEFAULT 0 COMMENT '订单类型，0: 1688, 1: 女装网',
     productSku VARCHAR(200) COMMENT '商品规格',
     orderTotalPrice DECIMAL(10,2) COMMENT '订单总金额',
     agentDeliveryFee DECIMAL(10,2) COMMENT '代发费',
@@ -39,6 +39,12 @@ const order1688 =`
     productStatus VARCHAR(10) COMMENT '货物状态',
     distributionAmount INTEGER COMMENT '已配数量',
     deliveryAmount INTEGER COMMENT '已发数量',
-    INDEX orderIdIndex(orderId)
+    buyerCompany VARCHAR(50) COMMENT '买家公司名',
+    buyerMember VARCHAR(50) COMMENT '买家会员名',
+    sellerMember VARCHAR(50) COMMENT '卖家会员名',
+    shipper VARCHAR(20) COMMENT '发货方',
+    goodsType INTEGER COMMENT '货品种类',
+    initiator VARCHAR(20) COMMENT '发起人登录名',
+    unique orderIdUnique(orderId)
   );
 `

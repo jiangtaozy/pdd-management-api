@@ -21,6 +21,7 @@ const createPddItemSku =`
     skuSoldQuantity INTEGER UNSIGNED COMMENT '已售',
     spec VARCHAR(20) COMMENT 'sku描述，碎花 S',
     specColor VARCHAR(20) COMMENT 'sku颜色，碎花',
-    specSize VARCHAR(20) COMMENT 'sku尺码，S'
+    specSize VARCHAR(20) COMMENT 'sku尺码，S',
+    groupSku VARCHAR(100) COMMENT '组合sku'
   );
 `

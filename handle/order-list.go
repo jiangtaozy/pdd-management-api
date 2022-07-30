@@ -78,6 +78,8 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
   `)
   if err != nil {
     log.Println("order-list-query-error: ", err)
+    w.WriteHeader(http.StatusInternalServerError)
+    return
   }
   defer rows.Close()
   var orderList []interface{}
@@ -88,7 +90,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       productName string
       orderId string
       outerOrderId sql.NullString
-      orderStatus string
+      orderStatus sql.NullString
       orderStatusStr string
       productTotalPrice float64
       storeDiscount float64
@@ -96,26 +98,26 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       postage float64
       userPaidAmount float64
       numberOfProducts int64
-      receiver string
+      receiver sql.NullString
       phone sql.NullString
       province sql.NullString
       city sql.NullString
       district sql.NullString
       street sql.NullString
-      paymentTime string
-      joinSuccessTime string
-      orderConfirmationTime string
-      commitmentDeliveryTime string
+      paymentTime sql.NullString
+      joinSuccessTime sql.NullString
+      orderConfirmationTime sql.NullString
+      commitmentDeliveryTime sql.NullString
       deliveryTime sql.NullString
       confirmDeliveryTime sql.NullString
       productId string
-      productSku string
+      productSku sql.NullString
       skuId sql.NullString
       trackingNumber sql.NullString
       courierCompany sql.NullString
-      merchantNotes string
+      merchantNotes sql.NullString
       afterSaleStatus sql.NullInt32
-      buyerMessage string
+      buyerMessage sql.NullString
       detailUrl sql.NullString
       originalId sql.NullString
       outerOrderStatus sql.NullInt32
@@ -171,6 +173,8 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       &shippingPhone,
     ); err != nil {
       log.Println("order-list-scan-error: ", err)
+      w.WriteHeader(http.StatusInternalServerError)
+      return
     }
     order := map[string]interface{}{
       "id": id,
@@ -178,7 +182,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "productName": productName,
       "orderId": orderId,
       "outerOrderId": outerOrderId.String,
-      "orderStatus": orderStatus,
+      "orderStatus": orderStatus.String,
       "orderStatusStr": orderStatusStr,
       "productTotalPrice": productTotalPrice,
       "storeDiscount": storeDiscount,
@@ -186,26 +190,26 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       "postage": postage,
       "userPaidAmount": userPaidAmount,
       "numberOfProducts": numberOfProducts,
-      "receiver": receiver,
+      "receiver": receiver.String,
       "phone": phone.String,
       "province": province.String,
       "city": city.String,
       "district": district.String,
       "street": street.String,
-      "paymentTime": paymentTime,
-      "joinSuccessTime": joinSuccessTime,
-      "orderConfirmationTime": orderConfirmationTime,
-      "commitmentDeliveryTime": commitmentDeliveryTime,
+      "paymentTime": paymentTime.String,
+      "joinSuccessTime": joinSuccessTime.String,
+      "orderConfirmationTime": orderConfirmationTime.String,
+      "commitmentDeliveryTime": commitmentDeliveryTime.String,
       "deliveryTime": deliveryTime.String,
       "confirmDeliveryTime": confirmDeliveryTime.String,
       "productId": productId,
-      "productSku": productSku,
+      "productSku": productSku.String,
       "skuId": skuId.String,
       "trackingNumber": trackingNumber.String,
       "courierCompany": courierCompany.String,
-      "merchantNotes": merchantNotes,
+      "merchantNotes": merchantNotes.String,
       "afterSaleStatus": afterSaleStatus.Int32,
-      "buyerMessage": buyerMessage,
+      "buyerMessage": buyerMessage.String,
       "detailUrl": detailUrl.String,
       "originalId": originalId.String,
       "outerOrderStatus": outerOrderStatus.Int32,
