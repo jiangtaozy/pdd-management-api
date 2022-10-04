@@ -9,6 +9,7 @@ package database
 
 const createPddItemSku =`
   CREATE TABLE IF NOT EXISTS pddItemSku (
+    id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     pddId BIGINT UNSIGNED NOT NULL,
     outGoodsSn VARCHAR(20),
     activityGroupPrice INTEGER UNSIGNED COMMENT '活动价，分',
@@ -22,6 +23,8 @@ const createPddItemSku =`
     spec VARCHAR(20) COMMENT 'sku描述，碎花 S',
     specColor VARCHAR(20) COMMENT 'sku颜色，碎花',
     specSize VARCHAR(20) COMMENT 'sku尺码，S',
-    groupSku VARCHAR(100) COMMENT '组合sku'
+    groupSku VARCHAR(1000) COMMENT '组合sku',
+    isDeleted BOOLEAN DEFAULT 0 COMMENT '是否已删除',
+    skuThumbUrl VARCHAR(200) COMMENT '图片地址'
   );
 `

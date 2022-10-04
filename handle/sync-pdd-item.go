@@ -374,9 +374,10 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
       skuSoldQuantity,
       spec,
       specColor,
-      specSize
+      specSize,
+      skuThumbUrl
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `)
   if err != nil {
     log.Println("sync-pdd-item-save-sku-list-insert-prepare-error: ", err)
@@ -397,7 +398,9 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
       skuSoldQuantity = ?,
       spec = ?,
       specColor = ?,
-      specSize = ?
+      specSize = ?,
+      isDeleted = 0,
+      skuThumbUrl = ?
     WHERE
       pddId = ?
     AND
@@ -408,6 +411,24 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
     return
   }
   defer stmtUpdate.Close()
+  updateIsDeleted, err := db.Prepare(`
+    UPDATE
+      pddItemSku
+    SET
+      isDeleted = 1
+    WHERE
+      pddId = ?
+  `)
+  if err != nil {
+    log.Println("sync-pdd-item-save-sku-list-update-is-deleted-prepare-error: ", err)
+    return
+  }
+  defer updateIsDeleted.Close()
+  _, err = updateIsDeleted.Exec(pddId)
+  if err != nil {
+    log.Println("sync-pdd-item-save-sku-list-update-is-deleted-exec-error: ", err)
+    return
+  }
   for i := 0; i < len(skuList); i++ {
     sku := skuList[i].(map[string]interface{})
     activityGroupPrice := sku["activityGroupPrice"]
@@ -425,6 +446,7 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
     if len(specList) > 1 {
       specSize = specList[1]
     }
+    skuThumbUrl := sku["skuThumbUrl"].(string)
     var count int
     err = db.QueryRow(`
       SELECT
@@ -455,6 +477,7 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
         spec,
         specColor,
         specSize,
+        skuThumbUrl,
       )
       if err != nil {
         log.Println("sync-pdd-item-save-sku-list-insert-exec-error: ", err)
@@ -473,6 +496,7 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
         spec,
         specColor,
         specSize,
+        skuThumbUrl,
         pddId,
         skuId,
       )
