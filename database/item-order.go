@@ -51,6 +51,9 @@ const itemOrder = `
     afterSaleApplyTime DATETIME COMMENT '售后申请时间',
     buyerMessage VARCHAR(100) DEFAULT '' COMMENT '买家留言',
     goodsName VARCHAR(60) DEFAULT '' COMMENT '货品名称',
-    goodsType VARCHAR(30) COMMENT '货品类型'
+    goodsType VARCHAR(30) COMMENT '货品类型',
+    privacyCode VARCHAR(10) COMMENT '隐私号的四位分机号',
+    noteSku VARCHAR(1000) COMMENT '备注对应sku',
+    unique orderIdUnique(orderId)
   );
 `

@@ -45,6 +45,7 @@ const order1688 =`
     shipper VARCHAR(20) COMMENT '发货方',
     goodsType INTEGER COMMENT '货品种类',
     initiator VARCHAR(20) COMMENT '发起人登录名',
+    downstreamOrderId VARCHAR(30) COMMENT '下游订单号(拼多多订单号)',
     unique orderIdUnique(orderId)
   );
 `
