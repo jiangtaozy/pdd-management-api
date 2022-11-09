@@ -48,6 +48,8 @@ func SyncAliDetail(html string) {
     skuModel := globalData["skuModel"].(map[string]interface{})
     skuInfoMap := skuModel["skuInfoMap"].(map[string]interface{})
     SaveItemSku(offerId, skuInfoMap, maxPrice)
+    skuProps := skuModel["skuProps"].([]interface{})
+    SaveItemSkuProps(offerId, skuProps)
   }
 }
 
@@ -167,6 +169,38 @@ func SaveItem(offerId float64, offerTitle string, maxPrice string, companyName s
     _, err = updateItem.Exec(maxPrice, originalId)
     if err != nil {
       log.Println("sync-ali-detail-update-item-exec-error: ", err)
+    }
+  }
+}
+
+// 保存skuProp
+func SaveItemSkuProps(offerId float64, skuProps []interface{}) {
+  db := database.DB
+  originalId := fmt.Sprintf("%.f", offerId)
+  var searchId int
+  err := db.QueryRow("SELECT searchId FROM item WHERE originalId = ?", originalId).Scan(&searchId)
+  if err == sql.ErrNoRows {
+    log.Println("sync-ali-detail-select-search-id-error: ", err)
+    return
+  }
+  insert, err := db.Prepare("insert into itemSkuProp (searchId, propName, propValue) values (? , ?, ?) on duplicate key update propValue = ?")
+  if err != nil {
+    log.Println("sync-ali-detail-save-sku-prop-insert-prepare-error: ", err)
+    return
+  }
+  defer insert.Close()
+  for i := 0; i < len(skuProps); i++ {
+    propMap := skuProps[i].(map[string]interface{})
+    prop := propMap["prop"].(string)
+    value := propMap["value"].([]interface{})
+    valueJson, err := json.Marshal(value)
+    if err != nil {
+      log.Println("sync-ali-detail-marshal-error: ", err)
+      return
+    }
+    _, err = insert.Exec(searchId, prop, valueJson, valueJson)
+    if err != nil {
+      log.Println("sync-ali-detail-save-sku-prop-insert-exec-error: ", err)
     }
   }
 }

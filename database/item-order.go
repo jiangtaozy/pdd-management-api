@@ -54,6 +54,9 @@ const itemOrder = `
     goodsType VARCHAR(30) COMMENT '货品类型',
     privacyCode VARCHAR(10) COMMENT '隐私号的四位分机号',
     noteSku VARCHAR(1000) COMMENT '备注对应sku',
+    cost DECIMAL(10,2) COMMENT '成本(元)',
+    mergeOrderNum INTEGER UNSIGNED COMMENT '组合订单数',
+    profit DECIMAL(10,2) COMMENT '利润(元)',
     unique orderIdUnique(orderId)
   );
 `

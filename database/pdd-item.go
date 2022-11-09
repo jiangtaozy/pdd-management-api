@@ -75,7 +75,11 @@ const createPddItem =`
     skuList VARCHAR(50),
     rejectStatus VARCHAR(50),
     rejectReason VARCHAR(50),
+    grossProfit DECIMAL(10,2) COMMENT '累计毛利润',
+    promotionCost DECIMAL(10,2) COMMENT '累计推广费用',
+    netProfit DECIMAL(10,2) COMMENT '累计净利润',
     INDEX pddIdIndex(pddId),
+    UNIQUE KEY(pddId)
     INDEX outGoodsSnIndex(outGoodsSn)
   );
 `

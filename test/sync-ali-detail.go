@@ -21,4 +21,5 @@ func main() {
     log.Println("sync-ali-detail-test-read-file-error: ", err)
   }
   handle.SyncAliDetail(string(data))
+  log.Println("ok")
 }
