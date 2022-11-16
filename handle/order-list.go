@@ -73,7 +73,7 @@ func OrderList(w http.ResponseWriter, r *http.Request) {
       (item.forSell = TRUE
       OR
       item.forSell IS NULL)
-      and itemOrder.paymentTime > SUBDATE(CURDATE(),INTERVAL 1 month)
+      and itemOrder.paymentTime > SUBDATE(CURDATE(),INTERVAL 2 month)
     ORDER BY itemOrder.paymentTime DESC
   `)
   if err != nil {
