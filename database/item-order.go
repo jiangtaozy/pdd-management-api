@@ -57,6 +57,9 @@ const itemOrder = `
     cost DECIMAL(10,2) COMMENT '成本(元)',
     mergeOrderNum INTEGER UNSIGNED COMMENT '组合订单数',
     profit DECIMAL(10,2) COMMENT '利润(元)',
+    actualIncome DECIMAL(10,2) COMMENT '实际收入(元)',
+    actualCost DECIMAL(10,2) COMMENT '实际成本(元)',
+    outerOrderStatus TINYINT COMMENT '订单状态，0: 待付款，1: 待发货，2: 待收货，3: 已收货，4: 交易成功，5: 已退换货，6: 交易关闭',
     unique orderIdUnique(orderId)
   );
 `

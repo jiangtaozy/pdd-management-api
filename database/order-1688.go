@@ -27,8 +27,8 @@ const order1688 =`
     productTitle VARCHAR(150) COMMENT '货品标题',
     price DECIMAL(10,2) COMMENT '单价(元)',
     amount INTEGER UNSIGNED COMMENT '数量',
-    courierCompany VARCHAR(30) COMMENT '物流公司',
-    trackingNumber VARCHAR(30) COMMENT '运单号',
+    courierCompany VARCHAR(200) COMMENT '物流公司',
+    trackingNumber VARCHAR(200) COMMENT '运单号',
     orderType TINYINT DEFAULT 0 COMMENT '订单类型，0: 1688, 1: 女装网',
     productSku VARCHAR(200) COMMENT '商品规格',
     orderTotalPrice DECIMAL(10,2) COMMENT '订单总金额',
@@ -46,6 +46,7 @@ const order1688 =`
     goodsType INTEGER COMMENT '货品种类',
     initiator VARCHAR(20) COMMENT '发起人登录名',
     downstreamOrderId VARCHAR(30) COMMENT '下游订单号(拼多多订单号)',
+    isReceived BOOLEAN COMMENT '是否已收货',
     unique orderIdUnique(orderId)
   );
 `

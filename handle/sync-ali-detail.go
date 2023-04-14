@@ -56,55 +56,64 @@ func SyncAliDetail(html string) {
 func SaveItemSku(offerId float64, skuInfoMap map[string]interface{}, maxPrice string) {
     db := database.DB
     originalId := fmt.Sprintf("%.f", offerId)
-    for skuName, skuMapInterface := range skuInfoMap {
-      skuMap := skuMapInterface.(map[string]interface{})
-      specId := skuMap["specId"].(string)
-      specAttrs := skuMap["specAttrs"].(string)
-      saleCount := int(skuMap["saleCount"].(float64))
-      canBookCount := int(skuMap["canBookCount"].(float64))
-      skuId := int(skuMap["skuId"].(float64))
-      isPromotionSku := skuMap["isPromotionSku"].(bool)
-      var price int
-      if skuMap["price"] != nil {
-        priceFloat, err := strconv.ParseFloat(skuMap["price"].(string), 64)
-        if err == nil {
-          price = int(priceFloat * 100)
-        }
-      } else {
-        maxPriceFloat, err := strconv.ParseFloat(maxPrice, 64)
-        if err == nil {
-          price = int(maxPriceFloat * 100)
-        }
+    var searchId int
+    err := db.QueryRow("SELECT searchId FROM item WHERE originalId = ?", originalId).Scan(&searchId)
+    if err == sql.ErrNoRows {
+      log.Println("sync-ali-detail-select-search-id-error: ", err)
+    } else {
+      removeAllItemSku, err := db.Prepare("UPDATE itemSku SET isDeleted = true WHERE searchId = ?")
+      if err != nil {
+        log.Println("sync-ali-detail-remove-all-sku-prepare-error: ", err)
       }
-      var discountPrice int
-      if skuMap["discountPrice"] != nil {
-        discountPriceFloat, err := strconv.ParseFloat(skuMap["discountPrice"].(string), 64)
-        if err == nil {
-          discountPrice = int(discountPriceFloat * 100)
-        }
+      defer removeAllItemSku.Close()
+      _, err = removeAllItemSku.Exec(searchId)
+      if err != nil {
+        log.Println("sync-ali-detail-remove-all-sku-exec-error: ", err)
       }
-      var searchId int
-      err := db.QueryRow("SELECT searchId FROM item WHERE originalId = ?", originalId).Scan(&searchId)
-      if err == sql.ErrNoRows {
-        log.Println("sync-ali-detail-select-search-id-error: ", err)
-      } else {
+      for skuName, skuMapInterface := range skuInfoMap {
+        skuMap := skuMapInterface.(map[string]interface{})
+        specId := skuMap["specId"].(string)
+        specAttrs := skuMap["specAttrs"].(string)
+        saleCount := int(skuMap["saleCount"].(float64))
+        canBookCount := int(skuMap["canBookCount"].(float64))
+        skuId := int(skuMap["skuId"].(float64))
+        isPromotionSku := skuMap["isPromotionSku"].(bool)
+        var price int
+        if skuMap["price"] != nil {
+          priceFloat, err := strconv.ParseFloat(skuMap["price"].(string), 64)
+          if err == nil {
+            price = int(priceFloat * 100)
+          }
+        } else {
+          maxPriceFloat, err := strconv.ParseFloat(maxPrice, 64)
+          if err == nil {
+            price = int(maxPriceFloat * 100)
+          }
+        }
+        var discountPrice int
+        if skuMap["discountPrice"] != nil {
+          discountPriceFloat, err := strconv.ParseFloat(skuMap["discountPrice"].(string), 64)
+          if err == nil {
+            discountPrice = int(discountPriceFloat * 100)
+          }
+        }
         var itemSkuCount int
         err = db.QueryRow("SELECT COUNT(*) FROM itemSku WHERE searchId = ? and skuId = ?", searchId, skuId).Scan(&itemSkuCount)
         if err != nil {
           log.Println("sync-ali-detail-count-item-sku-error: ", err)
         }
         if itemSkuCount == 0 {
-          insertItemSku, err := db.Prepare("INSERT INTO itemSku (searchId, skuName, specId, specAttrs, price, saleCount, discountPrice, canBookCount, skuId, isPromotionSku) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+          insertItemSku, err := db.Prepare("INSERT INTO itemSku (searchId, skuName, specId, specAttrs, price, saleCount, discountPrice, canBookCount, skuId, isPromotionSku, isDeleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
           if err != nil {
             log.Println("sync-ali-detail-insert-item-sku-prepare-error: ", err)
           }
           defer insertItemSku.Close()
-          _, err = insertItemSku.Exec(searchId, skuName, specId, specAttrs, price, saleCount, discountPrice, canBookCount, skuId, isPromotionSku)
+          _, err = insertItemSku.Exec(searchId, skuName, specId, specAttrs, price, saleCount, discountPrice, canBookCount, skuId, isPromotionSku, false)
           if err != nil {
             log.Println("sync-ali-detail-insert-item-sku-exec-error: ", err)
           }
         } else {
-          updateItemSku, err := db.Prepare("UPDATE itemSku SET skuName = ?, specId = ?, specAttrs = ?, price = ?, saleCount = ?, discountPrice = ?, canBookCount = ?, isPromotionSku = ? WHERE searchId = ? and skuId = ?")
+          updateItemSku, err := db.Prepare("UPDATE itemSku SET skuName = ?, specId = ?, specAttrs = ?, price = ?, saleCount = ?, discountPrice = ?, canBookCount = ?, isPromotionSku = ?, isDeleted = false WHERE searchId = ? and skuId = ?")
           if err != nil {
             log.Println("sync-ali-detail-update-item-sku-prepare-error: ", err)
           }

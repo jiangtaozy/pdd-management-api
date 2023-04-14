@@ -10,7 +10,7 @@ const createItemSku =`
   CREATE TABLE IF NOT EXISTS itemSku (
     id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     searchId INTEGER UNSIGNED NOT NULL COMMENT '商品id',
-    skuName VARCHAR(30) NOT NULL COMMENT 'sku名称，如【香槟】钻樱桃抓夹',
+    skuName VARCHAR(300) NOT NULL COMMENT 'sku名称，如【香槟】钻樱桃抓夹',
     specId VARCHAR(50) COMMENT 'specId',
     specAttrs VARCHAR(50) COMMENT 'spec名称',
     price INTEGER UNSIGNED COMMENT 'sku价格，单位：分',
@@ -22,6 +22,7 @@ const createItemSku =`
     isPromotionSku BOOLEAN COMMENT '是否推广',
     shortSkuName VARCHAR(20) COMMENT '简化sku名称',
     shortSkuNum VARCHAR(20) COMMENT '简化sku编码',
+    isDeleted BOOLEAN NOT NULL DEFAULT 0 COMMENT '是否已删除',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );

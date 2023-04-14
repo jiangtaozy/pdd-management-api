@@ -11,7 +11,7 @@ const item = `
     price DECIMAL(10,2) NOT NULL,
     imgUrl VARCHAR(200) NOT NULL DEFAULT '',
     detailUrl VARCHAR(60) NOT NULL DEFAULT '',
-    siteType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '1: 1688, 2: hznzcn',
+    siteType TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '1: 1688, 2: hznzcn, 3: 线下微信',
     originalId VARCHAR(30) NOT NULL DEFAULT '',
     supplierId INTEGER UNSIGNED NOT NULL DEFAULT 0,
     saleQuantity INTEGER UNSIGNED NOT NULL DEFAULT 0,
@@ -31,6 +31,12 @@ const item = `
     keyName VARCHAR(200),
     itemTypeKey INTEGER COMMENT '类型key',
     itemNum VARCHAR(20) COMMENT '编码',
+    length DECIMAL(10,2) UNSIGNED COMMENT '长(cm)',
+    width DECIMAL(10,2) UNSIGNED COMMENT '宽(cm)',
+    height DECIMAL(10,2) UNSIGNED COMMENT '高(cm)',
+    weight INTEGER UNSIGNED COMMENT '重量(g)',
+    crossBorderUrl VARCHAR(100) COMMENT '跨境平台地址',
+    notForSellReason VARCHAR(300) COMMENT '下架原因',
     INDEX forSellIndex(forSell)
   );
  `
