@@ -46,10 +46,14 @@ func SyncAliDetail(html string) {
     sellerWinportUrl := offerBaseInfo["sellerWinportUrl"].(string)
     SaveItem(offerId, offerTitle, maxPrice, companyName, sellerWinportUrl)
     skuModel := globalData["skuModel"].(map[string]interface{})
-    skuInfoMap := skuModel["skuInfoMap"].(map[string]interface{})
-    SaveItemSku(offerId, skuInfoMap, maxPrice)
-    skuProps := skuModel["skuProps"].([]interface{})
-    SaveItemSkuProps(offerId, skuProps)
+    skuInfoMap, ok := skuModel["skuInfoMap"].(map[string]interface{})
+    if(ok) {
+      SaveItemSku(offerId, skuInfoMap, maxPrice)
+    }
+    skuProps, ok := skuModel["skuProps"].([]interface{})
+    if(ok) {
+      SaveItemSkuProps(offerId, skuProps)
+    }
   }
 }
 
