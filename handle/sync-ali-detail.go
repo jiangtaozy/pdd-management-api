@@ -41,7 +41,10 @@ func SyncAliDetail(html string) {
     skuParam := orderParam["skuParam"].(map[string]interface{})
     skuRangePrices := skuParam["skuRangePrices"].([]interface{})
     maxPrice := skuRangePrices[0].(map[string]interface{})["price"].(string)
-    companyName := tempModel["companyName"].(string)
+    companyName := ""
+    if tempModel["companyName"] != nil {
+      companyName = tempModel["companyName"].(string)
+    }
     offerBaseInfo := globalData["offerBaseInfo"].(map[string]interface{})
     sellerWinportUrl := offerBaseInfo["sellerWinportUrl"].(string)
     SaveItem(offerId, offerTitle, maxPrice, companyName, sellerWinportUrl)
