@@ -6,16 +6,17 @@
 
 package database
 
-/*
-| mergeOrder1688 | CREATE TABLE `mergeOrder1688` (
-  `id`           bigint(20)    unsigned             NOT     NULL    AUTO_INCREMENT,
-  `orderId`      varchar(20)   NOT                  NULL    COMMENT '1688订单号',
-  `productTitle` varchar(150)  DEFAULT              NULL    COMMENT '货品标题',
-  `price`        decimal(10,2) DEFAULT              NULL    COMMENT '单价(元)',
-  `amount`       int(10)       unsigned             DEFAULT NULL    COMMENT '数量',
-  `skuId`        varchar(30)   DEFAULT              NULL    COMMENT 'SKU    ID',
-  `offerId`      varchar(30)   DEFAULT              NULL    COMMENT 'Offer  ID',
-  PRIMARY        KEY           (`id`),
-  UNIQUE         KEY           `orderIdSkuIdUnique` (`orderId`,`skuId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2102 DEFAULT CHARSET=utf8mb4             |
-*/
+const mergeOrder1688 = `
+  CREATE TABLE IF NOT EXISTS mergeOrder1688 (
+    id BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    orderId VARCHAR(20) NOT NULL COMMENT '1688订单号',
+    productTitle VARCHAR(150) COMMENT '货品标题',
+    price DECIMAL(10,2) COMMENT '单价(元)',
+    amount INTEGER UNSIGNED COMMENT '数量',
+    skuId VARCHAR(30) COMMENT 'sku id',
+    offerId VARCHAR(30) COMMENT 'offer id',
+    unique orderIdSkuIdUnique(orderId, skuId),
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  );
+`

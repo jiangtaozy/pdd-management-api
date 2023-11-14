@@ -37,6 +37,7 @@ const item = `
     weight INTEGER UNSIGNED COMMENT '重量(g)',
     crossBorderUrl VARCHAR(100) COMMENT '跨境平台地址',
     notForSellReason VARCHAR(300) COMMENT '下架原因',
+    declaredPrice DECIMAL(10,2) COMMENT '申报价格',
     INDEX forSellIndex(forSell)
   );
  `

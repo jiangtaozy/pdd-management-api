@@ -47,6 +47,9 @@ const order1688 =`
     initiator VARCHAR(20) COMMENT '发起人登录名',
     downstreamOrderId VARCHAR(30) COMMENT '下游订单号(拼多多订单号)',
     isReceived BOOLEAN COMMENT '是否已收货',
-    unique orderIdUnique(orderId)
+    receivedTime DATETIME COMMENT '收货时间',
+    unique orderIdUnique(orderId),
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 `

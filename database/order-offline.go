@@ -24,6 +24,8 @@ const orderOffline =`
     courierCompany VARCHAR(200) COMMENT '物流公司',
     trackingNumber VARCHAR(200) COMMENT '运单号',
     isReceived BOOLEAN DEFAULT 0 COMMENT '是否已收货',
+    receivedTime DATETIME COMMENT '收货时间',
+    receivedWarehouseId INTEGER UNSIGNED COMMENT '收货仓库id',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
