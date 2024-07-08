@@ -31,6 +31,13 @@ const labelSaleManage = `
     cumulativeTurnoverRate DECIMAL(6,4) COMMENT '累计资金周转率 = 累计总销售额 / 累计总进货金额',
     monthlyTurnoverRate DECIMAL(6,4) COMMENT '近三十天资金周转率 = 近一个月销售额 / ((累计进货量 - 累计销量 + 近一个月销量) * 进货价)',
     sevenDayTurnoverRate DECIMAL(6,4) COMMENT '近七天周转率 = 近七天销售额 / ((累计进货量 - 累计销量 + 近七天销量) * 进货价)',
+    stockDays DECIMAL(10,2) COMMENT '库存天数 = 总库存 / 近7天销量 * 7',
+    returnQuantity INTEGER COMMENT '退货库存',
+    returnAmount INTEGER COMMENT '退货库存金额 = 退货库存 * 进货价',
+    lastThirtyDaysSaleVolume INTEGER COMMENT '近30天销量',
+    lastThirtyDaysSalesAmount INTEGER COMMENT '近30天销售额',
+    lastThirtyDaysGrossProfit INTEGER COMMENT '近30天毛利润单位分',
+    lastThirtyDaysPurchaseAmount INTEGER COMMENT '近30天进货金额单位分',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     PRIMARY KEY(day, label)
   );

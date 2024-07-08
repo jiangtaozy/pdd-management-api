@@ -18,3 +18,6 @@ const createRoom =`
 `
 
 //insert into room (roomName, roomAddress, warehouseId, createdAt)values ('905', '海智中心905室', 2, now());
+//insert into room (roomName, roomAddress, warehouseId, createdAt)values ('1', '闫家庄客厅', 1, now());
+//insert into room (roomName, roomAddress, warehouseId, createdAt)values ('2', '闫家庄东南室', 1, now());
+//insert into room (roomName, roomAddress, warehouseId, createdAt)values ('东南室', '闫家庄东南室', 1, now());

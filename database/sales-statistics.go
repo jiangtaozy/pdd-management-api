@@ -33,6 +33,10 @@ const salesStatistics = `
     stockDays DECIMAL(10,2) COMMENT '库存天数 = 总库存 / 近7天销量 * 7',
     returnQuantity INTEGER COMMENT '退货库存',
     returnAmount INTEGER COMMENT '退货库存金额 = 退货库存 * 进货价',
+    lastThirtyDaysSaleVolume INTEGER COMMENT '近30天销量',
+    lastThirtyDaysSalesAmount INTEGER COMMENT '近30天销售额',
+    lastThirtyDaysGrossProfit INTEGER COMMENT '近30天毛利润单位分',
+    lastThirtyDaysPurchaseAmount INTEGER COMMENT '近30天进货金额单位分',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     PRIMARY KEY(day)
   );

@@ -90,12 +90,17 @@ const saleManage = `
     cumulativeTurnoverRate DECIMAL(6,4) COMMENT '累计资金周转率 = 累计销售额 / 累计进货金额',
     monthlyTurnoverRate DECIMAL(6,4) COMMENT '近30天资金周转率 = 近一个月销售额 / ((累计进货量 - 累计销量 + 近一个月销量) * 进货价)',
     lastThirtyDaysSalesAmount INTEGER COMMENT '近30天销售额',
+    lastThirtyDaysGrossProfit INTEGER COMMENT '近30天毛利润单位分',
+    lastThirtyDaysPurchaseAmount INTEGER COMMENT '近30天进货金额单位分',
     monthlyRemaining INTEGER COMMENT '近一个月剩余进货金额加销售进货金额 = ((累计进货量 - 累计销量 + 近一个月销量) * 进货价)',
     sevenDayTurnoverRate DECIMAL(6,4) COMMENT '七天周转率 = 近七天销售额 / ((累计进货量 - 累计销量 + 近七天销量) * 进货价)',
     sevenDayRemaining INTEGER COMMENT '七天剩余进货金额加销售进货金额 = ((累计进货量 - 累计销量 + 近七天销量) * 进货价)',
     stockDays DECIMAL(10,2) COMMENT '库存天数 = 总库存 / 近7天销量 * 7',
     returnQuantity INTEGER COMMENT '退货库存',
     returnAmount INTEGER COMMENT '退货库存金额 = 退货库存 * 进货价',
+    safeInventoryDays INTEGER COMMENT '库存安全天数',
+    isAdviceStock BOOLEAN COMMENT '是否建议备货',
+    supplyStatus INTEGER COMMENT '备货状态，1: 暂时无法备货, 0: 正常备货/无货审核中',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     PRIMARY KEY(day, productSkuId)
   );

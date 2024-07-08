@@ -11,6 +11,9 @@ const temuGroupSku = `
     aliSkuId VARCHAR(20) NOT NULL,
     quantity INTEGER,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY(temuSkuId, aliSkuId)
   );
  `
+
+//alter table temuGroupSku add updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
