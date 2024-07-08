@@ -177,12 +177,12 @@ func SaveItem(offerId float64, offerTitle string, maxPrice string, companyName s
       log.Println("sync-ali-detail-insert-item-exec-error: ", err)
     }
   } else if itemCount == 1 {
-    updateItem, err := db.Prepare("UPDATE item SET price = ?  WHERE originalId = ?")
+    updateItem, err := db.Prepare("UPDATE item SET price = ?, name = ?  WHERE originalId = ?")
     if err != nil {
       log.Println("sync-ali-detail-update-item-prepare-error: ", err)
     }
     defer updateItem.Close()
-    _, err = updateItem.Exec(maxPrice, originalId)
+    _, err = updateItem.Exec(maxPrice, offerTitle, originalId)
     if err != nil {
       log.Println("sync-ali-detail-update-item-exec-error: ", err)
     }
