@@ -55,7 +55,8 @@ func SyncPddOrder(requestBody map[string]interface{}, responseBody map[string]in
       buyerMessage,
       goodsName,
       goodsType,
-      merchantNotes
+      merchantNotes,
+      thumbUrl
     ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `)
   if err != nil {
@@ -86,7 +87,8 @@ func SyncPddOrder(requestBody map[string]interface{}, responseBody map[string]in
       homeDeliveryFee = ?,
       homeDeliveryAndInstallationFee = ?,
       userPaidAmount = ?,
-      merchantNotes = ?
+      merchantNotes = ?,
+      thumbUrl = ?
     WHERE
       orderId = ?
   `)
@@ -157,6 +159,7 @@ func SyncPddOrder(requestBody map[string]interface{}, responseBody map[string]in
         order["goods_name"],
         order["goods_type"],
         order["mall_remark"],
+        order["thumb_url"],
       )
       if err != nil {
         log.Println("save-pdd-order-data-insert-exec-error: ", err)
@@ -184,6 +187,7 @@ func SyncPddOrder(requestBody map[string]interface{}, responseBody map[string]in
         order["delivery_install_value"],
         order["order_amount"],
         order["mall_remark"],
+        order["thumb_url"],
         order["order_sn"],
       )
       if err != nil {
