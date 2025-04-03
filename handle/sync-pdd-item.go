@@ -439,12 +439,16 @@ func SaveSkuList(pddId float64, outGoodsSn string, skuList []interface{}) {
     skuId := sku["skuId"]
     skuQuantity := sku["skuQuantity"]
     skuSoldQuantity := sku["skuSoldQuantity"]
-    spec := sku["spec"].(string)
-    specList := strings.Split(spec, " ")
-    specColor := specList[0]
+    spec := ""
+    specColor := ""
     specSize := ""
-    if len(specList) > 1 {
-      specSize = specList[1]
+    if sku["spec"] != nil {
+      spec = sku["spec"].(string)
+      specList := strings.Split(spec, " ")
+      specColor = specList[0]
+      if len(specList) > 1 {
+        specSize = specList[1]
+      }
     }
     skuThumbUrl := sku["skuThumbUrl"].(string)
     var count int
