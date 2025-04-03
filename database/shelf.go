@@ -18,9 +18,15 @@ const createShelf =`
   );
 `
 
+// 海智中心
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('A', 1, 1, 2, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('B', 1, 1, 2, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('C', 2, 1, 2, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('D', 2, 1, 2, now());
+
+// 闫家庄
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('A', 3, 2, 1, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('B', 4, 3, 1, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('C', 5, 4, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('D', 3, 2, 1, now());
+

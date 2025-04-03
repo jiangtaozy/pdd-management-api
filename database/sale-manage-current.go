@@ -1,12 +1,12 @@
 /*
- * Maintained by jemo from 2023.3.28 to now
- * Created by jemo on 2023.3.28 14:15:33
- * 销售管理
+ * Maintained by jemo from 2025.01.29 to now
+ * Created by jemo on 2025.01.29 13:56:03
+ * 销售管理-当天状态
  */
 package database
 
-const saleManage = `
-  CREATE TABLE IF NOT EXISTS saleManage (
+const saleManageCurrent = `
+  CREATE TABLE IF NOT EXISTS saleManageCurrent (
     day DATE NOT NULL,
     supplierId VARCHAR(20) COMMENT '店铺id',
     productSkcId VARCHAR(20) COMMENT 'skc id',
@@ -62,9 +62,9 @@ const saleManage = `
     suggestPurchaseNumDown INTEGER,
     isAdjusted BOOLEAN,
     warehouseAvailableSaleDays DECIMAL(10,2) COMMENT '仓内库存可售天数',
-    notReceivedAmount INTEGER COMMENT '未到货库存'
-    totalLocalSurplusStock INTEGER COMMENT '本地剩余库存'
-    totalInventory INTEGER COMMENT '总库存'
+    notReceivedAmount INTEGER COMMENT '未到货库存',
+    totalLocalSurplusStock INTEGER COMMENT '本地剩余库存',
+    totalInventory INTEGER COMMENT '总库存',
     lastThirtyDaysPredictThirtyDaysSale INTEGER COMMENT '按30天销量预估30天销量',
     lastSevenDaysPredictThirtyDaysSale INTEGER COMMENT '按7天销量预估30天销量',
     lastSevenDaysPredictThirtySevenDaysSale INTEGER COMMENT '按7天销量预估37天销量',
@@ -105,15 +105,6 @@ const saleManage = `
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     isVerifyPrice BOOLEAN COMMENT '开款价格状态',
     purchaseConfig VARCHAR(20) COMMENT '备货逻辑',
-    pddLastSevenDaysSaleVolume INTEGER COMMENT '拼多多近7天销量',
-    PRIMARY KEY(day, productSkuId)
+    PRIMARY KEY(productSkuId)
   );
  `
- /* 添加索引
-alter table saleManage add index index_day(day);
-alter table saleManage add index index_skcExtCode(skcExtCode);
-alter table saleManage add index index_skuExtCode(skuExtCode);
-alter table saleManage add index index_isLastSevenDaysNeedStock(isLastSevenDaysNeedStock);
-alter table saleManage add purchaseConfig VARCHAR(20) COMMENT '备货逻辑';
-//alter table saleManage add pddLastSevenDaysSaleVolume INTEGER COMMENT '拼多多近7天销量';
-*/

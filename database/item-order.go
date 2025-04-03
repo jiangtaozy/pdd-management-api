@@ -1,7 +1,7 @@
 /*
  * Maintained by jemo from 2022.4.18 to now
  * Created by jemo on 2022.4.18 10:49:54
- * 商品订单列表
+ * 商品订单列表，拼多多订单
  */
 
 package database
@@ -60,6 +60,28 @@ const itemOrder = `
     actualIncome DECIMAL(10,2) COMMENT '实际收入(元)',
     actualCost DECIMAL(10,2) COMMENT '实际成本(元)',
     outerOrderStatus TINYINT COMMENT '订单状态，0: 待付款，1: 待发货，2: 待收货，3: 已收货，4: 交易成功，5: 已退换货，6: 交易关闭',
+    printStatus BOOLEAN COMMENT '是否打印快递单',
+    thumbUrl VARCHAR(200) COMMENT '预览图',
     unique orderIdUnique(orderId)
   );
 `
+/*
+ 已签收
+ 已发货，待签收
+ 已发货，待收货
+ 已收货
+
+ 已发货，退款成功
+ 未发货，退款成功
+ 已签收，退款成功
+ 已取消，退款成功
+ 已取消
+ 待支付
+ 待发货
+*/
+
+//select merchantCodeSkuDimension, sum(numberOfProducts) from itemOrder where paymentTime > '2025-03-05' group by merchantCodeSkuDimension order by sum(numberOfProducts) desc;
+
+//alter table itemOrder add printStatus BOOLEAN COMMENT '是否打印快递单';
+//alter table itemOrder add thumbUrl VARCHAR(200) COMMENT '预览图';
+

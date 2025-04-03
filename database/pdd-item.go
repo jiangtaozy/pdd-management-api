@@ -36,7 +36,7 @@ const createPddItem =`
     offSaleCheck VARCHAR(50),
     onsaleCheck VARCHAR(50),
     editCheck VARCHAR(50),
-    grayGoodsHighQualityRefund BOOLEAN NOT NULL DEFAULT false,
+    grayGoodsHighQualityRefund BOOLEAN,
     shareDesc VARCHAR(50),
     goodsDesc VARCHAR(50),
     activityTitle VARCHAR(50),
@@ -68,8 +68,8 @@ const createPddItem =`
     isPreSale BOOLEAN COMMENT '是否预售',
     guideTarget INTEGER UNSIGNED NOT NULL DEFAULT 0,
     overSell BOOLEAN NOT NULL DEFAULT false,
-    marketLabels VARCHAR(50),
-    labels VARCHAR(200),
+    marketLabels VARCHAR(300),
+    labels VARCHAR(300),
     skuType TINYINT UNSIGNED NOT NULL DEFAULT 0,
     isMoreSku VARCHAR(50),
     skuList VARCHAR(50),
@@ -83,3 +83,7 @@ const createPddItem =`
     INDEX outGoodsSnIndex(outGoodsSn)
   );
 `
+
+//alter table pddItem modify column grayGoodsHighQualityRefund BOOLEAN;
+//alter table pddItem modify column marketLabels VARCHAR(300);
+//alter table pddItem modify column labels VARCHAR(300);

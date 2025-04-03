@@ -33,3 +33,13 @@ const createlayer =`
 //insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('第2层', 3, 2, 1, 2, now());
 //insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('第3层', 3, 2, 1, 2, now());
 //insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('第4层', 3, 2, 1, 2, now());
+
+//insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('1', 7, 3, 2, 1, now());
+//insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('2', 7, 3, 2, 1, now());
+//insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('3', 7, 3, 2, 1, now());
+//insert into layer (layerName, shelfId, passageId, roomId, warehouseId, createdAt) values ('4', 7, 3, 2, 1, now());
+
+//update layer set layerName = '1' where layerId = 25;
+//update layer set layerName = '2' where layerId = 26;
+//update layer set layerName = '3' where layerId = 27;
+//update layer set layerName = '4' where layerId = 28;

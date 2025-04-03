@@ -44,3 +44,18 @@ const item = `
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
  `
+
+//insert into item (name, price) values ('卡通随机多种图案补丁贴', 1);
+//insert into item (name, price) values ('红色小米圆珠大颗黄色切面珠细锁骨项链', 9.2);
+//insert into item (name, price) values ('金如意铃铛吊坠茶色切面小米珠锁骨链', 14.2);
+//insert into item (name, price) values ('绿松石小米珠天然大颗碎石金属隔片锁骨链', 10);
+//insert into item (name, price) values ('十字架吊坠绿松石小米珠天然大颗碎石金属隔片锁骨链', 13.5);
+//insert into item (name, price) values ('马卡龙白圆柱石混色串珠弹力锁骨链', 14);
+//insert into item (name, price) values ('红色切面小米珠金色圆隔珠不规则隔片细锁骨链', 3.2);
+//insert into item (name, price) values ('黑色切面小米珠碎金银锁骨链', 6);
+
+
+
+
+
+
