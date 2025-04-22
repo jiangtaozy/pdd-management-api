@@ -13,6 +13,7 @@ const orderOffline =`
     productTitle VARCHAR(150) COMMENT '货品标题',
     skcCode VARCHAR(20) COMMENT 'skc货号',
     skuCode VARCHAR(20) COMMENT 'sku货号',
+    skuName VARCHAR(300) COMMENT 'sku名称，如【香槟】钻樱桃抓夹',
     price DECIMAL(10,2) COMMENT '单价(元)',
     amount INTEGER UNSIGNED COMMENT '数量',
     totalPrice DECIMAL(10,2) COMMENT '货品总价(元)',
@@ -30,3 +31,5 @@ const orderOffline =`
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 `
+
+//alter table orderOffline add skuName VARCHAR(300) COMMENT 'sku名称，如【香槟】钻樱桃抓夹';

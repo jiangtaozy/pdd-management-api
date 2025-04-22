@@ -23,6 +23,9 @@ const returnPackage = `
     remark VARCHAR(100) COMMENT '备注',
     outboundTime DATETIME COMMENT '出库时间',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
-    PRIMARY KEY(returnSupplierPackageNo, productSkcId, productSkuId)
+    PRIMARY KEY(returnSupplierPackageNo, productSkcId, productSkuId, returnSupplierQuantity)
   );
  `
+
+//ALTER  TABLE  returnPackage  DROP  PRIMARY  KEY;
+//alter table returnPackage add primary key(returnSupplierPackageNo, productSkcId, productSkuId, returnSupplierQuantity);

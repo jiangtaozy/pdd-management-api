@@ -17,9 +17,12 @@ const createPddWarehouseExpress =`
 `
 
 //insert into pddWarehouseExpress (warehouseId, warehouseName, shipName, branchName) values (1, '闫家庄', '韵达快递', '河北定州市公司明月店镇寄存点分部');
+//insert into pddWarehouseExpress (warehouseId, warehouseName, shipName, branchName) values (1, '闫家庄', '符占京', '定州市明月店镇闫家庄村闫家庄小学东150米金虎超市旁');
+
+// 亚马逊发货人、发货地址   'pddWarehouseExpress.branchName' 对应 'amazonShipmentInfo.fromAddressLine1')
+
+
 //insert into pddWarehouseExpress (warehouseId, warehouseName, shipName, branchName) values (2, '海智中心', '极兔速递', '杭州余杭海创园网点');
-
-
 //insert into pddWarehouseExpress (warehouseId, warehouseName, shipName, branchName) values (2, '海智中心', '符江涛', '仓前街道 海智中心3幢406室');
 //insert into pddWarehouseExpress (warehouseId, warehouseName, shipName, branchName) values (2, '海智中心', '中通快递', '杭州未来科技城');
 //insert into pddWarehouseExpress (warehouseId, warehouseName, shipName, branchName) values (2, '海智中心', '申通快递', '浙江杭州余杭区科技城公司');

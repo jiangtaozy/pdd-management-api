@@ -23,7 +23,9 @@ const createItemSku =`
     shortSkuName VARCHAR(20) COMMENT '简化sku名称',
     shortSkuNum VARCHAR(20) COMMENT '简化sku编码',
     isDeleted BOOLEAN NOT NULL DEFAULT 0 COMMENT '是否已删除',
+    skuExtCode VARCHAR(10) COMMENT 'sku货号',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 `
+//alter table itemSku add skuExtCode VARCHAR(10) COMMENT 'sku货号';

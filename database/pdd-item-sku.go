@@ -11,12 +11,12 @@ const createPddItemSku =`
   CREATE TABLE IF NOT EXISTS pddItemSku (
     id INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     pddId BIGINT UNSIGNED NOT NULL,
-    outGoodsSn VARCHAR(20),
+    outGoodsSn VARCHAR(100),
     activityGroupPrice INTEGER UNSIGNED COMMENT '活动价，分',
     groupPrice INTEGER UNSIGNED COMMENT '拼单价，分',
     isOnsale BOOLEAN COMMENT '是否在售',
     normalPrice INTEGER UNSIGNED COMMENT '单买价，分',
-    outSkuSn VARCHAR(20) COMMENT '外部sku编码',
+    outSkuSn VARCHAR(100) COMMENT '外部sku编码',
     skuId BIGINT UNSIGNED NOT NULL,
     skuQuantity INTEGER UNSIGNED COMMENT '库存',
     skuSoldQuantity INTEGER UNSIGNED COMMENT '已售',
@@ -32,3 +32,5 @@ const createPddItemSku =`
 //alter table pddItemSku modify column spec VARCHAR(200) COMMENT 'sku描述，碎花 S';
 //alter table pddItemSku modify column specColor VARCHAR(100) COMMENT 'sku颜色，碎花';
 //alter table pddItemSku modify column specSize VARCHAR(100) COMMENT 'sku尺码，S';
+//alter table pddItemSku modify column outGoodsSn VARCHAR(100);
+//alter table pddItemSku modify column outSkuSn VARCHAR(100) COMMENT '外部sku编码';
