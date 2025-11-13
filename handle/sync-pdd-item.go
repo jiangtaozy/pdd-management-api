@@ -20,6 +20,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
   db := database.DB
   stmtInsert, err := db.Prepare(`
     INSERT INTO pddItem (
+      mallId,
       quantity,
       score,
       resource,
@@ -87,7 +88,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
       rejectStatus,
       rejectReason
     ) VALUES(
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     )
   `)
   if err != nil {
@@ -98,6 +99,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
     UPDATE
       pddItem
     SET
+      mallId = ?,
       quantity = ?,
       score = ?,
       resource = ?,
@@ -206,6 +208,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
     skuList := ""
     if count == 0 {
       _, err = stmtInsert.Exec(
+        goods["mall_id"],
         goods["quantity"],
         goods["score"],
         goods["resource"],
@@ -279,6 +282,7 @@ func SyncPddItem(requestBody map[string]interface{}, responseBody map[string]int
       }
     } else {
       _, err = stmtUpdate.Exec(
+        goods["mall_id"],
         goods["quantity"],
         goods["score"],
         goods["resource"],
