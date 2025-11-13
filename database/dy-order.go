@@ -9,19 +9,22 @@ package database
 
 const createDyOrder = `
   CREATE TABLE IF NOT EXISTS dyOrder (
-    orderId VARCHAR(20) NOT NULL COMMENT '父订单ID',
+    orderId VARCHAR(20) NOT NULL PRIMARY KEY COMMENT '订单ID',
     shopId INTEGER UNSIGNED COMMENT '店铺ID',
     openId VARCHAR(10) COMMENT '买家抖音ID',
     orderStatus TINYINT UNSIGNED COMMENT '订单状态',
+    orderStatusStr VARCHAR(30) COMMENT '订单状态',
     orderType TINYINT UNSIGNED COMMENT '订单类型 (0实物，2普通虚拟，4poi核销，5三方核销，6服务市场)',
     orderTag VARCHAR(30),
     childNum TINYINT UNSIGNED COMMENT '子订单数量',
-    postAddrProvinceId VARCHAR(6) COMMENT '省ID',
+    postAddrProvinceId VARCHAR(20) COMMENT '省ID',
     postAddrProvinceName VARCHAR(50) COMMENT '省',
-    postAddrCityId VARCHAR(6) COMMENT '市ID',
+    postAddrCityId VARCHAR(20) COMMENT '市ID',
     postAddrCityName VARCHAR(50) COMMENT '市',
-    postAddrTownId VARCHAR(6) COMMENT '区ID',
+    postAddrTownId VARCHAR(20) COMMENT '区ID',
     postAddrTownName VARCHAR(50) COMMENT '区',
+    postAddrStreetId VARCHAR(20) COMMENT '乡ID',
+    postAddrStreetName VARCHAR(50) COMMENT '乡区',
     postAddrDetail VARCHAR(100) COMMENT '详细地址',
     postCode VARCHAR(6) COMMENT '邮编',
     postReceiver VARCHAR(50) COMMENT '收件人姓名',
@@ -51,8 +54,9 @@ const createDyOrder = `
     isInsurance BOOLEAN COMMENT '是否有退货运费险',
     cType TINYINT UNSIGNED COMMENT '已废弃，无业务意义',
     cosRatio VARCHAR(5) COMMENT '已废弃，无业务意义',
-    userName VARCHAR(20) COMMENT '暂无实际意义',
+    userName VARCHAR(20) COMMENT '买家名称',
     finalStatus TINYINT UNSIGNED COMMENT '订单状态',
-    shippedNum TINYINT UNSIGNED
+    shippedNum TINYINT UNSIGNED,
+    remark VARCHAR(100) COMMENT '备注'
   );
 `

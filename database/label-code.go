@@ -20,9 +20,9 @@ const labelCode = `
     catType VARCHAR(20) COMMENT '类目类型',
     displayImage VARCHAR(200) COMMENT '图像',
     productSkcSpecList VARCHAR(200) COMMENT 'skc spec',
-    skcEn VARCHAR(200) COMMENT 'skc spec en',
+    skcEn VARCHAR(500) COMMENT 'skc spec en',
     productSkuSpecList VARCHAR(200) COMMENT 'sku spec',
-    skuEn VARCHAR(200) COMMENT 'sku spec en',
+    skuEn VARCHAR(500) COMMENT 'sku spec en',
     isFragile BOOLEAN COMMENT '是否易碎'
   );
  `

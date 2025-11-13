@@ -21,7 +21,7 @@ const saleManageCurrent = `
     notVmiArrivalDelayNum INTEGER COMMENT '非VMI到货延迟订单数',
     notVmiTransportationNum INTEGER COMMENT '非VMI在途单数',
     skuExtCode VARCHAR(20) COMMENT 'SKU货号',
-    className VARCHAR(20) COMMENT 'SKU属性',
+    className VARCHAR(200) COMMENT 'SKU属性',
     predictSaleWarehouseAvailableDays DECIMAL(10,2),
     predictTodaySaleVolume INTEGER,
     inCartNumber7d INTEGER COMMENT '近7日用户加购数量',
@@ -38,7 +38,7 @@ const saleManageCurrent = `
     suggestPurchaseNumUp INTEGER,
     nomsgSubsCntCntSth INTEGER COMMENT '已订阅待提醒到货',
     predictLastSevenDaysSaleVolume INTEGER,
-    productSkuId VARCHAR(20) NOT NULL COMMENT 'sku id',
+    productSkuId VARCHAR(20) NOT NULL COMMENT 'sku id', // temu sku id, 当未上架到temu时为拼多多sku id
     lastThirtyDaysSaleVolume INTEGER COMMENT '近30天销量',
     goodsSkuId VARCHAR(20),
     isSubscribeArrivalRemind BOOLEAN,
@@ -105,6 +105,10 @@ const saleManageCurrent = `
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     isVerifyPrice BOOLEAN COMMENT '开款价格状态',
     purchaseConfig VARCHAR(20) COMMENT '备货逻辑',
+    pddLastSevenDaysSaleVolume INTEGER COMMENT '拼多多近7天销量',
     PRIMARY KEY(productSkuId)
   );
  `
+
+//alter table saleManageCurrent add pddLastSevenDaysSaleVolume INTEGER COMMENT '拼多多近7天销量';
+//alter table saleManageCurrent modify column className VARCHAR(200) COMMENT 'SKU属性';

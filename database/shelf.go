@@ -23,6 +23,7 @@ const createShelf =`
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('B', 1, 1, 2, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('C', 2, 1, 2, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('D', 2, 1, 2, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('E', 2, 1, 2, now());
 
 // 闫家庄
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('A', 3, 2, 1, now());
@@ -30,3 +31,10 @@ const createShelf =`
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('C', 5, 4, 1, now());
 //insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('D', 3, 2, 1, now());
 
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('E', 3, 2, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('F', 3, 2, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('G', 3, 2, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('H', 3, 2, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('I', 3, 2, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('J', 3, 2, 1, now());
+//insert into shelf (shelfName, passageId, roomId, warehouseId, createdAt) values ('K', 3, 2, 1, now());

@@ -9,7 +9,7 @@ const temuGroupSku = `
   CREATE TABLE IF NOT EXISTS temuGroupSku (
     temuSkuId VARCHAR(20) NOT NULL,
     aliSkuId VARCHAR(20) NOT NULL,
-    quantity INTEGER,
+    quantity FLOAT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY(temuSkuId, aliSkuId)
@@ -17,3 +17,5 @@ const temuGroupSku = `
  `
 
 //alter table temuGroupSku add updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+//alter table temuGroupSku modify column quantity FLOAT;

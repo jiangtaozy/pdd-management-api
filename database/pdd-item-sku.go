@@ -24,7 +24,7 @@ const createPddItemSku =`
     specColor VARCHAR(100) COMMENT 'sku颜色，碎花',
     specSize VARCHAR(100) COMMENT 'sku尺码，S',
     groupSku VARCHAR(1000) COMMENT '组合sku',
-    isDeleted BOOLEAN DEFAULT 0 COMMENT '是否已删除',
+    isDeleted BOOLEAN DEFAULT 0 COMMENT '是否已删除-重要-标志是否已经修改作废',
     skuThumbUrl VARCHAR(200) COMMENT '图片地址'
   );
 `
@@ -34,3 +34,5 @@ const createPddItemSku =`
 //alter table pddItemSku modify column specSize VARCHAR(100) COMMENT 'sku尺码，S';
 //alter table pddItemSku modify column outGoodsSn VARCHAR(100);
 //alter table pddItemSku modify column outSkuSn VARCHAR(100) COMMENT '外部sku编码';
+
+//alter table pddItemSku add index index_outSkuSn(outSkuSn);

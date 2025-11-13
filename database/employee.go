@@ -12,6 +12,9 @@ const employee = `
     name VARCHAR(200) NOT NULL COMMENT '姓名',
     entryDate DATE NOT NULL COMMENT '入职日期',
     isOn BOOLEAN DEFAULT true COMMENT '是否在职',
+    chargeContent VARCHAR(2000) COMMENT '负责工作内容',
+    phone VARCHAR(15) COMMENT '手机号',
+    password VARCHAR(150) COMMENT '密码-argon2',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
@@ -28,3 +31,10 @@ const employee = `
 //insert into employee (name, entryDate) values ('杨柳青', '2025-03-03');
 //insert into employee (name, entryDate) values ('刘梦梦', '2025-03-03');
 //insert into employee (name, entryDate) values ('黄丹莹', '2025-03-04');
+
+//alter table employee add chargeContent VARCHAR(2000) COMMENT '负责工作内容';
+
+//alter table employee add password VARCHAR(150) COMMENT '密码-argon2';
+//alter table employee add phone VARCHAR(15) COMMENT '手机号';
+
+//update employee set phone = '18794769375', password = '$argon2id$v=19$m=65536,t=3,p=4$3KptiF8VNjnSSTqSqxGyxw$DYNjOXFAQw5DGR0TYZHBMuCycb8iB+3/6vCETYdJnSY' where id = 1 and name = '符江涛';

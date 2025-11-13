@@ -9,6 +9,7 @@ package database
 const createPddItem =`
   CREATE TABLE IF NOT EXISTS pddItem (
     id BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    mallId VARCHAR(20),
     quantity INTEGER UNSIGNED NOT NULL DEFAULT 0,
     score INTEGER UNSIGNED NOT NULL DEFAULT 0,
     resource VARCHAR(50) NOT NULL DEFAULT '',
@@ -87,3 +88,5 @@ const createPddItem =`
 //alter table pddItem modify column grayGoodsHighQualityRefund BOOLEAN;
 //alter table pddItem modify column marketLabels VARCHAR(300);
 //alter table pddItem modify column labels VARCHAR(300);
+
+//alter table pddItem add mallId VARCHAR(20);

@@ -21,7 +21,7 @@ const saleManage = `
     notVmiArrivalDelayNum INTEGER COMMENT '非VMI到货延迟订单数',
     notVmiTransportationNum INTEGER COMMENT '非VMI在途单数',
     skuExtCode VARCHAR(20) COMMENT 'SKU货号',
-    className VARCHAR(20) COMMENT 'SKU属性',
+    className VARCHAR(200) COMMENT 'SKU属性',
     predictSaleWarehouseAvailableDays DECIMAL(10,2),
     predictTodaySaleVolume INTEGER,
     inCartNumber7d INTEGER COMMENT '近7日用户加购数量',
@@ -117,3 +117,5 @@ alter table saleManage add index index_isLastSevenDaysNeedStock(isLastSevenDaysN
 alter table saleManage add purchaseConfig VARCHAR(20) COMMENT '备货逻辑';
 //alter table saleManage add pddLastSevenDaysSaleVolume INTEGER COMMENT '拼多多近7天销量';
 */
+
+//alter table saleManage modify column className VARCHAR(200) COMMENT 'SKU属性';

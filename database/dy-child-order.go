@@ -9,11 +9,11 @@ package database
 
 const createDyChildOrder = `
   CREATE TABLE IF NOT EXISTS dyChildOrder (
-    orderId VARCHAR(20) NOT NULL COMMENT '子订单ID',
+    orderId VARCHAR(20) NOT NULL PRIMARY KEY COMMENT '子订单ID',
     shopId INTEGER UNSIGNED COMMENT '店铺ID',
     openId VARCHAR(10) COMMENT '买家抖音ID',
-    orderStatus TINYINT UNSIGNED COMMENT '订单状态',
-    orderType TINYINT UNSIGNED COMMENT '订单类型 (0实物，2普通虚拟，4poi核销，5三方核销，6服务市场)',
+    orderStatus TINYINT UNSIGNED COMMENT '订单状态, 5: 已完成, 4: 已关闭, 3: 已发货',
+    orderType VARCHAR(5) COMMENT '订单类型 (0实物，2普通虚拟，4poi核销，5三方核销，6服务市场)',
     orderTag VARCHAR(30),
     postAddrProvinceId VARCHAR(6) COMMENT '省ID',
     postAddrProvinceName VARCHAR(50) COMMENT '省',
@@ -64,6 +64,22 @@ const createDyChildOrder = `
     productId VARCHAR(20) COMMENT '商品Id',
     productName VARCHAR(60) COMMENT '商品名称',
     productPic VARCHAR(200) COMMENT '主图',
-    specDesc VARCHAR(100) COMMENT '规格描述'
+    taxAmount INTEGER COMMENT '税费金额',
+    payAmount INTEGER COMMENT '支付金额',
+    specDesc VARCHAR(100) COMMENT '规格描述',
+    merchantSkuCode VARCHAR(20) COMMENT 'sku货号',
+    orderStatusStr VARCHAR(30) COMMENT '订单状态'
   );
 `
+//alter table dyChildOrder add payAmount INTEGER COMMENT '支付金额';
+
+//alter table dyChildOrder add
+//    merchantSkuCode VARCHAR(20) COMMENT 'sku货号';
+//alter table dyChildOrder add
+//    skuId INTEGER COMMENT 'sku Id';
+
+//  ALTER TABLE dyChildOrder DROP COLUMN skuId;
+
+//alter table dyChildOrder add orderStatusStr VARCHAR(30) COMMENT '订单状态';
+
+//alter table dyChildOrder modify column orderType VARCHAR(5) COMMENT '订单类型 (0实物，2普通虚拟，4poi核销，5三方核销，6服务市场)';

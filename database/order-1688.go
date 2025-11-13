@@ -48,8 +48,10 @@ const order1688 =`
     downstreamOrderId VARCHAR(30) COMMENT '下游订单号(拼多多订单号)',
     isReceived BOOLEAN COMMENT '是否已收货',
     receivedTime DATETIME COMMENT '收货时间',
+    orderRemark VARCHAR(200) COMMENT '订单备注',
     unique orderIdUnique(orderId),
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 `
+//alter table order1688 add orderRemark VARCHAR(200) COMMENT '订单备注';

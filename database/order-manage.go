@@ -14,7 +14,7 @@ const orderManage = `
     status INTEGER COMMENT '订单状态，1: 待发货, 2: 已送货，3: 已收货，7: 已入库, 8: 已作废, null: 待审核',
     productSkuId VARCHAR(20) COMMENT 'sku id',
     extCode VARCHAR(20) COMMENT 'sku 货号',
-    className VARCHAR(20) COMMENT '属性',
+    className VARCHAR(200) COMMENT '属性',
     purchaseQuantity INTEGER COMMENT '下单数量',
     deliverQuantity INTEGER COMMENT '送货数量',
     waitReceiveNum INTEGER COMMENT '待收货数量',
@@ -37,3 +37,5 @@ const orderManage = `
     PRIMARY KEY(subPurchaseOrderSn, productSkuId)
   );
  `
+
+//alter table orderManage modify column className VARCHAR(200) COMMENT '属性';

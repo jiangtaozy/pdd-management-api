@@ -80,7 +80,7 @@ func execSQL(sqlStmt string) {
 }
 
 const alter = `
-  ALTER TABLE item
+  alter table item
   ADD
     itemNum VARCHAR(20)
   AFTER itemTypeKey

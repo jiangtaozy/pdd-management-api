@@ -12,7 +12,7 @@ const temuItemSku = `
     skcId VARCHAR(20),
     skuId VARCHAR(20) NOT NULL,
     hasUploadBom BOOLEAN,
-    productPropertyList VARCHAR(100),
+    productPropertyList VARCHAR(2000),
     supplierPrice VARCHAR(10),
     priceReviewStatus INTEGER,
     supplierPriceCurrencyType VARCHAR(10),
@@ -23,9 +23,10 @@ const temuItemSku = `
     len INTEGER,
     width INTEGER,
     height INTEGER,
-    weight INTEGER,
+    weight INTEGER COMMENT '毫克',
     skuPreviewImage VARCHAR(200),
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     PRIMARY KEY(skuId)
   );
  `
+

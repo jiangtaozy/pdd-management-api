@@ -11,7 +11,7 @@ const temuItemSkc = `
     productId VARCHAR(20),
     selectId VARCHAR(20),
     skcId VARCHAR(20) NOT NULL,
-    selectStatus INTEGER COMMENT '11: 已下首单，13: 已下架',
+    selectStatus INTEGER COMMENT '1:未发布，7: 价格申报中，9: 价格已作废, 10: 待创建首单, 11: 已创建首单，12: 已发布到站点, 13: 已下架, 14: 待修改, 15: 修改完成, 17: 已终止',
     goodsSkcStatus INTEGER,
     color VARCHAR(20),
     colorName VARCHAR(20),
@@ -51,6 +51,8 @@ const temuItemSkc = `
     extCode VARCHAR(20),
     latestPriceComparingStatus VARCHAR(20),
     terminationReasonList VARCHAR(200),
+    isNotSentFirstOrder BOOLEAN DEFAULT 0 COMMENT '是否不发首单-新增字段-核价太低等原因',
+    hasNotice BOOLEAN DEFAULT 0 COMMENT '是否已通知发首单-新增字段',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
     PRIMARY KEY(skcId)
   );

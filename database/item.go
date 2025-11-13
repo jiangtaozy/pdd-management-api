@@ -38,7 +38,7 @@ const item = `
     crossBorderUrl VARCHAR(100) COMMENT '跨境平台地址',
     notForSellReason VARCHAR(300) COMMENT '下架原因',
     declaredPrice DECIMAL(10,2) COMMENT '申报价格',
-    remark VARCHAR(100) COMMENT '备注',
+    remark VARCHAR(1000) COMMENT '备注',
     INDEX forSellIndex(forSell),
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -54,8 +54,4 @@ const item = `
 //insert into item (name, price) values ('红色切面小米珠金色圆隔珠不规则隔片细锁骨链', 3.2);
 //insert into item (name, price) values ('黑色切面小米珠碎金银锁骨链', 6);
 
-
-
-
-
-
+//alter table item modify column remark VARCHAR(1000) COMMENT '备注';
