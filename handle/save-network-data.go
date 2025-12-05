@@ -24,6 +24,7 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   }
   requestBody := make(map[string]interface{})
   requestText := body["requestText"]
+
   if requestText != nil {
     err = json.Unmarshal([]byte(requestText.(string)), &requestBody)
     if err != nil {
@@ -33,13 +34,14 @@ func SaveNetworkData(w http.ResponseWriter, r *http.Request) {
   responseContent := body["responseContent"].(string)
   responseBody := make(map[string]interface{})
   responseContentMimeType := body["responseContentMimeType"].(string)
-  if responseContentMimeType == "application/json" {
+  if responseContentMimeType == "application/json" || responseContentMimeType == "application/json; charset=UTF-8" {
     err = json.Unmarshal([]byte(responseContent), &responseBody)
     if err != nil {
       log.Println("save-network-data-unmarshal-response-content-error: ", err)
     }
   }
   url := body["requestUrl"].(string)
+
   start := time.Now()
   // 关键词
   if url == "https://yingxiao.pinduoduo.com/mms-gateway/venus/api/subway/keyword/listKeywordPage" {
