@@ -14,7 +14,7 @@ import (
   "github.com/jiangtaozy/pdd-management-api/database"
 )
 
-var port = ":7000"
+var port = ":7001"
 
 func main() {
   database.InitDB()
@@ -98,5 +98,5 @@ func main() {
   mux.HandleFunc("/placeOrderList", handle.PlaceOrderList)
   mux.Handle("/", http.FileServer(http.Dir("/home/jemo/workspace/pdd/pdd-management-web/build")))
   handler := cors.Default().Handler(mux)
-  log.Fatal(http.ListenAndServe(port, handler))
+  log.Fatal(http.ListenAndServeTLS(port, "../one-step-api/mujixing.com.pem", "../one-step-api/mujixing.com.key", handler))
 }
