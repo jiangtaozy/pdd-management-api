@@ -17,6 +17,9 @@ const createAmazonAd =`
     asinPriceMillicents INTEGER UNSIGNED,
     asinPriceCurrencyCode VARCHAR(10),
     productImage VARCHAR(200),
+    adGroupId VARCHAR(30) COMMENT '广告组ID',
     createdAt DATE DEFAULT CURRENT_DATE
   );
 `
+//alter table amazonAd add adGroupId VARCHAR(30) COMMENT '广告组ID';
+

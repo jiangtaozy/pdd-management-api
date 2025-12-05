@@ -106,6 +106,7 @@ const saleManage = `
     isVerifyPrice BOOLEAN COMMENT '开款价格状态',
     purchaseConfig VARCHAR(20) COMMENT '备货逻辑',
     pddLastSevenDaysSaleVolume INTEGER COMMENT '拼多多近7天销量',
+    amazonLastSevenDaysSaleVolume INTEGER COMMENT '亚马逊近7天销量',
     PRIMARY KEY(day, productSkuId)
   );
  `
@@ -119,3 +120,4 @@ alter table saleManage add purchaseConfig VARCHAR(20) COMMENT '备货逻辑';
 */
 
 //alter table saleManage modify column className VARCHAR(200) COMMENT 'SKU属性';
+//alter table saleManage add amazonLastSevenDaysSaleVolume INTEGER COMMENT '亚马逊近7天销量';

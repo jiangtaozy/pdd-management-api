@@ -11,9 +11,10 @@ const document = `
     id BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     classification VARCHAR(50) COMMENT '文档分类',
     title VARCHAR(200) COMMENT '文档标题',
-    content TEXT COMMENT '文档内容',
+    content MEDIUMTEXT COMMENT '文档内容, TEXT最大64KB，MEDIUMTEXT最大16MB',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 `
 //alter table document add classification VARCHAR(50) COMMENT '文档分类';
+//alter table document modify column content MEDIUMTEXT COMMENT '文档内容';

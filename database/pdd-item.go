@@ -69,8 +69,8 @@ const createPddItem =`
     isPreSale BOOLEAN COMMENT '是否预售',
     guideTarget INTEGER UNSIGNED NOT NULL DEFAULT 0,
     overSell BOOLEAN NOT NULL DEFAULT false,
-    marketLabels VARCHAR(300),
-    labels VARCHAR(300),
+    marketLabels VARCHAR(1000),
+    labels VARCHAR(1000),
     skuType TINYINT UNSIGNED NOT NULL DEFAULT 0,
     isMoreSku VARCHAR(50),
     skuList VARCHAR(50),
@@ -90,3 +90,6 @@ const createPddItem =`
 //alter table pddItem modify column labels VARCHAR(300);
 
 //alter table pddItem add mallId VARCHAR(20);
+
+//alter table pddItem modify column marketLabels VARCHAR(1000);
+//alter table pddItem modify column labels VARCHAR(1000);
